@@ -2,3 +2,6 @@ rootProject.name = 'fulcrum'
 
 include 'fulcrum-shell'
 project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')
+
+include 'fulcrum-concat'
+project(':fulcrum-concat').projectDir = new File(settingsDir, 'concat')

@@ -34,7 +34,7 @@ allprojects {
   }
   
   dependencies {
-    testCompile 'org.junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
   }
 
   jacoco {
@@ -85,4 +85,11 @@ task jacocoRootReport(type: JacocoReport) {
       fileTree(dir: it, exclude: ['sample/**'])
     })
   }
+}
+
+def packageName = 'fulcrum-core'
+
+jar {
+  baseName packageName
+  finalizedBy jacocoRootReport
 }

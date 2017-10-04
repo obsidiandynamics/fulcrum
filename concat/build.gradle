@@ -1,8 +1,7 @@
-def packageName = 'fulcrum-shell'
+def packageName = 'fulcrum-concat'
 version = project(':').version
 
 dependencies {
-  compile project(":fulcrum-concat")
 }
 
 jar {
@@ -47,7 +46,7 @@ publishing {
 
 def envUser = 'BINTRAY_USER'
 def envKey = 'BINTRAY_KEY'
-def packageDesc = 'Assists in the execution of shells and processes'
+def packageDesc = 'Fluid API for selective concatenation of strings'
 def repoName = 'fulcrum'
 bintray {
   user = System.getenv(envUser)
