@@ -1,0 +1,88 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.7.3'
+}
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'com.obsidiandynamics.fulcrum'
+version = '0.1.0-SNAPSHOT'
+  
+def envUser = 'BINTRAY_USER'
+def envKey = 'BINTRAY_KEY'
+task bintrayCredentialsCheck {
+  doLast {
+    if (System.getenv(envUser) == null) {
+      throw new GradleException("No Bintray username specified; set with 'export ${envUser}=<username>'")
+    }
+    if (System.getenv(envKey) == null) {
+      throw new GradleException("No Bintray key specified; set with 'export ${envKey}=<key>'")
+    }
+  }
+}
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.jfrog.bintray'
+
+  repositories {
+    jcenter()
+    maven {
+      url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+  }
+  
+  dependencies {
+    testCompile 'org.junit:junit:4.12'
+  }
+
+  jacoco {
+    toolVersion = '0.7.10-SNAPSHOT'
+  }
+
+  jacocoTestReport {
+    additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+      html.enabled = true
+      xml.enabled = true
+      csv.enabled = false
+    }
+  }
+
+  // invoke this task when ready to publish to Bintray
+  bintrayUpload {
+    dependsOn ':bintrayCredentialsCheck'
+  }
+}
+
+subprojects {
+}
+
+task jacocoRootReport(type: JacocoReport) {
+  dependsOn = allprojects.test
+  additionalSourceDirs = files(allprojects.sourceSets.main.allSource.srcDirs)
+  sourceDirectories = files(allprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories = files(allprojects.sourceSets.main.output)
+  executionData = files(allprojects.jacocoTestReport.executionData)
+  reports {
+    html.enabled = true
+    xml.enabled = false
+    csv.enabled = false
+  }
+  onlyIf = {
+    true
+  }
+  doFirst {
+    executionData = files(executionData.findAll {
+      it.exists()
+    })
+  }
+  afterEvaluate {
+    classDirectories = files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: ['sample/**'])
+    })
+  }
+}

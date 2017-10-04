@@ -1,0 +1,4 @@
+rootProject.name = 'fulcrum'
+
+include 'fulcrum-shell'
+project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')
