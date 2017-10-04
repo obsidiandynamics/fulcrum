@@ -1,10 +1,10 @@
-package com.obsidiandynamics.proc;
+package com.obsidiandynamics.shell;
 
 /**
  *  Definition of a shell - a wrapper for a command.
  */
 public interface Shell {
-  String[] toArgs(String... commandFrags);
+  String[] prepare(String... command);
   
   static ProcBuilder builder() {
     return new ProcBuilder();

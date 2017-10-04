@@ -1,4 +1,4 @@
-package com.obsidiandynamics.proc;
+package com.obsidiandynamics.shell;
 
 /**
  *  Executes a given command directly, without wrapping it
@@ -6,7 +6,7 @@ package com.obsidiandynamics.proc;
  */
 public final class Direct implements Shell {
   @Override
-  public String[] toArgs(String... commandFrags) {
-    return commandFrags;
+  public String[] prepare(String... command) {
+    return command;
   }
 }

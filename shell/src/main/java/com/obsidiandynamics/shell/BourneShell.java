@@ -1,8 +1,8 @@
-package com.obsidiandynamics.proc;
+package com.obsidiandynamics.shell;
 
 import com.obsidiandynamics.concat.*;
 
-public final class Bourne implements Shell {
+public final class BourneShell implements Shell {
   private String path;
   
   public enum Variant {
@@ -17,27 +17,32 @@ public final class Bourne implements Shell {
   
   private Variant variant = Variant.BASH;
   
-  public String withPath(String path) {
+  public BourneShell withPath(String path) {
     this.path = path;
-    return path;
+    return this;
+  }
+  
+  public BourneShell withVariant(Variant variant) {
+    this.variant = variant;
+    return this;
   }
   
   @Override
-  public String[] toArgs(String... commandFrags) {
-    return new String[] { variant.getShell(), "-c", parseCommand(commandFrags) };
+  public String[] prepare(String... command) {
+    return new String[] { variant.getShell(), "-c", parseCommand(command) };
   }
   
-  private String parseCommand(String[] commandFrags) {
+  private String parseCommand(String[] command) {
     if (path != null) {
       return new Concat()
           .when(path != null).append(new Concat("export PATH=$PATH:")
                                      .append(path)
                                      .append(" && "))
-          .appendArray(" ", (Object[]) commandFrags)
+          .appendArray(" ", (Object[]) command)
           .toString();
     } else {
       return new Concat()
-          .appendArray(" ", (Object[]) commandFrags)
+          .appendArray(" ", (Object[]) command)
           .toString();
     }
   }
