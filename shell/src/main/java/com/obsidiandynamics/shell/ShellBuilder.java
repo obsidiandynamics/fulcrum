@@ -8,24 +8,37 @@ import java.util.function.*;
 /**
  *  Builds the process definition to be executed within a shell.
  */
-public final class ProcBuilder {
+public final class ShellBuilder {
   private Shell shell = new BourneShell();
   
   private String[] command;
   
   private Process proc;
   
-  ProcBuilder() {}
+  private ProcessExecutor executor = new DefaultProcessExecutor();
+  
+  ShellBuilder() {}
 
   /**
    *  Assigns a shell.
    *  
    *  @param shell The shell to use.
-   *  @return The current {@link ProcBuilder} instance for chaining.
+   *  @return The current {@link ShellBuilder} instance for chaining.
    */
-  public ProcBuilder withShell(Shell shell) {
+  public ShellBuilder withShell(Shell shell) {
     ensureNotExecuted();
     this.shell = shell;
+    return this;
+  }
+  
+  /**
+   *  Assigns a custom executor, in place of the default {@link DefaultProcessExecutor}.
+   *  
+   *  @param executor The executor to set.
+   *  @return The current {@link ShellBuilder} instance for chaining.
+   */
+  public ShellBuilder withExecutor(ProcessExecutor executor) {
+    this.executor = executor;
     return this;
   }
 
@@ -33,9 +46,9 @@ public final class ProcBuilder {
    *  Executes the given command in a shell.
    *  
    *  @param command The command fragments to execute.
-   *  @return The current {@link ProcBuilder} instance for chaining.
+   *  @return The current {@link ShellBuilder} instance for chaining.
    */
-  public ProcBuilder execute(String... command) {
+  public ShellBuilder execute(String... command) {
     ensureNotExecuted();
     this.command = command;
     startProcess();
@@ -44,10 +57,8 @@ public final class ProcBuilder {
   
   private void startProcess() {
     final String[] preparedCommand = shell.prepare(command);
-    final ProcessBuilder pb = new ProcessBuilder(preparedCommand);
-    pb.redirectErrorStream(true);
     try {
-      proc = pb.start();
+      proc = executor.run(preparedCommand);
     } catch (IOException e) {
       throw new ProcessException("Error executing prepared command " + Arrays.asList(preparedCommand), e);
     }
@@ -65,9 +76,9 @@ public final class ProcBuilder {
    *  Pipes stdout an stderr to the given sink.
    *  
    *  @param sink The sink to receive process output.
-   *  @return The current {@link ProcBuilder} instance for chaining.
+   *  @return The current {@link ShellBuilder} instance for chaining.
    */
-  public ProcBuilder pipeTo(Consumer<String> sink) {
+  public ShellBuilder pipeTo(Consumer<String> sink) {
     ensureExecuted();
     try (InputStream in = proc.getInputStream()) {
       readStream(in, sink);

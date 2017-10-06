@@ -1,9 +1,7 @@
-def packageName = 'fulcrum-shell'
+def packageName = 'fulcrum-assert'
 version = project(':').version
 
 dependencies {
-  compile project(":fulcrum-assert")
-  compile project(":fulcrum-concat")
 }
 
 jar {
@@ -48,7 +46,7 @@ publishing {
 
 def envUser = 'BINTRAY_USER'
 def envKey = 'BINTRAY_KEY'
-def packageDesc = 'Assists in the execution of shells and processes'
+def packageDesc = 'Common assertions'
 def repoName = 'fulcrum'
 bintray {
   user = System.getenv(envUser)

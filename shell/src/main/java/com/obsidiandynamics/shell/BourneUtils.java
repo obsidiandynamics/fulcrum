@@ -17,7 +17,7 @@ public final class BourneUtils {
    *  @return True if {@code sh} is installed.
    */
   public static boolean isShellAvailable() {
-    return isSuccess(Shell.builder().withShell(new NullShell()).execute("sh", "--help").await());
+    return BourneShell.Variant.SH.isAvailable();
   }
   
   /**
@@ -51,7 +51,7 @@ public final class BourneUtils {
    *  @return True if the command is installed.
    *  @throws CommandExecutionException If running the command generated an error.
    */
-  public static boolean isInstalled(String verifyCommand, String path) throws CommandExecutionException {
+  public static boolean isInstalled(String verifyCommand, String path) {
     final StringBuilder out = new StringBuilder();
     final int code = run(verifyCommand, path, out::append);
     if (isSuccess(code)) {
@@ -68,6 +68,17 @@ public final class BourneUtils {
     NotInstalledError(String m) { super(m); }
   }
   
+  /**
+   *  Asserts whether a given command is installed. Internally, this delegates to
+   *  {@link BourneUtils#isInstalled(String, String)}, throwing a {@link NotInstalledError} - a
+   *  subclass of {@link AssertionError} if the command failed to run.
+   *  
+   *  @param verifyCommand The verify command.
+   *  @param path The optional additional path (may be left {@code null}).
+   *  @param name The name of the program; will appear in the exception message.
+   *  @exception NotInstalledError If the command is not installed.
+   *  @exception CommandExecutionException If running the command generated an error.
+   */
   public static void assertInstalled(String verifyCommand, String path, String name) throws NotInstalledError, CommandExecutionException {
     if (! isInstalled(path, verifyCommand)) {
       final AtomicReference<String> completePath = new AtomicReference<>();

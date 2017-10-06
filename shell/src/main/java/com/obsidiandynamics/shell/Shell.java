@@ -6,7 +6,7 @@ package com.obsidiandynamics.shell;
 public interface Shell {
   String[] prepare(String... command);
   
-  static ProcBuilder builder() {
-    return new ProcBuilder();
+  static ShellBuilder builder() {
+    return new ShellBuilder();
   }
 }

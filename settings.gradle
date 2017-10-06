@@ -1,7 +1,10 @@
 rootProject.name = 'fulcrum'
 
-include 'fulcrum-shell'
-project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')
+include 'fulcrum-assert'
+project(':fulcrum-assert').projectDir = new File(settingsDir, 'assert')
 
 include 'fulcrum-concat'
 project(':fulcrum-concat').projectDir = new File(settingsDir, 'concat')
+
+include 'fulcrum-shell'
+project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')

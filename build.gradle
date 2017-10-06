@@ -34,7 +34,8 @@ allprojects {
   }
   
   dependencies {
-    testCompile 'com.obsidiandynamics.indigo:indigo-assurance:0.9.5'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.9.0'
   }
 
   jacoco {

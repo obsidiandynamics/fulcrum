@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import com.obsidiandynamics.indigo.util.*;
+import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.shell.BourneUtils.*;
 
 public final class BourneUtilsTest {
@@ -15,7 +15,7 @@ public final class BourneUtilsTest {
   
   @Test
   public void testConformance() throws Exception {
-    TestSupport.assertUtilityClassWellDefined(BourneUtils.class);
+    Assertions.assertUtilityClassWellDefined(BourneUtils.class);
   }
 
   @Test
