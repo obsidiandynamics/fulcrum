@@ -34,7 +34,7 @@ allprojects {
   }
   
   dependencies {
-    testCompile 'junit:junit:4.12'
+    testCompile 'com.obsidiandynamics.indigo:indigo-assurance:0.9.5'
   }
 
   jacoco {

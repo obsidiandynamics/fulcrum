@@ -33,17 +33,11 @@ public final class BourneShell implements Shell {
   }
   
   private String parseCommand(String[] command) {
-    if (path != null) {
-      return new Concat()
-          .when(path != null).append(new Concat("export PATH=$PATH:")
-                                     .append(path)
-                                     .append(" && "))
-          .appendArray(" ", (Object[]) command)
-          .toString();
-    } else {
-      return new Concat()
-          .appendArray(" ", (Object[]) command)
-          .toString();
-    }
+    return new Concat()
+        .when(path != null).append(new Concat("export PATH=$PATH:")
+                                   .append(path)
+                                   .append(" && "))
+        .appendArray(" ", (Object[]) command)
+        .toString();
   }
 }
