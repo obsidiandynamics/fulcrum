@@ -15,9 +15,17 @@ public final class Assertions {
    *  @return True if assertions are enabled.
    */
   public static boolean areEnabled() {
-    return ! assertRunnable(() -> {
-      assert false;
-    });
+    return not(assertRunnable(asserterOfTrue(false)));
+  }
+  
+  static Runnable asserterOfTrue(boolean b) {
+    return () -> {
+      assert b;
+    };
+  }
+  
+  static boolean not(boolean b) {
+    return ! b;
   }
   
   /**
@@ -42,7 +50,7 @@ public final class Assertions {
    *
    *  @param obj The object to test.
    */
-  public static void assertToString(Object obj) {
+  public static void assertToStringOverride(Object obj) {
     final String objectToString = obj.getClass().getName() + "@" + Integer.toHexString(obj.hashCode());
     final String actualToString = obj.toString();
     if (Objects.equals(actualToString, objectToString)) {
@@ -69,14 +77,14 @@ public final class Assertions {
     }
     
     final Constructor<?> constructor = cls.getDeclaredConstructor();
-    if (constructor.isAccessible() || ! Modifier.isPrivate(constructor.getModifiers())) {
+    if (! Modifier.isPrivate(constructor.getModifiers())) {
       throw new AssertionError("Constructor is not private");
     }
     constructor.setAccessible(true);
     constructor.newInstance();
     constructor.setAccessible(false);
-    for (Method method : cls.getMethods()) {
-      if (! Modifier.isStatic(method.getModifiers()) && method.getDeclaringClass().equals(cls)) {
+    for (Method method : cls.getDeclaredMethods()) {
+      if (! Modifier.isStatic(method.getModifiers())) {
         throw new AssertionError("There exists a non-static method: " + method);
       }
     }
