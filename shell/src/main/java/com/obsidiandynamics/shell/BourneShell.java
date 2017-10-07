@@ -34,11 +34,23 @@ public final class BourneShell implements Shell {
   
   private Variant variant = Variant.SH;
   
+  /**
+   *  Assigns a path that will be used to execute a subsequent command.
+   *  
+   *  @param path The path to set.
+   *  @return The current {@link BourneShell} instance for chaining.
+   */
   public BourneShell withPath(String path) {
     this.path = path;
     return this;
   }
-  
+ 
+  /**
+   *  Specifies the variant of the Bourne shell to use.
+   *  
+   *  @param variant The shell variant.
+   *  @return The current {@link BourneShell} instance for chaining.
+   */
   public BourneShell withVariant(Variant variant) {
     this.variant = variant;
     return this;
