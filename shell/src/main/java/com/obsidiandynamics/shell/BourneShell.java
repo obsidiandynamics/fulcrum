@@ -69,4 +69,20 @@ public final class BourneShell implements Shell {
         .appendArray(" ", (Object[]) command)
         .toString();
   }
+  
+  /**
+   *  Splices the given {@code command} with a whitespace delimiter, prepending the
+   *  '$' prompt to the result.
+   *  
+   *  @param command The command to transform.
+   *  @return The spliced command with a prompt character.
+   */
+  public static String spliceWithPrompt(String[] command) {
+    return "$ " + CommandTransform.splice(command);
+  }
+
+  @Override
+  public CommandTransform getDefaultEcho() {
+    return BourneShell::spliceWithPrompt;
+  }
 }

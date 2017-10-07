@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
-import com.obsidiandynamics.shell.BourneUtils.*;
 
 public final class BourneUtilsTest {
   @Before
@@ -19,38 +18,17 @@ public final class BourneUtilsTest {
   }
 
   @Test
+  public void testRun() {
+    final StringBuilder sink = new StringBuilder();
+    BourneUtils.run("echo hello", null, false, sink::append);
+    assertEquals("hello\n", sink.toString());
+  }
+
+  @Test
   public void testRunVerbose() {
     final StringBuilder sink = new StringBuilder();
-    BourneUtils.runVerbose("echo hello", null, sink::append);
-    assertEquals("$ echo hello\nhello\n", sink.toString());
-  }
-  
-  @Test
-  public void testIsNotInstalled() throws CommandExecutionException {
-    assertFalse(BourneUtils.isInstalled("xyz_not_found", null));
-  }
-  
-  @Test
-  public void testIsInstalled() throws CommandExecutionException {
-    assertTrue(BourneUtils.isInstalled("ls src/test/sh", null));
-  }
-  
-  @Test(expected=CommandExecutionException.class)
-  public void testIsInstalledError() throws CommandExecutionException {
-    BourneUtils.isInstalled("src/test/sh/exit-code.sh 3", null);
-  }
-  
-  @Test
-  public void testAssertInstalled() throws CommandExecutionException {
-    BourneUtils.assertInstalled("XYZ", "ls src/test/sh", null);
-  }
-  
-  @Test
-  public void testAssertNotInstalled() throws CommandExecutionException {
-    try {
-      BourneUtils.assertInstalled(null, "xyz_not_found", "XYZ");
-      fail("Failed to throw an " + NotInstalledError.class.getName());
-    } catch (NotInstalledError e) {}
+    BourneUtils.run("echo hello", null, true, sink::append);
+    assertEquals("$ sh -c echo hello\nhello\n", sink.toString());
   }
   
   @Test

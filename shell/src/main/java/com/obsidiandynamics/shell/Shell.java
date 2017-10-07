@@ -14,6 +14,14 @@ public interface Shell {
   String[] prepare(String... command);
   
   /**
+   *  Obtains the default transform that should by applied when echoing the command for
+   *  this shell.
+   *  
+   *  @return The default {@link CommandTransform}.
+   */
+  CommandTransform getDefaultEcho();
+  
+  /**
    *  Creates a new builder.
    *  
    *  @return A new {@link ShellBuilder} instance.

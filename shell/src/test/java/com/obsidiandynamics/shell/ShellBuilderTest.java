@@ -144,4 +144,20 @@ public final class ShellBuilderTest {
     assertEquals(-1, builder.execute().await(1, TimeUnit.SECONDS));
     assertTrue(Thread.interrupted());
   }
+  
+  @Test
+  public void checkInstalledPass() throws IOException, InterruptedException {
+    final Process proc = mock(Process.class);
+    when(executor.run(any())).thenReturn(proc);
+    builder.checkInstalled("command");
+  }
+  
+  @Test(expected=NotInstalledError.class)
+  public void checkInstalledFail() throws IOException, InterruptedException {
+    final Process proc = mock(Process.class);
+    when(executor.run(any())).thenReturn(proc);
+    final int exitCode = 3;
+    when(proc.waitFor()).thenReturn(exitCode);
+    builder.checkInstalled("command");
+  }
 }

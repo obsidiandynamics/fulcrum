@@ -8,11 +8,14 @@ import java.util.function.*;
  *  Wraps a running {@link Process}.
  */
 public final class RunningProcess {
+  private final Shell shell;
+  
   private final String[] preparedCommand;
   
   private final Process process;
 
-  RunningProcess(String[] preparedCommand, Process process) {
+  RunningProcess(Shell shell, String[] preparedCommand, Process process) {
+    this.shell = shell;
     this.preparedCommand = preparedCommand;
     this.process = process;
   }
@@ -37,15 +40,14 @@ public final class RunningProcess {
   }
   
   /**
-   *  Pipes the prepared command into the given {@link Sink}, having first spliced
-   *  the constituent parts with a single whitespace delimiter. A single newline 
-   *  character is appended at the end of the command.
+   *  Pipes the prepared command into the given {@link Sink}, using the default
+   *  transform for the {@link Shell} that was used to launch this process.
    *  
    *  @param sink The sink to pipe the command to.
    *  @return The current {@link RunningProcess} instance for chaining.
    */
   public RunningProcess echo(Sink sink) {
-    return echo(sink, CommandTransform::splice);
+    return echo(sink, shell.getDefaultEcho());
   }
   
   /**

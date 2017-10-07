@@ -9,4 +9,9 @@ public final class NullShell implements Shell {
   public String[] prepare(String... command) {
     return command;
   }
+
+  @Override
+  public CommandTransform getDefaultEcho() {
+    return CommandTransform::splice;
+  }
 }

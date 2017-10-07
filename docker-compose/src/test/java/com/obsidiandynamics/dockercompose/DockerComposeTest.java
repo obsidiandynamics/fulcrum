@@ -80,7 +80,7 @@ public final class DockerComposeTest {
                                      contains(" -f file"),
                                      contains(" up"),
                                      contains(" -d")));
-    assertTrue("sink=" + sink, sink.toString().startsWith("$ "));
+    assertTrue("sink=" + sink, sink.toString().startsWith("docker-compose "));
     assertTrue("sink=" + sink, sink.toString().contains("test output\n"));
   }
   

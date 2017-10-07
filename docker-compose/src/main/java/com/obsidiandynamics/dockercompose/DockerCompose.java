@@ -49,11 +49,6 @@ public final class DockerCompose {
     return this;
   }
   
-  public static final class NotInstalledError extends AssertionError {
-    private static final long serialVersionUID = 1L;
-    NotInstalledError(String m) { super(m); }
-  }
-  
   /**
    *  Checks whether the {@code docker-compose} CLI is installed. Behind the scenes, this
    *  method tries to run {@code docker-compose version}, which should return a zero exit code if
@@ -63,14 +58,10 @@ public final class DockerCompose {
    *  @exception NotInstalledError If {@code docker-compose} isn't properly installed.
    */
   public void checkInstalled() {
-    final int exitCode = Shell.builder()
-        .withShell(shell)
-        .withExecutor(executor)
-        .execute("docker-compose version")
-        .await();
-    if (exitCode != 0) {
-      throw new NotInstalledError("docker-compose is not correctly installed");
-    }
+    Shell.builder()
+    .withShell(shell)
+    .withExecutor(executor)
+    .checkInstalled("docker-compose version");
   }
   
   private void ensureComposeFileAssigned() {
@@ -124,7 +115,7 @@ public final class DockerCompose {
         .execute(command);
 
     if (echo) {
-      proc.echo(out::append, c -> "$ " + CommandTransform.splice(c));
+      proc.echo(out::append);
     }
     
     final int exitCode = proc        
