@@ -9,7 +9,6 @@ import java.io.*;
 
 import org.junit.*;
 
-import com.obsidiandynamics.dockercompose.DockerCompose.*;
 import com.obsidiandynamics.shell.*;
 
 public final class DockerComposeTest {
