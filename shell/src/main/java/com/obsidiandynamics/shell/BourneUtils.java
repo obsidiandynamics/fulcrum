@@ -2,8 +2,6 @@ package com.obsidiandynamics.shell;
 
 import static com.obsidiandynamics.shell.BourneShell.Variant.*;
 
-import java.util.function.*;
-
 /**
  *  Utilities specific to the Bourne shell.
  */
@@ -95,7 +93,7 @@ public final class BourneUtils {
    *  @param sink The output sink.
    *  @return The exit code, or {@code -1} if this method was interrupted.
    */
-  public static int runVerbose(String command, String path, Consumer<String> sink) {
+  public static int runVerbose(String command, String path, Sink sink) {
     final StringBuilder buf = new StringBuilder();
     buf.append("$ ").append(command).append('\n');
     final int exitCode = run(command, path, buf::append);
@@ -112,7 +110,7 @@ public final class BourneUtils {
    *  @param sink The output sink.
    *  @return The exit code, or {@code -1} if this method was interrupted.
    */
-  public static int run(String command, String path, Consumer<String> sink) {
+  public static int run(String command, String path, Sink sink) {
     return Shell.builder()
     .withShell(new BourneShell().withVariant(SH).withPath(path))
     .execute(command)

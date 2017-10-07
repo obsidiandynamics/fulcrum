@@ -13,9 +13,11 @@ public final class ShellBuilder {
   
   private String[] command;
   
+  private ProcessExecutor executor = ProcessExecutor.getDefault();
+  
   private Process proc;
   
-  private ProcessExecutor executor = ProcessExecutor.getDefault();
+  private String[] preparedCommand;
   
   ShellBuilder() {}
 
@@ -57,13 +59,23 @@ public final class ShellBuilder {
   }
   
   private void startProcess() {
-    final String[] preparedCommand = shell.prepare(command);
+    preparedCommand = shell.prepare(command);
     try {
       proc = executor.run(preparedCommand);
       if (proc == null) throw new IllegalStateException("Executor returned a null process");
     } catch (IOException e) {
       throw new ProcessException("Error executing prepared command " + Arrays.asList(preparedCommand), e);
     }
+  }
+  
+  /**
+   *  Obtains the prepared command that was used to execute the process.
+   *  
+   *  @return The prepared command.
+   */
+  public String[] getPreparedCommand() {
+    ensureExecuted();
+    return preparedCommand;
   }
   
   private void ensureNotExecuted() {
@@ -80,7 +92,7 @@ public final class ShellBuilder {
    *  @param sink The sink to receive process output.
    *  @return The current {@link ShellBuilder} instance for chaining.
    */
-  public ShellBuilder pipeTo(Consumer<String> sink) {
+  public ShellBuilder pipeTo(Sink sink) {
     ensureExecuted();
     try (InputStream in = proc.getInputStream()) {
       readStream(in, sink);
