@@ -25,9 +25,47 @@ public final class RunningProcess {
   public String[] getPreparedCommand() {
     return preparedCommand;
   }
+  
+  /**
+   *  Obtains the spliced prepared command. The command fragments are spliced with
+   *  a single whitespace character as the delimiter.
+   *  
+   *  @return The spliced prepared command.
+   */
+  public String getSplicedPreparedCommand() {
+    return CommandTransform.splice(preparedCommand);
+  }
+  
+  /**
+   *  Pipes the prepared command into the given {@link Sink}, having first spliced
+   *  the constituent parts with a single whitespace delimiter. A single newline 
+   *  character is appended at the end of the command.
+   *  
+   *  @param sink The sink to pipe the command to.
+   *  @return The current {@link RunningProcess} instance for chaining.
+   */
+  public RunningProcess echo(Sink sink) {
+    return echo(sink, CommandTransform::splice);
+  }
+  
+  /**
+   *  Pipes the prepared command into the given {@link Sink}, transforming the command using
+   *  the given {@link CommandTransform} implementation. A single newline character is appended
+   *  at the end of the transformed command.
+   *  
+   *  @param sink The sink to pipe the command to.
+   *  @param commandTransform A way of transforming the command prior to piping to the {@code sink}.
+   *  @return The current {@link RunningProcess} instance for chaining.
+   */
+  public RunningProcess echo(Sink sink, CommandTransform commandTransform) {
+    sink.accept(commandTransform.apply(getPreparedCommand()));
+    sink.accept("\n");
+    return this;
+  }
 
   /**
-   *  Pipes stdout an stderr to the given sink.
+   *  Pipes stdout an stderr to the given sink. This variant allows you to specify
+   *  a transform for echoing the prepared command
    *  
    *  @param sink The sink to receive process output.
    *  @return The current {@link RunningProcess} instance for chaining.

@@ -73,14 +73,15 @@ public final class DockerComposeTest {
   }
   
   @Test
-  public void testUpWithSink() throws DockerComposeException, IOException {
+  public void testUpWithSinkEcho() throws DockerComposeException, IOException {
     final StringBuilder sink = new StringBuilder();
-    compose.withComposeFile("file").withSink(sink::append).up();
+    compose.withComposeFile("file").withEcho(true).withSink(sink::append).up();
     verify(executor).run(conjunction(startsWith("docker-compose "),
                                      contains(" -f file"),
                                      contains(" up"),
                                      contains(" -d")));
-    assertEquals("test output\n", sink.toString());
+    assertTrue("sink=" + sink, sink.toString().startsWith("$ "));
+    assertTrue("sink=" + sink, sink.toString().contains("test output\n"));
   }
   
   @Test

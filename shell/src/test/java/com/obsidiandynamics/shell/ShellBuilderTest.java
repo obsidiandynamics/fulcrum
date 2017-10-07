@@ -36,6 +36,7 @@ public final class ShellBuilderTest {
     verify(shell).prepare(eq("test"));
     assertNotNull(rp.getProcess());
     assertArrayEquals(new String[] { "shell", "test" }, rp.getPreparedCommand());
+    assertEquals("shell test", rp.getSplicedPreparedCommand());
   }
   
   @Test
@@ -50,6 +51,23 @@ public final class ShellBuilderTest {
     final StringBuilder sink = new StringBuilder();
     rp.pipeTo(sink::append);
     assertEquals(output, sink.toString());
+  }
+  
+  @Test
+  public void testEcho() throws IOException {
+    builder.withShell(new NullShell());
+    final Process proc = mock(Process.class);
+    when(executor.run(any())).thenReturn(proc);
+    final String command = "command";
+    final RunningProcess rp = builder.execute(command);
+    assertEquals(proc, rp.getProcess());
+    final String output = "test stream";
+    final InputStream in = new ByteArrayInputStream(output.getBytes());
+    when(proc.getInputStream()).thenReturn(in);
+    final StringBuilder sink = new StringBuilder();
+    rp.echo(sink::append);
+    rp.pipeTo(sink::append);
+    assertEquals(command + "\n" + output, sink.toString());
   }
   
   @Test(expected=ProcessException.class)

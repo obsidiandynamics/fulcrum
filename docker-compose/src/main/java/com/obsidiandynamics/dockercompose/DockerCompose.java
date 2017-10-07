@@ -1,7 +1,5 @@
 package com.obsidiandynamics.dockercompose;
 
-import java.util.function.*;
-
 import com.obsidiandynamics.concat.*;
 import com.obsidiandynamics.shell.*;
 
@@ -17,7 +15,9 @@ public final class DockerCompose {
   
   private ProcessExecutor executor = ProcessExecutor.getDefault();
   
-  private Consumer<String> sink;
+  private Sink sink;
+  
+  private boolean echo;
 
   public DockerCompose withComposeFile(String composeFile) {
     this.composeFile = composeFile;
@@ -39,7 +39,12 @@ public final class DockerCompose {
     return this;
   }
 
-  public DockerCompose withSink(Consumer<String> sink) {
+  public DockerCompose withEcho(boolean echo) {
+    this.echo = echo;
+    return this;
+  }
+
+  public DockerCompose withSink(Sink sink) {
     this.sink = sink;
     return this;
   }
@@ -113,10 +118,16 @@ public final class DockerCompose {
   
   private void run(String command) throws DockerComposeException {
     final StringBuilder out = new StringBuilder();
-    final int exitCode = Shell.builder()
+    final RunningProcess proc = Shell.builder()
         .withShell(shell)
         .withExecutor(executor)
-        .execute(command)
+        .execute(command);
+
+    if (echo) {
+      proc.echo(out::append, c -> "$ " + CommandTransform.splice(c));
+    }
+    
+    final int exitCode = proc        
         .pipeTo(out::append)
         .await();
     
