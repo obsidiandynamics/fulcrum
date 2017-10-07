@@ -2,8 +2,6 @@ package com.obsidiandynamics.shell;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
 
 /**
  *  Builds the process definition to be executed within a shell.
@@ -11,13 +9,7 @@ import java.util.function.*;
 public final class ShellBuilder {
   private Shell shell = Shell.getDefault();
   
-  private String[] command;
-  
   private ProcessExecutor executor = ProcessExecutor.getDefault();
-  
-  private Process proc;
-  
-  private String[] preparedCommand;
   
   ShellBuilder() {}
 
@@ -28,7 +20,6 @@ public final class ShellBuilder {
    *  @return The current {@link ShellBuilder} instance for chaining.
    */
   public ShellBuilder withShell(Shell shell) {
-    ensureNotExecuted();
     this.shell = shell;
     return this;
   }
@@ -40,7 +31,6 @@ public final class ShellBuilder {
    *  @return The current {@link ShellBuilder} instance for chaining.
    */
   public ShellBuilder withExecutor(ProcessExecutor executor) {
-    ensureNotExecuted();
     this.executor = executor;
     return this;
   }
@@ -49,122 +39,18 @@ public final class ShellBuilder {
    *  Executes the given command in a shell.
    *  
    *  @param command The command fragments to execute.
-   *  @return The current {@link ShellBuilder} instance for chaining.
+   *  @return A new {@link RunningProcess} instance.
    */
-  public ShellBuilder execute(String... command) {
-    ensureNotExecuted();
-    this.command = command;
-    startProcess();
-    return this;
-  }
-  
-  private void startProcess() {
-    preparedCommand = shell.prepare(command);
+  public RunningProcess execute(String... command) {
+    final String[] preparedCommand = shell.prepare(command);
+    final Process process;
     try {
-      proc = executor.run(preparedCommand);
-      if (proc == null) throw new IllegalStateException("Executor returned a null process");
+      process = executor.run(preparedCommand);
+      if (process == null) throw new IllegalStateException("Executor returned a null process");
     } catch (IOException e) {
       throw new ProcessException("Error executing prepared command " + Arrays.asList(preparedCommand), e);
     }
-  }
-  
-  /**
-   *  Obtains the prepared command that was used to execute the process.
-   *  
-   *  @return The prepared command.
-   */
-  public String[] getPreparedCommand() {
-    ensureExecuted();
-    return preparedCommand;
-  }
-  
-  private void ensureNotExecuted() {
-    if (proc != null) throw new IllegalStateException("A process has already been executed");
-  }
-  
-  private void ensureExecuted() {
-    if (proc == null) throw new IllegalStateException("No process has yet been executed");
-  }
-
-  /**
-   *  Pipes stdout an stderr to the given sink.
-   *  
-   *  @param sink The sink to receive process output.
-   *  @return The current {@link ShellBuilder} instance for chaining.
-   */
-  public ShellBuilder pipeTo(Sink sink) {
-    ensureExecuted();
-    try (InputStream in = proc.getInputStream()) {
-      readStream(in, sink);
-    } catch (IOException e) {
-      throw new ProcessException("Error reading stdout", e);
-    }
-    return this;
-  }
-  
-  private static String readStream(InputStream is, Consumer<String> sink) throws IOException {
-    final Writer writer = new StringWriter();
-    final char[] buffer = new char[1024];
-    try (Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
-      int n;
-      while ((n = reader.read(buffer)) != -1) {
-        final String output = new String(buffer, 0, n);
-        writer.write(buffer, 0, n);
-        sink.accept(output);
-      }
-    }
-    return writer.toString();
-  }
-  
-  /**
-   *  Awaits the termination of the process, returning the exit code.
-   *  
-   *  @return The exit code, or {@code -1} if this method was interrupted.
-   */
-  public int await() {
-    ensureExecuted();
-    try {
-      return proc.waitFor();
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return -1;
-    }
-  }
-  
-  /**
-   *  Awaits the termination of the process, up to a set maximum amount of
-   *  time, returning the exit code if the process has terminated within the
-   *  wait period.
-   *  
-   *  @param timeout The maximum time to wait.
-   *  @param unit The time unit of the {@code timeout} argument.
-   *  @return The exit code, or {@code -1} if this method was interrupted.
-   *  @throws TimeoutException If the process failed to terminate within the wait period.
-   */
-  public int await(long timeout, TimeUnit unit) throws TimeoutException {
-    ensureExecuted();
-    try {
-      final long started = System.currentTimeMillis();
-      final boolean completed = proc.waitFor(timeout, unit);
-      final long took = System.currentTimeMillis() - started;
-      if (! completed) {
-        throw new TimeoutException(String.format("Process is still alive after %,d ms", took));
-      } else {
-        return proc.exitValue();
-      }
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return -1;
-    }
-  }
-  
-  /**
-   *  Obtains the underlying process instance.
-   *  
-   *  @return The executed {@code Process}.
-   */
-  public Process getProcess() {
-    ensureExecuted();
-    return proc;
+    
+    return new RunningProcess(preparedCommand, process);
   }
 }

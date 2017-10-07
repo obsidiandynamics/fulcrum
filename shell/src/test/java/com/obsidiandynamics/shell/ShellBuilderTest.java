@@ -22,39 +22,33 @@ public final class ShellBuilderTest {
     builder = Shell.builder().withExecutor(executor);
   }
 
-  @Test(expected=IllegalStateException.class)
-  public void testEnsureNotExecuted() throws IOException {
-    when(executor.run(any())).thenReturn(mock(Process.class));
-    builder.execute("test");
-    builder.withShell(null);
-  }
-
-  @Test(expected=IllegalStateException.class)
-  public void testEnsureExecuted() throws IOException {
-    builder.pipeTo(s -> {});
-  }
-
   @Test
   public void testWithShell() throws IOException {
     final Shell shell = mock(Shell.class);
+    when(shell.prepare(any())).then(invocation -> {
+      final String command0 = invocation.getArgument(0);
+      return new String[] { "shell", command0 };
+    });
     builder.withShell(shell);
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
-    builder.execute("test");
+    final RunningProcess rp = builder.execute("test");
     verify(shell).prepare(eq("test"));
+    assertNotNull(rp.getProcess());
+    assertArrayEquals(new String[] { "shell", "test" }, rp.getPreparedCommand());
   }
   
   @Test
   public void testPipeTo() throws IOException {
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
-    builder.execute();
-    assertEquals(proc, builder.getProcess());
+    final RunningProcess rp = builder.execute();
+    assertEquals(proc, rp.getProcess());
     final String output = "test stream";
     final InputStream in = new ByteArrayInputStream(output.getBytes());
     when(proc.getInputStream()).thenReturn(in);
     final StringBuilder sink = new StringBuilder();
-    builder.pipeTo(sink::append);
+    rp.pipeTo(sink::append);
     assertEquals(output, sink.toString());
   }
   
@@ -62,11 +56,11 @@ public final class ShellBuilderTest {
   public void testPipeToException() throws IOException {
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
-    builder.execute();
+    final RunningProcess rp = builder.execute();
     final InputStream in = mock(InputStream.class);
     when(proc.getInputStream()).thenReturn(in);
     when(in.read()).thenThrow(new IOException("boom"));
-    builder.pipeTo(s -> {});
+    rp.pipeTo(s -> {});
   }
 
   @Test(expected=IllegalStateException.class)
