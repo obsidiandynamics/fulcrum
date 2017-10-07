@@ -1,6 +1,6 @@
 package com.obsidiandynamics.dockercompose;
 
-import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 import com.obsidiandynamics.concat.*;
 import com.obsidiandynamics.shell.*;
@@ -16,6 +16,8 @@ public final class DockerCompose {
   private Shell shell = Shell.getDefault();
   
   private ProcessExecutor executor = ProcessExecutor.getDefault();
+  
+  private Consumer<String> sink;
 
   public DockerCompose withComposeFile(String composeFile) {
     this.composeFile = composeFile;
@@ -34,6 +36,11 @@ public final class DockerCompose {
 
   public DockerCompose withExecutor(ProcessExecutor executor) {
     this.executor = executor;
+    return this;
+  }
+
+  public DockerCompose withSink(Consumer<String> sink) {
+    this.sink = sink;
     return this;
   }
   
@@ -70,7 +77,7 @@ public final class DockerCompose {
     final Concat cmd = new Concat("docker-compose")
         .whenIsNotNull(project).append(new StringBuilder(" -p ").append(project))
         .append(" -f ").append(composeFile)
-        .append(" up -d");
+        .append(" up --no-color -d");
     run(cmd.toString());
   }
   
@@ -105,15 +112,21 @@ public final class DockerCompose {
   }
   
   private void run(String command) throws DockerComposeException {
-    final AtomicReference<String> sink = new AtomicReference<>();
+    final StringBuilder out = new StringBuilder();
     final int exitCode = Shell.builder()
         .withShell(shell)
         .withExecutor(executor)
         .execute(command)
-        .pipeTo(sink::set)
+        .pipeTo(out::append)
         .await();
+    
+    if (sink != null) {
+      sink.accept(out.toString());
+      sink.accept("\n");
+    }
+    
     if (exitCode != 0) {
-      throw new DockerComposeException(command, sink.get(), exitCode);
+      throw new DockerComposeException(command, out.toString(), exitCode);
     }
   }
 }

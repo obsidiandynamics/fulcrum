@@ -1,5 +1,6 @@
 package com.obsidiandynamics.dockercompose;
 
+import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -69,6 +70,17 @@ public final class DockerComposeTest {
                                      contains(" -f file"),
                                      contains(" up"),
                                      contains(" -d")));
+  }
+  
+  @Test
+  public void testUpWithSink() throws DockerComposeException, IOException {
+    final StringBuilder sink = new StringBuilder();
+    compose.withComposeFile("file").withSink(sink::append).up();
+    verify(executor).run(conjunction(startsWith("docker-compose "),
+                                     contains(" -f file"),
+                                     contains(" up"),
+                                     contains(" -d")));
+    assertEquals("test output\n", sink.toString());
   }
   
   @Test

@@ -2,7 +2,6 @@ package com.obsidiandynamics.shell;
 
 import static com.obsidiandynamics.shell.BourneShell.Variant.*;
 
-import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 /**
@@ -81,8 +80,8 @@ public final class BourneUtils {
    */
   public static void assertInstalled(String verifyCommand, String path, String name) throws NotInstalledError, CommandExecutionException {
     if (! isInstalled(path, verifyCommand)) {
-      final AtomicReference<String> completePath = new AtomicReference<>();
-      run("echo $PATH", path, completePath::set);
+      final StringBuilder completePath = new StringBuilder();
+      run("echo $PATH", path, completePath::append);
       throw new NotInstalledError(name + " is not installed, or is missing from the path (" + completePath + ")");
     }
   }

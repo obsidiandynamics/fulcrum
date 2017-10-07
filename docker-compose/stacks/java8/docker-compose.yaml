@@ -1,0 +1,5 @@
+version: '2'
+services:
+  java8:
+    image: openjdk:8u131-jdk-alpine
+    command: sh -c "sleep 300"

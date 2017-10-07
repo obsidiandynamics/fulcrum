@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
@@ -54,9 +53,9 @@ public final class ShellBuilderTest {
     final String output = "test stream";
     final InputStream in = new ByteArrayInputStream(output.getBytes());
     when(proc.getInputStream()).thenReturn(in);
-    final AtomicReference<String> sink = new AtomicReference<>();
-    builder.pipeTo(sink::set);
-    assertEquals(output, sink.get());
+    final StringBuilder sink = new StringBuilder();
+    builder.pipeTo(sink::append);
+    assertEquals(output, sink.toString());
   }
   
   @Test(expected=ProcessException.class)
