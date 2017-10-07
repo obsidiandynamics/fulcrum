@@ -36,9 +36,11 @@ public final class ShellBuilderTest {
   }
 
   @Test
-  public void testWithShell() {
+  public void testWithShell() throws IOException {
     final Shell shell = mock(Shell.class);
     builder.withShell(shell);
+    final Process proc = mock(Process.class);
+    when(executor.run(any())).thenReturn(proc);
     builder.execute("test");
     verify(shell).prepare(eq("test"));
   }
@@ -66,6 +68,11 @@ public final class ShellBuilderTest {
     when(proc.getInputStream()).thenReturn(in);
     when(in.read()).thenThrow(new IOException("boom"));
     builder.pipeTo(s -> {});
+  }
+
+  @Test(expected=IllegalStateException.class)
+  public void testExecuteNullProcess() throws IOException {
+    builder.execute("test");
   }
   
   @Test(expected=ProcessException.class)

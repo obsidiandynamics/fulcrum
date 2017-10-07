@@ -39,4 +39,13 @@ public interface ProcessExecutor {
   default boolean canTryRun(String... command) {
     return tryRun(command) != null;
   }
+  
+  /**
+   *  Obtains a new instance of the default process executor.
+   *  
+   *  @return The default executor.
+   */
+  static ProcessExecutor getDefault() {
+    return new DefaultProcessExecutor();
+  }
 }

@@ -6,5 +6,8 @@ project(':fulcrum-assert').projectDir = new File(settingsDir, 'assert')
 include 'fulcrum-concat'
 project(':fulcrum-concat').projectDir = new File(settingsDir, 'concat')
 
+include 'fulcrum-docker-compose'
+project(':fulcrum-docker-compose').projectDir = new File(settingsDir, 'docker-compose')
+
 include 'fulcrum-shell'
 project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')

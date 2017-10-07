@@ -6,18 +6,48 @@ import org.junit.*;
 
 public final class ConcatTest {
   @Test
-  public void testConditionFail() {
+  public void testBooleanConditionPass() {
+    final CharSequence cs = new Concat("foo")
+        .when(true).append(" bar");
+    assertEquals("foo bar", cs.toString());
+  }
+  
+  @Test
+  public void testBooleanConditionFail() {
     final CharSequence cs = new Concat()
         .append("foo")
         .when(false).append(" bar");
     assertEquals("foo", cs.toString());
   }
-
+  
   @Test
-  public void testConditionPass() {
+  public void testIsNullConditionPass() {
     final CharSequence cs = new Concat("foo")
-        .when(true).append(" bar");
+        .whenIsNull(null).append(" bar");
     assertEquals("foo bar", cs.toString());
+  }
+  
+  @Test
+  public void testIsNullConditionFail() {
+    final CharSequence cs = new Concat()
+        .append("foo")
+        .whenIsNull(this).append(" bar");
+    assertEquals("foo", cs.toString());
+  }
+  
+  @Test
+  public void testIsNotNullConditionPass() {
+    final CharSequence cs = new Concat("foo")
+        .whenIsNotNull(this).append(" bar");
+    assertEquals("foo bar", cs.toString());
+  }
+  
+  @Test
+  public void testIsNotNullConditionFail() {
+    final CharSequence cs = new Concat()
+        .append("foo")
+        .whenIsNotNull(null).append(" bar");
+    assertEquals("foo", cs.toString());
   }
   
   @Test

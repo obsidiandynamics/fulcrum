@@ -43,6 +43,14 @@ public final class Concat implements CharSequence {
     return new ConditionalConcat(condition);
   }
   
+  public ConditionalConcat whenIsNull(Object obj) {
+    return when(obj == null);
+  }
+  
+  public ConditionalConcat whenIsNotNull(Object obj) {
+    return when(obj != null);
+  }
+  
   public final class ConditionalConcat {
     private final boolean conditionMet;
 

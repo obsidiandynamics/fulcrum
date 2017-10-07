@@ -21,4 +21,13 @@ public interface Shell {
   static ShellBuilder builder() {
     return new ShellBuilder();
   }
+  
+  /**
+   *  Obtains a new instance of the default shell.
+   *  
+   *  @return The default shell.
+   */
+  static Shell getDefault() {
+    return new BourneShell();
+  }
 }

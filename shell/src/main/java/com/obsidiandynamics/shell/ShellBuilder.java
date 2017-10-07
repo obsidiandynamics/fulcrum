@@ -9,13 +9,13 @@ import java.util.function.*;
  *  Builds the process definition to be executed within a shell.
  */
 public final class ShellBuilder {
-  private Shell shell = new BourneShell();
+  private Shell shell = Shell.getDefault();
   
   private String[] command;
   
   private Process proc;
   
-  private ProcessExecutor executor = new DefaultProcessExecutor();
+  private ProcessExecutor executor = ProcessExecutor.getDefault();
   
   ShellBuilder() {}
 
@@ -60,6 +60,7 @@ public final class ShellBuilder {
     final String[] preparedCommand = shell.prepare(command);
     try {
       proc = executor.run(preparedCommand);
+      if (proc == null) throw new IllegalStateException("Executor returned a null process");
     } catch (IOException e) {
       throw new ProcessException("Error executing prepared command " + Arrays.asList(preparedCommand), e);
     }
