@@ -38,6 +38,7 @@ public final class ShellBuilder {
    *  @return The current {@link ShellBuilder} instance for chaining.
    */
   public ShellBuilder withExecutor(ProcessExecutor executor) {
+    ensureNotExecuted();
     this.executor = executor;
     return this;
   }
@@ -96,10 +97,7 @@ public final class ShellBuilder {
       while ((n = reader.read(buffer)) != -1) {
         final String output = new String(buffer, 0, n);
         writer.write(buffer, 0, n);
-
-        if (sink != null) {
-          sink.accept(output);
-        }
+        sink.accept(output);
       }
     }
     return writer.toString();
@@ -134,9 +132,9 @@ public final class ShellBuilder {
     ensureExecuted();
     try {
       final long started = System.currentTimeMillis();
-      proc.waitFor(timeout, unit);
+      final boolean completed = proc.waitFor(timeout, unit);
       final long took = System.currentTimeMillis() - started;
-      if (proc.isAlive()) {
+      if (! completed) {
         throw new TimeoutException(String.format("Process is still alive after %,d ms", took));
       } else {
         return proc.exitValue();
