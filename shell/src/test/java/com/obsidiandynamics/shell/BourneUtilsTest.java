@@ -30,17 +30,4 @@ public final class BourneUtilsTest {
     BourneUtils.run("echo hello", null, true, sink::append);
     assertEquals("$ sh -c echo hello\nhello\n", sink.toString());
   }
-  
-  @Test
-  public void testIsSuccess() {
-    assertTrue(BourneUtils.isSuccess(0));
-    assertFalse(BourneUtils.isSuccess(1));
-  }
-  
-  @Test
-  public void isNotFoundOrNotExecutable() {
-    assertTrue(BourneUtils.isNotFoundOrNotExecutable(126));
-    assertTrue(BourneUtils.isNotFoundOrNotExecutable(127));
-    assertFalse(BourneUtils.isNotFoundOrNotExecutable(128));
-  }
 }

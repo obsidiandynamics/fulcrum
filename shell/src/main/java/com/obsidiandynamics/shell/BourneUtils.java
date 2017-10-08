@@ -18,27 +18,6 @@ public final class BourneUtils {
   }
   
   /**
-   *  Determines if the given exit code represents a success status.
-   *  
-   *  @param exitCode The exit code to test.
-   *  @return True if this code represents a success status.
-   */
-  public static boolean isSuccess(int exitCode) {
-    return exitCode == 0;
-  }
-  
-  /**
-   *  Determines if the given exit code implies that a command wasn't found or wasn't
-   *  an executable.
-   *  
-   *  @param exitCode The exit code to test.
-   *  @return True if this code represents a not-found/non-executable status.
-   */
-  public static boolean isNotFoundOrNotExecutable(int exitCode) {
-    return exitCode == 126 || exitCode == 127;
-  }
-  
-  /**
    *  Pre-canned {@code sh} command executor, piping the output to the
    *  specified {@code sink}.
    *  
