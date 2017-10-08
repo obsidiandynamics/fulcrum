@@ -15,7 +15,7 @@ public final class NullShellTest {
   @Test
   public void test() {
     assertArrayEquals(new String[] { "a", "b"},
-                      shell.prepare("a", "b"));
+                      shell.prepare(new String[] { "a", "b" }));
   }
   
   @Test

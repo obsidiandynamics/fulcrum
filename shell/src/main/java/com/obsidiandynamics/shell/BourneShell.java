@@ -57,7 +57,7 @@ public final class BourneShell implements Shell {
   }
   
   @Override
-  public String[] prepare(String... command) {
+  public String[] prepare(String[] command) {
     return new String[] { variant.getShellExecutable(), "-c", parseCommand(command) };
   }
   

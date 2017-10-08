@@ -17,13 +17,13 @@ public final class BourneShellTest {
   @Test
   public void testWithoutPath() {
     assertArrayEquals(new String[] { "sh", "-c", "a b"},
-                      shell.withVariant(Variant.SH).prepare("a", "b"));
+                      shell.withVariant(Variant.SH).prepare(new String[] { "a", "b" }));
   }
   
   @Test
   public void testWithPath() {
     assertArrayEquals(new String[] { "sh", "-c", "export PATH=$PATH:/foo && a b"},
-                      shell.withPath("/foo").withVariant(Variant.SH).prepare("a", "b"));
+                      shell.withPath("/foo").withVariant(Variant.SH).prepare(new String[] { "a", "b" }));
   }
   
   @Test

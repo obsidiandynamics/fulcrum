@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
@@ -26,14 +27,16 @@ public final class ShellBuilderTest {
   public void testWithShell() throws IOException {
     final Shell shell = mock(Shell.class);
     when(shell.prepare(any())).then(invocation -> {
-      final String command0 = invocation.getArgument(0);
-      return new String[] { "shell", command0 };
+      final String[] command = invocation.getArgument(0);
+      final List<String> commandList = new ArrayList<>(Arrays.asList(command));
+      commandList.add(0, "shell");
+      return commandList.toArray(new String[0]);
     });
     builder.withShell(shell);
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
     final RunningProcess rp = builder.execute("test");
-    verify(shell).prepare(eq("test"));
+    verify(shell).prepare(eq(new String[] { "test" }));
     assertNotNull(rp.getProcess());
     assertArrayEquals(new String[] { "shell", "test" }, rp.getPreparedCommand());
     assertEquals("shell test", rp.getSplicedPreparedCommand());

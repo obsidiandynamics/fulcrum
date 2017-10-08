@@ -6,7 +6,7 @@ package com.obsidiandynamics.shell;
  */
 public final class NullShell implements Shell {
   @Override
-  public String[] prepare(String... command) {
+  public String[] prepare(String[] command) {
     return command;
   }
 

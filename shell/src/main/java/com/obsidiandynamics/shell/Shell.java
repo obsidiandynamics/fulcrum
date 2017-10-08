@@ -11,7 +11,7 @@ public interface Shell {
    *  @param command The raw command.
    *  @return The prepared command.
    */
-  String[] prepare(String... command);
+  String[] prepare(String[] command);
   
   /**
    *  Obtains the default transform that should by applied when echoing the command for
