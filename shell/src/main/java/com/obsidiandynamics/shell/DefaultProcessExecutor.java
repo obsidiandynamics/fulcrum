@@ -7,7 +7,7 @@ import java.io.*;
  */
 public final class DefaultProcessExecutor implements ProcessExecutor {
   @Override
-  public Process run(String... command) throws IOException {
+  public Process run(String[] command) throws IOException {
     final ProcessBuilder pb = new ProcessBuilder(command);
     pb.redirectErrorStream(true);
     return pb.start();

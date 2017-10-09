@@ -20,16 +20,16 @@ public final class ProcessExecutorTest {
   
   @Test
   public void testTryRunSuccess() throws IOException {
-    when(executor.run(isA(String.class))).thenReturn(mock(Process.class));
-    assertNotNull(executor.tryRun("foo"));
-    assertTrue(executor.canTryRun("foo"));
+    when(executor.run(isA(String[].class))).thenReturn(mock(Process.class));
+    assertNotNull(executor.tryRun(new String[] { "foo" }));
+    assertTrue(executor.canTryRun(new String[] { "foo" }));
   }
   
   @Test
   public void testTryRunFailure() throws IOException {
     final Exception cause = new IOException("Boom");
-    when(executor.run(isA(String.class))).thenThrow(cause);
-    assertNull(executor.tryRun("foo"));
-    assertFalse(executor.canTryRun("foo"));
+    when(executor.run(isA(String[].class))).thenThrow(cause);
+    assertNull(executor.tryRun(new String[] { "foo" }));
+    assertFalse(executor.canTryRun(new String[] { "foo" }));
   }
 }

@@ -13,7 +13,7 @@ public interface ProcessExecutor {
    *  @return The resulting {@link Process} instance.
    *  @throws IOException If an I/O error occurs.
    */
-  Process run(String... command) throws IOException;
+  Process run(String[] command) throws IOException;
   
   /**
    *  Attempts to run the given {@code command} array, returning a {@link Process}
@@ -22,7 +22,7 @@ public interface ProcessExecutor {
    *  @param command The command to run.
    *  @return The resulting {@link Process} instance, or {@code null} if an error occured.
    */
-  default Process tryRun(String... command) {
+  default Process tryRun(String[] command) {
     try {
       return run(command);
     } catch (IOException e) {
@@ -36,7 +36,7 @@ public interface ProcessExecutor {
    *  @param command The command to run.
    *  @return True if the run succeeded.
    */
-  default boolean canTryRun(String... command) {
+  default boolean canTryRun(String[] command) {
     return tryRun(command) != null;
   }
   
