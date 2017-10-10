@@ -1,9 +1,9 @@
 
-Fulcrum
+<img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> Fulcrum
 ===
 [ ![Download](https://api.bintray.com/packages/obsidiandynamics/fulcrum/fulcrum-shell/images/download.svg) ](https://bintray.com/obsidiandynamics/fulcrum/fulcrum-shell/_latestVersion)
 
-Fulcrum is a set of tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
+Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
 
 # Modules
 * [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) - Common assertions
