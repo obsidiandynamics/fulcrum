@@ -24,7 +24,7 @@ For Maven:
 <dependency>
   <groupId>com.obsidiandynamics.fulcrum</groupId>
   <artifactId>fulcrum-module</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -32,5 +32,5 @@ For Maven:
 For Gradle:
 
 ```groovy
-compile 'com.obsidiandynamics.fulcrum:fulcrum-module:0.2.0'
+compile 'com.obsidiandynamics.fulcrum:fulcrum-module:0.3.0'
 ```
