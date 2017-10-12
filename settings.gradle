@@ -14,3 +14,6 @@ project(':fulcrum-junit').projectDir = new File(settingsDir, 'junit')
 
 include 'fulcrum-shell'
 project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')
+
+include 'fulcrum-version'
+project(':fulcrum-version').projectDir = new File(settingsDir, 'version')

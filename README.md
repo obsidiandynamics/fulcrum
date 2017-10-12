@@ -11,6 +11,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) - Wrapper around the `docker-compose` CLI
 * [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) - JUnit utilities
 * [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) - Assists in the execution of shells and processes
+* [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) - Loads the application version and build number
 
 # Getting started
 Select just the module(s) that you need from the list above. Each module has a short README describing its use.
