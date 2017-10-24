@@ -16,7 +16,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 # Getting started
 Select just the module(s) that you need from the list above. Each module has a short README describing its use.
 
-The builds are hosted on JCenter. (Maven users may need to add the JCenter repository to their POM.) Simply add the following snippet to your build file. Replace the version number in the snippet with the version shown on the Download badge at the top of this README, and `fulcrum-module` with the name of the actual module you need.
+The builds are hosted on JCenter. (Maven users may need to add the JCenter repository to their POM.) Simply add the following snippet to your build file. Replace the version placeholder `x.y.z` in the snippet with the version shown on the Download badge at the top of this README, and `fulcrum-module` with the name of the actual module you need.
 
 For Maven:
 
@@ -24,7 +24,7 @@ For Maven:
 <dependency>
   <groupId>com.obsidiandynamics.fulcrum</groupId>
   <artifactId>fulcrum-module</artifactId>
-  <version>0.3.0</version>
+  <version>x.y.z</version>
   <type>pom</type>
 </dependency>
 ```
@@ -32,5 +32,5 @@ For Maven:
 For Gradle:
 
 ```groovy
-compile 'com.obsidiandynamics.fulcrum:fulcrum-module:0.3.0'
+compile 'com.obsidiandynamics.fulcrum:fulcrum-module:x.y.z'
 ```
