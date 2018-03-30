@@ -29,3 +29,6 @@ project(":fulcrum-select").projectDir = new File(settingsDir, "select")
 
 include "fulcrum-resolver"
 project(":fulcrum-resolver").projectDir = new File(settingsDir, "resolver")
+
+include "fulcrum-node-queue"
+project(":fulcrum-node-queue").projectDir = new File(settingsDir, "node-queue")
