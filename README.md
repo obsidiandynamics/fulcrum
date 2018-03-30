@@ -5,16 +5,16 @@
 [ ![Build](https://travis-ci.org/obsidiandynamics/fulcrum.svg?branch=master) ](https://travis-ci.org/obsidiandynamics/fulcrum#)
 [![codecov](https://codecov.io/gh/obsidiandynamics/fulcrum/branch/master/graph/badge.svg)](https://codecov.io/gh/obsidiandynamics/fulcrum)
 
-Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.-
+Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
 
 # Modules
-* [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) - Common assertions
-* [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) - Utility for awaiting asynchronous actions
-* [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) - Fluid API for selective concatenation of strings
-* [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) - Wrapper around the `docker-compose` CLI
-* [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) - JUnit utilities
-* [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) - Assists in the execution of shells and processes
-* [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) - Loads the application version and build number
+* [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) — Common assertions
+* [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) — Utility for awaiting asynchronous actions
+* [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) — Fluid API for selective concatenation of strings
+* [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
+* [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) — JUnit utilities
+* [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) — Assists in the execution of shells and processes
+* [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) — Loads the application version and build number
 
 # Getting started
 Select just the module(s) that you need from the list above. Each module has a short README describing its use.
