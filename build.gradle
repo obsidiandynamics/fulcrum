@@ -93,7 +93,7 @@ task jacocoRootReport(type: JacocoReport) {
   }
   afterEvaluate {
     classDirectories = files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: ["sample/**"])
+      fileTree(dir: it, exclude: ["sample/**", "**/*Uncovered*"])
     })
   }
 }

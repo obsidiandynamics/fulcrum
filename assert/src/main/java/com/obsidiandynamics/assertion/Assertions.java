@@ -19,9 +19,7 @@ public final class Assertions {
   }
   
   static Runnable asserterOfTrue(boolean b) {
-    return () -> {
-      assert b;
-    };
+    return () -> AssertionsEnabledUncovered.doAssert(b);
   }
   
   static boolean not(boolean b) {
@@ -54,7 +52,7 @@ public final class Assertions {
     final String objectToString = obj.getClass().getName() + "@" + Integer.toHexString(obj.hashCode());
     final String actualToString = obj.toString();
     if (Objects.equals(actualToString, objectToString)) {
-      throw new AssertionError("The toString() method does not appear to have been overriden");
+      throw new AssertionError("The toString() method does not appear to have been overridden");
     }
   }
 
