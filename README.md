@@ -2,6 +2,8 @@
 <img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> Fulcrum
 ===
 [ ![Download](https://api.bintray.com/packages/obsidiandynamics/fulcrum/fulcrum-shell/images/download.svg) ](https://bintray.com/obsidiandynamics/fulcrum/fulcrum-shell/_latestVersion)
+[ ![Build](https://travis-ci.org/obsidiandynamics/fulcrum.svg?branch=master) ](https://travis-ci.org/obsidiandynamics/fulcrum#)
+[![codecov](https://codecov.io/gh/obsidiandynamics/fulcrum/branch/master/graph/badge.svg)](https://codecov.io/gh/obsidiandynamics/fulcrum)
 
 Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.-
 

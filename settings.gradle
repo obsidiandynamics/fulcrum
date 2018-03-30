@@ -1,22 +1,22 @@
-rootProject.name = 'fulcrum'
+rootProject.name = "fulcrum"
 
-include 'fulcrum-assert'
-project(':fulcrum-assert').projectDir = new File(settingsDir, 'assert')
+include "fulcrum-assert"
+project(":fulcrum-assert").projectDir = new File(settingsDir, "assert")
 
-include 'fulcrum-await'
-project(':fulcrum-await').projectDir = new File(settingsDir, 'await')
+include "fulcrum-await"
+project(":fulcrum-await").projectDir = new File(settingsDir, "await")
 
-include 'fulcrum-concat'
-project(':fulcrum-concat').projectDir = new File(settingsDir, 'concat')
+include "fulcrum-concat"
+project(":fulcrum-concat").projectDir = new File(settingsDir, "concat")
 
-include 'fulcrum-docker-compose'
-project(':fulcrum-docker-compose').projectDir = new File(settingsDir, 'docker-compose')
+include "fulcrum-docker-compose"
+project(":fulcrum-docker-compose").projectDir = new File(settingsDir, "docker-compose")
 
-include 'fulcrum-junit'
-project(':fulcrum-junit').projectDir = new File(settingsDir, 'junit')
+include "fulcrum-junit"
+project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
 
-include 'fulcrum-shell'
-project(':fulcrum-shell').projectDir = new File(settingsDir, 'shell')
+include "fulcrum-shell"
+project(":fulcrum-shell").projectDir = new File(settingsDir, "shell")
 
-include 'fulcrum-version'
-project(':fulcrum-version').projectDir = new File(settingsDir, 'version')
+include "fulcrum-version"
+project(":fulcrum-version").projectDir = new File(settingsDir, "version")

@@ -1,5 +1,5 @@
-def packageName = 'fulcrum-assert'
-version = project(':').version
+def packageName = "fulcrum-assert"
+version = project(":").version
 
 dependencies {
 }
@@ -10,14 +10,14 @@ jar {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   baseName packageName
-  classifier = 'javadoc'
+  classifier = "javadoc"
   from "$buildDir/docs/javadoc"
 }
  
 task sourcesJar(type: Jar) {
   baseName packageName
   from sourceSets.main.allSource
-  classifier = 'sources'
+  classifier = "sources"
 }
  
 artifacts {
@@ -29,9 +29,9 @@ artifacts {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      groupId project(':').group
+      groupId project(":").group
       artifactId packageName
-      version project(':').version
+      version project(":").version
       from components.java
       artifact sourcesJar
       artifact javadocJar
@@ -44,21 +44,21 @@ publishing {
   }
 }
 
-def envUser = 'BINTRAY_USER'
-def envKey = 'BINTRAY_KEY'
-def packageDesc = 'Common assertions'
-def repoName = 'fulcrum'
+def envUser = "BINTRAY_USER"
+def envKey = "BINTRAY_KEY"
+def packageDesc = "Common assertions"
+def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)
   key = System.getenv(envKey)
-  publications = ['mavenJava']
+  publications = ["mavenJava"]
   pkg {
     repo = "${repoName}"
     name = packageName
-    userOrg = 'obsidiandynamics'
+    userOrg = "obsidiandynamics"
     desc = packageDesc
     websiteUrl = "https://github.com/obsidiandynamics/${repoName}"
-    licenses = ['BSD New']
+    licenses = ["BSD New"]
     vcsUrl = "https://github.com/obsidiandynamics/${repoName}"
     issueTrackerUrl = "https://github.com/obsidiandynamics/${repoName}/issues"
     publicDownloadNumbers = true
@@ -66,10 +66,10 @@ bintray {
     override = true
     publish = false
     version {
-      name = project(':').version
+      name = project(":").version
       desc = packageDesc
       released  = new Date()
-      vcsTag = project(':').version
+      vcsTag = project(":").version
     }
   }
 }
