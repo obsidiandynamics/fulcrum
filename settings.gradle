@@ -23,3 +23,6 @@ project(":fulcrum-version").projectDir = new File(settingsDir, "version")
 
 include "fulcrum-func"
 project(":fulcrum-func").projectDir = new File(settingsDir, "func")
+
+include "fulcrum-select"
+project(":fulcrum-select").projectDir = new File(settingsDir, "select")
