@@ -12,6 +12,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) — Utility for awaiting asynchronous actions
 * [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) — Fluid API for selective concatenation of strings
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
+* [`fulcrum-func`](https://github.com/obsidiandynamics/fulcrum/tree/master/func) — Functional interfaces that throw checked exceptions
 * [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) — JUnit utilities
 * [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) — Assists in the execution of shells and processes
 * [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) — Loads the application version and build number
