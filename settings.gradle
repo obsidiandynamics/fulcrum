@@ -26,3 +26,6 @@ project(":fulcrum-func").projectDir = new File(settingsDir, "func")
 
 include "fulcrum-select"
 project(":fulcrum-select").projectDir = new File(settingsDir, "select")
+
+include "fulcrum-resolver"
+project(":fulcrum-resolver").projectDir = new File(settingsDir, "resolver")
