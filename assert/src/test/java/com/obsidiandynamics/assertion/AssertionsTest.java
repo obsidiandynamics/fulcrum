@@ -1,6 +1,7 @@
 package com.obsidiandynamics.assertion;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.*;
 
@@ -95,5 +96,36 @@ public final class AssertionsTest {
   @Test
   public void testNot() {
     assertTrue(Assertions.not(Assertions.not(true)));
+  }
+  
+  @Test
+  public void testRunIfTrue() {
+    final Runnable r = mock(Runnable.class);
+    Assertions.runIf(() -> true, r);
+    verify(r).run();
+  }
+  
+  @Test
+  public void testRunIfFalse() {
+    final Runnable r = mock(Runnable.class);
+    Assertions.runIf(() -> false, r);
+    verifyNoMoreInteractions(r);
+  }
+  
+  @Test
+  public void testRunIfEnabled() {
+    final Runnable r = mock(Runnable.class);
+    Assertions.runIfEnabled(r);
+    verify(r).run();
+  }
+  
+  @Test
+  public void testAssertConditionPass() {
+    Assertions.assertCondition(() -> true, "will not be thrown");
+  }
+  
+  @Test(expected=AssertionError.class)
+  public void testAssertConditionFail() {
+    Assertions.assertCondition(() -> false, "will be thrown");
   }
 }

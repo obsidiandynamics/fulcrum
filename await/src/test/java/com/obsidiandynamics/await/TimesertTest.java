@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import com.obsidiandynamics.indigo.util.*;
+import com.obsidiandynamics.threads.*;
 
 import junit.framework.*;
 
@@ -43,7 +43,7 @@ public final class TimesertTest {
     final AtomicInteger calls = new AtomicInteger();
     Timesert.wait(0).withIntervalMillis(1).until(() -> { 
       if (calls.getAndIncrement() == 0) {
-        TestSupport.sleep(1);
+        Threads.sleep(1);
         throw new AssertionError("Boom"); 
       }
     });

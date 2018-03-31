@@ -14,13 +14,14 @@ import org.junit.runner.*;
 import org.junit.runners.*;
 
 import com.obsidiandynamics.await.*;
-import com.obsidiandynamics.indigo.util.*;
 import com.obsidiandynamics.junit.*;
-import com.obsidiandynamics.testsupport.*;
+import com.obsidiandynamics.parallel.*;
+import com.obsidiandynamics.testmark.*;
+import com.obsidiandynamics.threads.*;
 
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class TaskSchedulerTest implements TestSupport {
+public final class TaskSchedulerTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
     return TestCycle.timesQuietly(1);
@@ -105,7 +106,7 @@ public final class TaskSchedulerTest implements TestSupport {
     final CyclicBarrier barrier = new CyclicBarrier(2);
     scheduler.schedule(new AbstractTask<Long>(0, -1L) {
       @Override public void execute(TaskScheduler scheduler) {
-        TestSupport.await(barrier);
+        Threads.await(barrier);
       }
     });
     
@@ -125,7 +126,7 @@ public final class TaskSchedulerTest implements TestSupport {
       }
     }
     
-    TestSupport.await(barrier); // resume scheduling
+    Threads.await(barrier); // resume scheduling
    
     Collections.reverse(ids);
     wait.until(receiver.isSize(tasks));
@@ -138,7 +139,7 @@ public final class TaskSchedulerTest implements TestSupport {
   }
   
   private void testParallelSchedule(int addThreads, int tasksPerThread) {
-    ParallelJob.blocking(addThreads, threadIdx -> {
+    Parallel.blocking(addThreads, threadIdx -> {
       final List<UUID> ids = new ArrayList<>(tasksPerThread);
       for (int i = 0; i < tasksPerThread; i++) {
         final TestTask task = doIn(new UUID(threadIdx, i), i);
@@ -164,7 +165,7 @@ public final class TaskSchedulerTest implements TestSupport {
     }
    
     scheduler.clear();
-    TestSupport.sleep(10);
+    Threads.sleep(10);
     assertTrue(receiver.ids.size() <= tasks);
   }
   
@@ -393,7 +394,7 @@ public final class TaskSchedulerTest implements TestSupport {
     final long startNanos = System.nanoTime();
 
     final long tasksPerThread = tasks / submissionThreads;
-    ParallelJob.blocking(submissionThreads, threadIdx -> {
+    Parallel.blocking(submissionThreads, threadIdx -> {
       for (int i = 0; i < tasksPerThread; i++) {
         final long delayNanos = (long) (Math.random() * (maxDelayNanos - minDelayNanos)) + minDelayNanos;
         final TestTask task = new TestTask(startNanos + delayNanos, 

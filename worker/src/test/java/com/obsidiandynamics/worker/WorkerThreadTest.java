@@ -15,8 +15,8 @@ import org.junit.runners.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.await.*;
-import com.obsidiandynamics.indigo.util.*;
 import com.obsidiandynamics.junit.*;
+import com.obsidiandynamics.threads.*;
 
 @RunWith(Parameterized.class)
 public final class WorkerThreadTest {
@@ -46,7 +46,7 @@ public final class WorkerThreadTest {
     final boolean joined = thread.joinSilently(60_000);
     assertTrue(joined);
     assertEquals(1, counter.get());
-    TestSupport.sleep(10);
+    Threads.sleep(10);
     assertEquals(1, counter.get());
     assertFalse(thread.getDriverThread().isAlive());
     assertEquals(WorkerState.TERMINATED, thread.getState());

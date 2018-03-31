@@ -39,8 +39,20 @@ project(":fulcrum-scheduler").projectDir = new File(settingsDir, "scheduler")
 include "fulcrum-worker"
 project(":fulcrum-worker").projectDir = new File(settingsDir, "worker")
 
-include "fulcrum-test-support"
-project(":fulcrum-test-support").projectDir = new File(settingsDir, "test-support")
+include "fulcrum-testmark"
+project(":fulcrum-testmark").projectDir = new File(settingsDir, "testmark")
 
 include "fulcrum-flow"
 project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
+
+include "fulcrum-launcher"
+project(":fulcrum-launcher").projectDir = new File(settingsDir, "launcher")
+
+include "fulcrum-props"
+project(":fulcrum-props").projectDir = new File(settingsDir, "props")
+
+include "fulcrum-threads"
+project(":fulcrum-threads").projectDir = new File(settingsDir, "threads")
+
+include "fulcrum-parallel"
+project(":fulcrum-parallel").projectDir = new File(settingsDir, "parallel")

@@ -6,7 +6,9 @@ dependencies {
   testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-await")
   testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-test-support")
+  testCompile project(":fulcrum-parallel")
+  testCompile project(":fulcrum-testmark")
+  testCompile project(":fulcrum-threads")
 }
 
 jar {

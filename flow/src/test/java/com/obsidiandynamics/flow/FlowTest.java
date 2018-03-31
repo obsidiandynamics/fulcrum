@@ -12,8 +12,8 @@ import org.junit.runner.*;
 import org.junit.runners.*;
 
 import com.obsidiandynamics.await.*;
-import com.obsidiandynamics.indigo.util.*;
 import com.obsidiandynamics.junit.*;
+import com.obsidiandynamics.threads.*;
 
 @RunWith(Parameterized.class)
 public final class FlowTest {
@@ -66,7 +66,7 @@ public final class FlowTest {
       flow.begin(i, new TestTask(completed, i));
     }
 
-    TestSupport.sleep(10);
+    Threads.sleep(10);
     assertEquals(0, completed.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
@@ -79,7 +79,7 @@ public final class FlowTest {
     final List<Integer> completed = new CopyOnWriteArrayList<>();
     final List<FlowConfirmation> cons = new ArrayList<>(runs);
 
-    TestSupport.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
+    Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     
     cons.forEach(a -> a.confirm());
@@ -159,7 +159,7 @@ public final class FlowTest {
       flow.begin(i, new TestTask(completed, i));
     }
 
-    TestSupport.sleep(10);
+    Threads.sleep(10);
     assertEquals(0, completed.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
@@ -172,7 +172,7 @@ public final class FlowTest {
     final List<Integer> completed = new CopyOnWriteArrayList<>();
     final List<FlowConfirmation> cons = new ArrayList<>(runs);
 
-    TestSupport.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
+    Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).delayedBy(1).forEach(a -> a.confirm());
 
@@ -270,7 +270,7 @@ public final class FlowTest {
       
       void forEach(Consumer<T> consumer) {
         list.forEach(t -> {
-          if (delayMillis != 0) TestSupport.sleep(delayMillis); else Thread.yield();
+          if (delayMillis != 0) Threads.sleep(delayMillis); else Thread.yield();
           consumer.accept(t);
         });
       }

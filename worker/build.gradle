@@ -5,6 +5,7 @@ dependencies {
   compile project(":fulcrum-concat")
   testCompile project(":fulcrum-await")
   testCompile project(":fulcrum-junit")
+  testCompile project(":fulcrum-threads")
 }
 
 jar {

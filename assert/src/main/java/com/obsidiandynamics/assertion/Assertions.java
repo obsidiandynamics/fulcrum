@@ -2,6 +2,7 @@ package com.obsidiandynamics.assertion;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.*;
 
 /**
  *  Common assertions.
@@ -18,12 +19,54 @@ public final class Assertions {
     return not(assertRunnable(asserterOfTrue(false)));
   }
   
+  /**
+   *  Conditionally runs a given {@code runnable} block of code if
+   *  assertions are enabled.
+   *  
+   *  @param runnable The code to run.
+   */
+  public static void runIfEnabled(Runnable runnable) {
+    runIf(Assertions::areEnabled, runnable);
+  }
+  
   static Runnable asserterOfTrue(boolean b) {
     return () -> AssertionsEnabledUncovered.doAssert(b);
   }
   
   static boolean not(boolean b) {
     return ! b;
+  }
+  
+  static void runIf(BooleanSupplier condition, Runnable runnable) {
+    if (condition.getAsBoolean()) runnable.run();
+  }
+  
+  /**
+   *  Asserts a Boolean condition if assertions are enabled. If the condition fails, an
+   *  {@link AssertionError} with the given message {@code format} and {@code args}.
+   *  
+   *  @param condition The condition to test.
+   *  @param format The error message format.
+   *  @param args Formatting arguments.
+   */
+  public static void assertCondition(BooleanSupplier condition, String format, Object... args) {
+    assertCondition(condition, () -> String.format(format, args));
+  }
+  
+  /**
+   *  Asserts a Boolean condition if assertions are enabled. If the condition fails, an
+   *  {@link AssertionError} with the message prescribed by {@code messageMaker} is
+   *  thrown.
+   *  
+   *  @param condition The condition to test.
+   *  @param messageMaker A way of constructing the error message.
+   */
+  public static void assertCondition(BooleanSupplier condition, Supplier<String> messageMaker) {
+    runIfEnabled(() -> {
+      if (! condition.getAsBoolean()) {
+        throw new AssertionError(messageMaker.get());
+      }
+    });
   }
   
   /**
