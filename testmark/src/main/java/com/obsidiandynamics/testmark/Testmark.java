@@ -7,9 +7,6 @@ import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.resolver.*;
 
 public final class Testmark {
-  @FunctionalInterface
-  public interface LogLine extends Consumer<String> {}
-  
   private static class TestmarkConfig {
     boolean enabled;
   }
@@ -74,9 +71,9 @@ public final class Testmark {
     if (isEnabled()) {
       final LogLine logLine = getOptions(LogLine.class, Testmark::sysOut);
       if (name != null) {
-        logLine.accept(String.format("Starting benchmark (%s)...", name));
+        logLine.printf("Starting benchmark (%s)...", name);
       } else {
-        logLine.accept(String.format("Starting benchmark..."));
+        logLine.println("Starting benchmark...");
       }
       try {
         r.run();

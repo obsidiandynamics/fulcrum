@@ -8,7 +8,6 @@ import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
-import com.obsidiandynamics.testmark.Testmark.LogLine;
 
 public final class TestmarkTest {
   @After
@@ -33,24 +32,26 @@ public final class TestmarkTest {
   public void testEnabledNoName() throws Exception {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
+    doCallRealMethod().when(logLine).printf(any(), any());
     Testmark.enable().withOptions(LogLine.class, logLine);
     assertTrue(Testmark.isEnabled());
     
     Testmark.ifEnabled(r);
     verify(r).run();
-    verify(logLine).accept(isNotNull());
+    verify(logLine).println(isNotNull());
   }
   
   @Test
   public void testEnabledWithName() throws Exception {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
+    doCallRealMethod().when(logLine).printf(any(), any());
     Testmark.enable().withOptions(LogLine.class, logLine);
     assertTrue(Testmark.isEnabled());
     
     Testmark.ifEnabled("name", r);
     verify(r).run();
-    verify(logLine).accept(isNotNull());
+    verify(logLine).println(isNotNull());
   }
   
   @Test
@@ -69,13 +70,14 @@ public final class TestmarkTest {
     final Exception cause = new Exception("test exception");
     doThrow(cause).when(r).run();
     final LogLine logLine = mock(LogLine.class);
+    doCallRealMethod().when(logLine).printf(any(), any());
     final ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
     Testmark.enable().withOptions(LogLine.class, logLine).withOptions(ExceptionHandler.class, exceptionHandler);
     assertTrue(Testmark.isEnabled());
     
     Testmark.ifEnabled(r);
     verify(r).run();
-    verify(logLine).accept(isNotNull());
+    verify(logLine).println(isNotNull());
     verify(exceptionHandler).onException(notNull(), eq(cause));
   }
   
@@ -83,6 +85,7 @@ public final class TestmarkTest {
   public void testEnabledWithScale() throws Exception {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
+    doCallRealMethod().when(logLine).printf(any(), any());
     Testmark.enable().withOptions(Scale.by(10)).withOptions(LogLine.class, logLine);
     assertTrue(Testmark.isEnabled());
     doAnswer(invocation -> {
@@ -93,6 +96,6 @@ public final class TestmarkTest {
     
     Testmark.ifEnabled(r);
     verify(r).run();
-    verify(logLine).accept(isNotNull());
+    verify(logLine).println(isNotNull());
   }
 }
