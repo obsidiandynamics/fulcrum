@@ -56,3 +56,6 @@ project(":fulcrum-threads").projectDir = new File(settingsDir, "threads")
 
 include "fulcrum-parallel"
 project(":fulcrum-parallel").projectDir = new File(settingsDir, "parallel")
+
+include "fulcrum-nanoclock"
+project(":fulcrum-nanoclock").projectDir = new File(settingsDir, "nanoclock")
