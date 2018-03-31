@@ -2,6 +2,7 @@ package com.obsidiandynamics.testmark;
 
 import java.util.function.*;
 
+import com.obsidiandynamics.classes.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.resolver.*;
 
@@ -49,8 +50,7 @@ public final class Testmark {
   }
   
   public static <T> void setOptions(T options) {
-    @SuppressWarnings("unchecked")
-    final Class<T> optionsType = (Class<T>) options.getClass();
+    final Class<T> optionsType = Classes.cast(options.getClass());
     setOptions(optionsType, options);
   }
   

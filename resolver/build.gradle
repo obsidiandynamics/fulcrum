@@ -2,6 +2,7 @@ def packageName = "fulcrum-resolver"
 version = project(":").version
 
 dependencies {
+  compile project(":fulcrum-classes")
   testCompile project(":fulcrum-assert")
 }
 

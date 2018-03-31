@@ -2,6 +2,9 @@ package com.obsidiandynamics.worker;
 
 import java.util.*;
 
+import com.obsidiandynamics.classes.*;
+
+
 /**
  *  An abstract base class for fluently composing elements into an operational set that (typically)
  *  would take on the properties of each of its underlying members, thereby permitting bulk operations
@@ -44,9 +47,8 @@ public abstract class FluentOperatingSet<E, O extends FluentOperatingSet<E, O>> 
     return Collections.unmodifiableCollection(new HashSet<>(elements));
   }
   
-  @SuppressWarnings("unchecked")
   private O self() {
-    return (O) this;
+    return Classes.cast(this);
   }
   
   @Override
