@@ -8,7 +8,7 @@ import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
-import com.obsidiandynamics.testmark.Testmark.*;
+import com.obsidiandynamics.testmark.Testmark.LogLine;
 
 public final class TestmarkTest {
   @After

@@ -65,3 +65,6 @@ project(":fulcrum-retry").projectDir = new File(settingsDir, "retry")
 
 include "fulcrum-classes"
 project(":fulcrum-classes").projectDir = new File(settingsDir, "classes")
+
+include "fulcrum-jgroups"
+project(":fulcrum-jgroups").projectDir = new File(settingsDir, "jgroups")
