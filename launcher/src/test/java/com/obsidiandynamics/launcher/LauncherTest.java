@@ -17,22 +17,6 @@ public final class LauncherTest {
   public void testConformance() throws Exception {
     Assertions.assertUtilityClassWellDefined(Launcher.class);
   }
-  
-  @Test
-  public void testFormatClass() {
-    final String className = "com.obsidiandynamics.foo.Bar";
-    assertEquals(className, Launcher.formatClass(className, 0));
-    assertEquals("c.obsidiandynamics.foo.Bar", Launcher.formatClass(className, 1));
-    assertEquals("c.o.f.Bar", Launcher.formatClass(className, 3));
-    assertEquals("c.o.f.Bar", Launcher.formatClass(className, 4));
-  }
-
-  @Test
-  public void testFormatClassDefaultPackage() {
-    final String className = "Bar";
-    assertEquals(className, Launcher.formatClass(className, 0));
-    assertEquals(className, Launcher.formatClass(className, 1));
-  }
 
   @Test
   public void testMatchClass() {

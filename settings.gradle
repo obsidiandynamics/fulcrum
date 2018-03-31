@@ -62,3 +62,6 @@ project(":fulcrum-nanoclock").projectDir = new File(settingsDir, "nanoclock")
 
 include "fulcrum-retry"
 project(":fulcrum-retry").projectDir = new File(settingsDir, "retry")
+
+include "fulcrum-classes"
+project(":fulcrum-classes").projectDir = new File(settingsDir, "classes")

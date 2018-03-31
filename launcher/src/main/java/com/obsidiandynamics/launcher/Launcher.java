@@ -4,6 +4,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.obsidiandynamics.classes.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.props.*;
 import com.obsidiandynamics.resolver.*;
@@ -51,7 +52,7 @@ public final class Launcher {
     } else {
       options.out.printf("Select class to run\n");
       for (int i = 0; i < classes.length; i++) {
-        options.out.printf("[%2d] %s\n", i + 1, formatClass(classes[i], options.packageCompressLevel));
+        options.out.printf("[%2d] %s\n", i + 1, Classes.compressPackage(classes[i], options.packageCompressLevel));
       }
       
       final String read = options.in.readLine();
@@ -77,20 +78,6 @@ public final class Launcher {
   
   static String matchClass(String partialClassName, String[] classes) {
     return Arrays.stream(classes).filter(c -> c.endsWith(partialClassName)).findAny().orElse(null);
-  }
-  
-  static String formatClass(String className, int packageCompressLevel) {
-    final String[] frags = className.split("\\.");
-    final StringBuilder formatted = new StringBuilder();
-    for (int i = 0; i < frags.length; i++) {
-      if (formatted.length() != 0) formatted.append('.');
-      if (i < packageCompressLevel && i < frags.length - 1) {
-        formatted.append(frags[i].charAt(0));
-      } else {
-        formatted.append(frags[i]);
-      }
-    }
-    return formatted.toString();
   }
   
   static void run(String className) throws Exception {

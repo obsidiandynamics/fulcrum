@@ -1,11 +1,7 @@
-def packageName = "fulcrum-launcher"
+def packageName = "fulcrum-classes"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-classes")
-  compile project(":fulcrum-func")
-  compile project(":fulcrum-props")
-  compile project(":fulcrum-resolver")
   testCompile project(":fulcrum-assert")
 }
 
@@ -51,7 +47,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Launch applications from Gradle"
+def packageDesc = "Utilities for working with objects and classes"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)
