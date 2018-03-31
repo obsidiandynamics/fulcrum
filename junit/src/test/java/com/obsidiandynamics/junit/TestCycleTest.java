@@ -12,7 +12,7 @@ import com.obsidiandynamics.assertion.*;
 
 public final class TestCycleTest {
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(TestCycle.class);
   }
   

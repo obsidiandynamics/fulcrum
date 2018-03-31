@@ -16,18 +16,18 @@ public final class AssertionsTest {
   }
   
   @Test
-  public void testSelfConformance() throws Exception {
+  public void testSelfConformance() {
     Assertions.assertUtilityClassWellDefined(Assertions.class);
   }
   
   @Test(expected=AssertionError.class)
-  public void testConformanceNonFinal() throws Exception {
+  public void testConformanceNonFinal() {
     class NonFinal {}
     Assertions.assertUtilityClassWellDefined(NonFinal.class);
   }
   
   @Test(expected=AssertionError.class)
-  public void testConformanceMultipleConstructors() throws Exception {
+  public void testConformanceMultipleConstructors() {
     final class MultipleConstructors {
       @SuppressWarnings("unused")
       MultipleConstructors(String s) {}
@@ -43,7 +43,7 @@ public final class AssertionsTest {
   }
   
   @Test(expected=AssertionError.class)
-  public void testConformanceNonPrivateConstructor() throws Exception {
+  public void testConformanceNonPrivateConstructor() {
     Assertions.assertUtilityClassWellDefined(NonPrivateConstructor.class);
   }
   
@@ -54,20 +54,31 @@ public final class AssertionsTest {
   }
   
   @Test(expected=AssertionError.class)
-  public void testConformanceNonStaticMethods() throws Exception {
+  public void testConformanceNonStaticMethods() {
     Assertions.assertUtilityClassWellDefined(NonStaticMethods.class);
+  }
+  
+  static final class ErrorInInitializer {
+    private ErrorInInitializer() {
+      throw new RuntimeException("test exception");
+    }
+  }
+  
+  @Test(expected=AssertionError.class)
+  public void testConformanceReflectionError() {
+    Assertions.assertUtilityClassWellDefined(ErrorInInitializer.class);
   }
   
   @Test
   public void testToStringOverridePass() {
-    class ToStringOverriden {
+    class ToStringOverridden {
       @Override public String toString() { return "toString()"; }
     }
-    Assertions.assertToStringOverride(new ToStringOverriden());
+    Assertions.assertToStringOverride(new ToStringOverridden());
   }
   
   @Test(expected=AssertionError.class)
-  public void testToStringOverridenFail() {
+  public void testToStringOverriddenFail() {
     Assertions.assertToStringOverride(new Object());
   }
   

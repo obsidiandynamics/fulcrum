@@ -13,7 +13,7 @@ public final class ResolverTest {
   }
   
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Resolver.class);
   }
 

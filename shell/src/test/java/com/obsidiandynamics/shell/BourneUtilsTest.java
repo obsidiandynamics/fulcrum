@@ -13,7 +13,7 @@ public final class BourneUtilsTest {
   }
   
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(BourneUtils.class);
   }
 

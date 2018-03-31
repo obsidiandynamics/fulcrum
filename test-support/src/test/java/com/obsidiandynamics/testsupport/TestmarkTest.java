@@ -19,7 +19,7 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Testmark.class);
   }
   

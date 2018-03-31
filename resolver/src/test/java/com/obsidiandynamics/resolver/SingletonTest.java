@@ -10,7 +10,7 @@ import com.obsidiandynamics.assertion.*;
 
 public final class SingletonTest {
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Singleton.class);
   }
   

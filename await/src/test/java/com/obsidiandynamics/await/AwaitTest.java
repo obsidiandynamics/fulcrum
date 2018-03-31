@@ -56,7 +56,7 @@ public final class AwaitTest {
   }
 
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Await.class);
   }
 }

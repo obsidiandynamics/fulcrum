@@ -55,7 +55,7 @@ public final class Assertions {
       throw new AssertionError("The toString() method does not appear to have been overridden");
     }
   }
-
+  
   /**
    *  Verifies that a utility class is well defined.
    *
@@ -63,9 +63,8 @@ public final class Assertions {
    *  https://github.com/trajano/maven-jee6/blob/master/maven-jee6-test/src/test/java/net/trajano/maven_jee6/test/test/UtilityClassTestUtilTest.java
    *
    *  @param cls Utility class to verify.
-   *  @throws Exception If an error occurred.
    */
-  public static void assertUtilityClassWellDefined(Class<?> cls) throws Exception {
+  public static void assertUtilityClassWellDefined(Class<?> cls) {
     if (! Modifier.isFinal(cls.getModifiers())) {
       throw new AssertionError("Class must be final");
     }
@@ -74,17 +73,21 @@ public final class Assertions {
       throw new AssertionError("There must be exactly one construtor");
     }
     
-    final Constructor<?> constructor = cls.getDeclaredConstructor();
-    if (! Modifier.isPrivate(constructor.getModifiers())) {
-      throw new AssertionError("Constructor is not private");
-    }
-    constructor.setAccessible(true);
-    constructor.newInstance();
-    constructor.setAccessible(false);
-    for (Method method : cls.getDeclaredMethods()) {
-      if (! Modifier.isStatic(method.getModifiers())) {
-        throw new AssertionError("There exists a non-static method: " + method);
+    try {
+      final Constructor<?> constructor = cls.getDeclaredConstructor();
+      if (! Modifier.isPrivate(constructor.getModifiers())) {
+        throw new AssertionError("Constructor is not private");
       }
+      constructor.setAccessible(true);
+      constructor.newInstance();
+      constructor.setAccessible(false);
+      for (Method method : cls.getDeclaredMethods()) {
+        if (! Modifier.isStatic(method.getModifiers())) {
+          throw new AssertionError("There exists a non-static method: " + method);
+        }
+      }
+    } catch (Exception e) {
+      throw new AssertionError(e);
     }
   }
 }
