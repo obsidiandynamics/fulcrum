@@ -52,7 +52,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Synchronous messaging with JGroups"
+def packageDesc = "Synchronous messaging overlay for JGroups"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)
