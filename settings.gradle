@@ -32,3 +32,12 @@ project(":fulcrum-resolver").projectDir = new File(settingsDir, "resolver")
 
 include "fulcrum-node-queue"
 project(":fulcrum-node-queue").projectDir = new File(settingsDir, "node-queue")
+
+include "fulcrum-scheduler"
+project(":fulcrum-scheduler").projectDir = new File(settingsDir, "scheduler")
+
+include "fulcrum-worker"
+project(":fulcrum-worker").projectDir = new File(settingsDir, "worker")
+
+include "fulcrum-test-support"
+project(":fulcrum-test-support").projectDir = new File(settingsDir, "test-support")
