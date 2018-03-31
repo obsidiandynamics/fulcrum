@@ -21,6 +21,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-parallel`](https://github.com/obsidiandynamics/fulcrum/tree/master/parallel) — Runs jobs in parallel
 * [`fulcrum-props`](https://github.com/obsidiandynamics/fulcrum/tree/master/props) — Utilities for working with `Properties`
 * [`fulcrum-resolver`](https://github.com/obsidiandynamics/fulcrum/tree/master/resolver) — A lightweight Contextual Service Locator pattern implementation
+* [`fulcrum-retry`](https://github.com/obsidiandynamics/fulcrum/tree/master/retry) — Retries actions that may throw a `RuntimeException`
 * [`fulcrum-scheduler`](https://github.com/obsidiandynamics/fulcrum/tree/master/scheduler) — A fast task scheduler
 * [`fulcrum-select`](https://github.com/obsidiandynamics/fulcrum/tree/master/select) — Functional object matching
 * [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) — Assists in the execution of shells and processes
