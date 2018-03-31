@@ -4,14 +4,11 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.*;
-
 import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.testmark.Testmark.*;
-import com.obsidiandynamics.testmark.Testmark.ExceptionHandler;
 
 public final class TestmarkTest {
   @After
@@ -62,14 +59,6 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testPrintStreamExceptionHandler() {
-    final PrintStream stream = mock(PrintStream.class);
-    final ExceptionHandler printStreamExceptionHandler = Testmark.printStreamExceptionHandler(stream);
-    printStreamExceptionHandler.accept(new Exception("test exception"));
-    verify(stream, atLeastOnce()).println(isA(Object.class));
-  }
-  
-  @Test
   public void testSysErrExceptionHandler() {
     assertNotNull(Testmark.sysErrExceptionHandler());
   }
@@ -87,7 +76,7 @@ public final class TestmarkTest {
     Testmark.ifEnabled(r);
     verify(r).run();
     verify(logLine).accept(isNotNull());
-    verify(exceptionHandler).accept(eq(cause));
+    verify(exceptionHandler).onException(notNull(), eq(cause));
   }
   
   @Test

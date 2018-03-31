@@ -1,6 +1,5 @@
 package com.obsidiandynamics.testmark;
 
-import java.io.*;
 import java.util.function.*;
 
 import com.obsidiandynamics.func.*;
@@ -9,9 +8,6 @@ import com.obsidiandynamics.resolver.*;
 public final class Testmark {
   @FunctionalInterface
   public interface LogLine extends Consumer<String> {}
-  
-  @FunctionalInterface
-  public interface ExceptionHandler extends Consumer<Throwable> {}
   
   private static class TestmarkConfig {
     boolean enabled;
@@ -71,11 +67,7 @@ public final class Testmark {
   }
   
   static ExceptionHandler sysErrExceptionHandler() {
-    return printStreamExceptionHandler(System.err);
-  }
-  
-  static ExceptionHandler printStreamExceptionHandler(PrintStream stream) {
-    return error -> error.printStackTrace(stream);
+    return ExceptionHandler.forPrintStream(System.err);
   }
   
   public static <X extends Exception> void ifEnabled(String name, CheckedRunnable<X> r) {
@@ -90,7 +82,7 @@ public final class Testmark {
         r.run();
       } catch (Throwable e) {
         final ExceptionHandler exceptionHandler = getOptions(ExceptionHandler.class, Testmark::sysErrExceptionHandler);
-        exceptionHandler.accept(e);
+        exceptionHandler.onException("Unexpected error running benchmark", e);
       }
     }
   }
