@@ -41,3 +41,6 @@ project(":fulcrum-worker").projectDir = new File(settingsDir, "worker")
 
 include "fulcrum-test-support"
 project(":fulcrum-test-support").projectDir = new File(settingsDir, "test-support")
+
+include "fulcrum-flow"
+project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
