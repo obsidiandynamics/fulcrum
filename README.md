@@ -30,6 +30,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-testmark`](https://github.com/obsidiandynamics/fulcrum/tree/master/testmark) — Toggleable benchmark for use in unit tests
 * [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) — Loads the application version and build number
 * [`fulcrum-worker`](https://github.com/obsidiandynamics/fulcrum/tree/master/worker) — Worker thread with lifecycle management
+* [`fulcrum-zlg`](https://github.com/obsidiandynamics/fulcrum/tree/master/zlg) — Near-zero overhead logging for performance-sensitive applications
 
 # Getting started
 Select just the module(s) that you need from the list above. Each module has a short README describing its use.
