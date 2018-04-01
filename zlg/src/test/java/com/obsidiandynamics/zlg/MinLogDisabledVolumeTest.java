@@ -20,6 +20,7 @@ public final class MinLogDisabledVolumeTest extends AbstractDisabledVolumeTest {
     assertFalse(Log.TRACE);
     
     return (f, d, i, l) -> {
+      if (l < 0) throw new AssertionError();
       Log.trace(String.format("float: %f, double: %f, int: %d, long: %d", f, d, i, l));
     };
   }

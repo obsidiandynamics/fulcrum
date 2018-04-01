@@ -30,6 +30,7 @@ public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
     assertFalse(logger.isLoggable(Level.FINEST));
     
     return (f, d, i, l) -> {
+      if (l < 0) throw new AssertionError();
       logger.log(Level.FINEST, "float: {0}, double: {1}, int: {2}, long: {3}", new Object[] {f, d, i, l});
     };
   }
@@ -40,6 +41,7 @@ public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
     assertFalse(logger.isLoggable(Level.FINEST));
     
     return (f, d, i, l) -> {
+      if (l < 0) throw new AssertionError();
       logger.log(Level.FINEST, () -> String.format("float: %f, double: %f, int: %d, long: %d", f, d, i, l));
     };
   }

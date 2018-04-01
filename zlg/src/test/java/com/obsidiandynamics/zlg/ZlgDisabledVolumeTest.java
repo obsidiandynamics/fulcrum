@@ -24,6 +24,7 @@ public final class ZlgDisabledVolumeTest extends AbstractDisabledVolumeTest {
     assertFalse(z.isEnabled(LogLevel.TRACE));
     
     return (f, d, i, l) -> {
+      if (l < 0) throw new AssertionError();
       z.t("float: %f, double: %f, int: %d, long: %d").arg(f).arg(d).arg(i).arg(l).log();
     };
   }

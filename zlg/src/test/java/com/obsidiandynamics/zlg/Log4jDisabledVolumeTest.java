@@ -20,6 +20,7 @@ public final class Log4jDisabledVolumeTest extends AbstractDisabledVolumeTest {
     assertFalse(logger.isTraceEnabled());
     
     return (f, d, i, l) -> {
+      if (l < 0) throw new AssertionError();
       LogMF.trace(logger, "float: {}, double: {}, int: {}, long: {}", f, d, i, l);
     };
   }
