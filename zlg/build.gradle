@@ -2,6 +2,7 @@ def packageName = "fulcrum-zlg"
 version = project(":").version
 
 dependencies {
+  testCompile project(":fulcrum-testmark")
 }
 
 jar {
