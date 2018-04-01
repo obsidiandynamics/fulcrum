@@ -19,7 +19,7 @@ public final class BaselineDisabledVolumeTest extends AbstractDisabledVolumeTest
   
   private static TestCycle cycle() {
     return (f, d, i, l) -> {
-      if (l < 0) throw new AssertionError();
+      consumeArgs(f, d, i, l);
     };
   }
   

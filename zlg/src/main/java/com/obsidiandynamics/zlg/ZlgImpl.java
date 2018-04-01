@@ -16,7 +16,7 @@ final class ZlgImpl implements Zlg {
     TooManyArgsException(String m) { super(m); }
   }
   
-  static int MAX_ARGS = 8;
+  static int MAX_ARGS = 16;
   
   private class LevelChainImpl implements LevelChain {
     private LogLevel level;

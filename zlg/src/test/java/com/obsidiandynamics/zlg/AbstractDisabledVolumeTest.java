@@ -29,10 +29,10 @@ public abstract class AbstractDisabledVolumeTest {
       // Generate random numbers to avoid cache hits for boxed primitives and any JIT optimisations.
       // Each primitive is assigned from another in a cascade. The last primitive is asserted by each
       // of the target sinks to avoid JIT dead code elimination.
-      final double randomDouble = RandomFP.toDouble(random.nextLong());
+      final long randomLong = random.nextLong();
+      final double randomDouble = RandomFP.toDouble(randomLong);
       final float randomFloat = (float) randomDouble;
       final int randomInt = (int) (Integer.MAX_VALUE * randomFloat);
-      final long randomLong = randomInt;
       
       cycle.cycle(randomFloat, randomDouble, randomInt, randomLong);
       cycles++;
@@ -58,5 +58,11 @@ public abstract class AbstractDisabledVolumeTest {
       final double tookMillis = took / 1_000_000d;
       System.out.format("%-10s: %,d cycles took %,.0f ms, %,.2f ns/cycle\n", name, cycles, tookMillis, perCycle);
     }
+  }
+  
+  protected static void consumeArgs(float randomFloat, double randomDouble, int randomInt, long randomLong) {
+    // randomInt is the last primitive in the assignment chain, so testing it guarantees that all prior
+    // operations have been carried out
+    if (randomInt < 0) throw new AssertionError();
   }
 }

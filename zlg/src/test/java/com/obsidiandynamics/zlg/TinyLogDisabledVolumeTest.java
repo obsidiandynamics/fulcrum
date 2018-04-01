@@ -24,7 +24,7 @@ public final class TinyLogDisabledVolumeTest extends AbstractDisabledVolumeTest 
     assertEquals(Level.INFO, Logger.getLevel());
     
     return (f, d, i, l) -> {
-      if (l < 0) throw new AssertionError();
+      consumeArgs(f, d, i, l);
       Logger.trace("float: {}, double: {}, int: {}, long: {}", f, d, i, l);
     };
   }
