@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 
 @FunctionalInterface
-public interface CheckedConsumer<T, X extends Exception> {
+public interface CheckedConsumer<T, X extends Throwable> {
   void accept(T t) throws X;
 
   default CheckedConsumer<T, X> andThen(CheckedConsumer<? super T, ? extends X> after) {

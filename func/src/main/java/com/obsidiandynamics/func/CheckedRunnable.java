@@ -1,7 +1,7 @@
 package com.obsidiandynamics.func;
 
 @FunctionalInterface
-public interface CheckedRunnable<X extends Exception> {
+public interface CheckedRunnable<X extends Throwable> {
   void run() throws X;
   
   /**

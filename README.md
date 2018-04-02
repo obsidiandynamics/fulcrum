@@ -15,6 +15,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
 * [`fulcrum-flow`](https://github.com/obsidiandynamics/fulcrum/tree/master/flow) — Strictly ordered joining of parallel tasks
 * [`fulcrum-func`](https://github.com/obsidiandynamics/fulcrum/tree/master/func) — Functional interfaces that throw checked exceptions
+* [`fulcrum-io`](https://github.com/obsidiandynamics/fulcrum/tree/master/io) — File and socket I/O
 * [`fulcrum-jgroups`](https://github.com/obsidiandynamics/fulcrum/tree/master/jgroups) — Synchronous messaging overlay for JGroups
 * [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) — JUnit utilities
 * [`fulcrum-launcher`](https://github.com/obsidiandynamics/fulcrum/tree/master/launcher) — Launch applications from Gradle

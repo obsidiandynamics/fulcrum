@@ -8,6 +8,7 @@ import java.util.concurrent.*;
 import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
+import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.threads.*;
 
 public final class ThreadsTest {
@@ -76,12 +77,13 @@ public final class ThreadsTest {
   
   @Test
   public void testWrapInRuntimeExceptionNormal() {
-    Threads.wrapInRuntimeException(() -> {}, TestRuntimeException::new);
+    final int out = Threads.wrap(() -> 42, TestRuntimeException::new);
+    assertEquals(42, out);
   }
   
   @Test(expected=TestRuntimeException.class)
   public void testWrapInRuntimeExceptionThrown() {
-    Threads.wrapInRuntimeException(() -> {
+    Threads.wrap((CheckedRunnable<?>) () -> {
       throw new IOException("test exception");
     }, TestRuntimeException::new);
   }

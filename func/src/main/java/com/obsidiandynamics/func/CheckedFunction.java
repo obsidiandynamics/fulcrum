@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 
 @FunctionalInterface
-public interface CheckedFunction<T, R, X extends Exception> {
+public interface CheckedFunction<T, R, X extends Throwable> {
   R apply(T t) throws X;
 
   default <V> CheckedFunction<V, R, X> compose(CheckedFunction<? super V, ? extends T, ? extends X> before) {

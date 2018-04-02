@@ -1,19 +1,8 @@
-def packageName = "fulcrum-zlg"
+def packageName = "fulcrum-io"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-classes")
-  compile project(":fulcrum-io")
-  compile project(":fulcrum-props")
-  compile project(":fulcrum-threads")
-  
   testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-testmark")
-  testCompile "com.squidpony:squidlib-util:3.0.0-b9" // used for RNG
-  testCompile "org.slf4j:slf4j-api:1.7.25"
-  testCompile "log4j:log4j:1.2.17"
-  testCompile "org.tinylog:tinylog:1.3.4"
-  testRuntime "org.slf4j:slf4j-log4j12:1.7.25"
 }
 
 jar {
@@ -58,7 +47,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Near-zero overhead logging for performance-sensitive applications"
+def packageDesc = "Fluid API for selective concatenation of strings"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

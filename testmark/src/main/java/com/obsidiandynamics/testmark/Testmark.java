@@ -55,7 +55,7 @@ public final class Testmark {
     Resolver.assign(optionsType, Singleton.of(options));
   }
   
-  public static <X extends Exception> void ifEnabled(CheckedRunnable<X> r) {
+  public static <X extends Throwable> void ifEnabled(CheckedRunnable<X> r) {
     ifEnabled(null, r);
   }
   
@@ -67,7 +67,7 @@ public final class Testmark {
     return ExceptionHandler.forPrintStream(System.err);
   }
   
-  public static <X extends Exception> void ifEnabled(String name, CheckedRunnable<X> r) {
+  public static <X extends Throwable> void ifEnabled(String name, CheckedRunnable<X> r) {
     if (isEnabled()) {
       final LogLine logLine = getOptions(LogLine.class, Testmark::sysOut);
       if (name != null) {

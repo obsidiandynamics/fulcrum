@@ -29,7 +29,7 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testEnabledNoName() throws Exception {
+  public void testEnabledNoName() throws Throwable {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
     doCallRealMethod().when(logLine).printf(any(), any());
@@ -42,7 +42,7 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testEnabledWithName() throws Exception {
+  public void testEnabledWithName() throws Throwable {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
     doCallRealMethod().when(logLine).printf(any(), any());
@@ -65,7 +65,7 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testEnabledWithError() throws Exception {
+  public void testEnabledWithError() throws Throwable {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final Exception cause = new Exception("test exception");
     doThrow(cause).when(r).run();
@@ -82,7 +82,7 @@ public final class TestmarkTest {
   }
   
   @Test
-  public void testEnabledWithScale() throws Exception {
+  public void testEnabledWithScale() throws Throwable {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
     final LogLine logLine = mock(LogLine.class);
     doCallRealMethod().when(logLine).printf(any(), any());

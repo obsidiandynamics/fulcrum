@@ -1,7 +1,22 @@
 package com.obsidiandynamics.zlg;
 
+import static com.obsidiandynamics.zlg.PropertiesConfigService.*;
+
+import java.net.*;
+
+import com.obsidiandynamics.props.*;
+
+/**
+ *  Fluent builder for {@link Zlg} instance.
+ */
 public final class ZlgBuilder {
-  private static final LogConfig defaultConfigService = new LogConfig();
+  public static final String KEY_DEFAULT_CONFIG_URI = "zlg.default.config.uri";
+  
+  /** The default URI to load the properties file from. Supports both cp:// and file:// schemes. */
+  private static final URI defaultConfigUri = Props.get(KEY_DEFAULT_CONFIG_URI, URI::create, URI.create("cp://zlg.properties"));
+  
+  /** The default config service. */
+  private static final ConfigService defaultConfigService = new PropertiesConfigService(forUri(defaultConfigUri));
   
   private final String name;
   

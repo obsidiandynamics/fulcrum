@@ -71,3 +71,6 @@ project(":fulcrum-jgroups").projectDir = new File(settingsDir, "jgroups")
 
 include "fulcrum-zlg"
 project(":fulcrum-zlg").projectDir = new File(settingsDir, "zlg")
+
+include "fulcrum-io"
+project(":fulcrum-io").projectDir = new File(settingsDir, "io")

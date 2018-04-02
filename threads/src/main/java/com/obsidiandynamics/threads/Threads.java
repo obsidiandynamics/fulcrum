@@ -13,7 +13,8 @@ public final class Threads {
   }
 
   public static boolean await(CyclicBarrier barrier) {
-    return runUninterruptedly(() -> wrapInRuntimeException(barrier::await, IllegalStateException::new));
+    return runUninterruptedly(() -> wrap((CheckedRunnable<?>) barrier::await, 
+                                         IllegalStateException::new));
   }
   
   public static boolean sleep(long millis) {
@@ -35,13 +36,20 @@ public final class Threads {
   }
   
   @FunctionalInterface
-  public interface RuntimeExceptionMaker extends Function<Exception, RuntimeException> {}
+  public interface ExceptionWrapper<X extends Throwable> extends Function<Throwable, X> {}
   
-  public static void wrapInRuntimeException(CheckedRunnable<?> runnable, RuntimeExceptionMaker exceptionMaker) {
-    try {
+  public static <X extends Throwable> void wrap(CheckedRunnable<?> runnable, ExceptionWrapper<X> wrapper) throws X {
+    wrap(() -> {
       runnable.run();
-    } catch (Exception e) {
-      throw exceptionMaker.apply(e);
+      return null;
+    }, wrapper);
+  }
+  
+  public static <T, X extends Throwable> T wrap(CheckedSupplier<? extends T, ?> supplier, ExceptionWrapper<X> wrapper) throws X {
+    try {
+      return supplier.get();
+    } catch (Throwable e) {
+      throw wrapper.apply(e);
     }
   }
 }
