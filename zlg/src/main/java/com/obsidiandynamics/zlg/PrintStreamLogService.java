@@ -2,7 +2,7 @@ package com.obsidiandynamics.zlg;
 
 import java.io.*;
 
-public final class PrintStreamLogService implements LogService {
+public class PrintStreamLogService implements LogService {
   private final PrintStream stream;
   
   public PrintStreamLogService(PrintStream stream) {
@@ -10,7 +10,7 @@ public final class PrintStreamLogService implements LogService {
   }
 
   @Override
-  public LogTarget create(String name) {
+  public LogTarget get(String name) {
     return new PrintStreamLogTarget(stream);
   }
 }

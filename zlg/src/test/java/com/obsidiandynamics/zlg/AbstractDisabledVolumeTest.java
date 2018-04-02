@@ -15,7 +15,7 @@ public abstract class AbstractDisabledVolumeTest {
     void cycle(float randomFloat, double randomDouble, int randomInt, long randomLong);
   }
   
-  protected static void runBenchmark(String name, long runTimeNanos, TestCycle cycle) {
+  protected static final void runBenchmark(String name, long runTimeNanos, TestCycle cycle) {
     final long warmupTime = runTimeNanos / 2;
     final long checkRuns = 1_000_000L;
     boolean warmup = true;
@@ -60,7 +60,7 @@ public abstract class AbstractDisabledVolumeTest {
     }
   }
   
-  protected static void consumeArgs(float randomFloat, double randomDouble, int randomInt, long randomLong) {
+  protected static final void consumeArgs(float randomFloat, double randomDouble, int randomInt, long randomLong) {
     // randomInt is the last primitive in the assignment chain, so testing it guarantees that all prior
     // operations have been carried out
     if (randomInt < 0) throw new AssertionError();

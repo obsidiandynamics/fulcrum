@@ -1,49 +1,51 @@
 package com.obsidiandynamics.zlg;
 
 public interface Zlg {
-  interface LevelChain {
-    LevelChain tag(String tag);
+  interface LogChain {
+    static int MAX_ARGS = 16;
     
-    LevelChain format(String format);
+    LogChain tag(String tag);
     
-    LevelChain arg(boolean arg);
+    LogChain format(String format);
     
-    LevelChain arg(byte arg);
+    LogChain arg(boolean arg);
     
-    LevelChain arg(char arg);
+    LogChain arg(byte arg);
     
-    LevelChain arg(double arg);
+    LogChain arg(char arg);
     
-    LevelChain arg(float arg);
+    LogChain arg(double arg);
     
-    LevelChain arg(int arg);
+    LogChain arg(float arg);
     
-    LevelChain arg(long arg);
+    LogChain arg(int arg);
     
-    LevelChain arg(short arg);
+    LogChain arg(long arg);
     
-    LevelChain arg(Object arg);
+    LogChain arg(short arg);
     
-    LevelChain stack(Throwable throwable);
+    LogChain arg(Object arg);
+    
+    LogChain stack(Throwable throwable);
     
     void log();
   }
   
-  LevelChain level(LogLevel level);
+  LogChain level(LogLevel level);
   
   boolean isEnabled(LogLevel level);
   
-  default LevelChain e(String format) { return level(LogLevel.ERROR).format(format); }
+  default LogChain e(String format) { return level(LogLevel.ERROR).format(format); }
   
-  default LevelChain w(String format) { return level(LogLevel.WARN).format(format); }
+  default LogChain w(String format) { return level(LogLevel.WARN).format(format); }
   
-  default LevelChain i(String format) { return level(LogLevel.INFO).format(format); }
+  default LogChain i(String format) { return level(LogLevel.INFO).format(format); }
   
-  default LevelChain c(String format) { return level(LogLevel.CONF).format(format); }
+  default LogChain c(String format) { return level(LogLevel.CONF).format(format); }
   
-  default LevelChain d(String format) { return level(LogLevel.DEBUG).format(format); }
+  default LogChain d(String format) { return level(LogLevel.DEBUG).format(format); }
   
-  default LevelChain t(String format) { return level(LogLevel.TRACE).format(format); }
+  default LogChain t(String format) { return level(LogLevel.TRACE).format(format); }
   
   static ZlgBuilder forName(String name) {
     return new ZlgBuilder(name);

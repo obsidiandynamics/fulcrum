@@ -1,7 +1,7 @@
 package com.obsidiandynamics.zlg;
 
-public final class ZlgConfig {
-  private static final LogService defaultLogService = new PrintStreamLogService(System.out);
+public final class LogConfig implements ConfigService {
+  private static final LogService defaultLogService = new SysOutLogService();
   
   private LogLevel defaultLevel = LogLevel.CONF;
   
@@ -11,7 +11,7 @@ public final class ZlgConfig {
     return defaultLevel;
   }
 
-  public ZlgConfig withDefaultLevel(LogLevel defaultLevel) {
+  public LogConfig withDefaultLevel(LogLevel defaultLevel) {
     this.defaultLevel = defaultLevel;
     return this;
   }
@@ -20,14 +20,19 @@ public final class ZlgConfig {
     return logService;
   }
 
-  public ZlgConfig withLogService(LogService logService) {
+  public LogConfig withLogService(LogService logService) {
     this.logService = logService;
     return this;
   }
 
   @Override
   public String toString() {
-    return ZlgConfig.class.getSimpleName() + " [defaultLevel=" + defaultLevel 
+    return LogConfig.class.getSimpleName() + " [defaultLevel=" + defaultLevel 
         + ", logService=" + logService + "]";
+  }
+
+  @Override
+  public LogConfig get() {
+    return this;
   }
 }

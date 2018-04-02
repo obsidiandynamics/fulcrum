@@ -2,6 +2,7 @@ def packageName = "fulcrum-zlg"
 version = project(":").version
 
 dependencies {
+  testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-testmark")
   testCompile "com.squidpony:squidlib-util:3.0.0-b9" // used for RNG
   testCompile "org.slf4j:slf4j-api:1.7.25"

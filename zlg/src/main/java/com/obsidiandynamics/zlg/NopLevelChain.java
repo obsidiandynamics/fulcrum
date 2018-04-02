@@ -2,7 +2,7 @@ package com.obsidiandynamics.zlg;
 
 import com.obsidiandynamics.zlg.Zlg.*;
 
-final class NopLevelChain implements LevelChain {
+final class NopLevelChain implements LogChain {
   private static final NopLevelChain instance = new NopLevelChain();
   
   static NopLevelChain getInstance() { return instance; }
@@ -10,62 +10,62 @@ final class NopLevelChain implements LevelChain {
   private NopLevelChain() {}
   
   @Override
-  public LevelChain tag(String tag) {
+  public LogChain tag(String tag) {
     return this;
   }
 
   @Override
-  public LevelChain format(String format) {
+  public LogChain format(String format) {
     return this;
   }
 
   @Override
-  public LevelChain arg(boolean arg) {
+  public LogChain arg(boolean arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(byte arg) {
+  public LogChain arg(byte arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(char arg) {
+  public LogChain arg(char arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(double arg) {
+  public LogChain arg(double arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(float arg) {
+  public LogChain arg(float arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(int arg) {
+  public LogChain arg(int arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(long arg) {
+  public LogChain arg(long arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(short arg) {
+  public LogChain arg(short arg) {
     return this;
   }
 
   @Override
-  public LevelChain arg(Object arg) {
+  public LogChain arg(Object arg) {
     return this;
   }
 
   @Override
-  public LevelChain stack(Throwable throwable) {
+  public LogChain stack(Throwable throwable) {
     return this;
   }
 

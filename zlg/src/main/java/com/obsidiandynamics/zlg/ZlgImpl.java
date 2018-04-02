@@ -16,9 +16,7 @@ final class ZlgImpl implements Zlg {
     TooManyArgsException(String m) { super(m); }
   }
   
-  static int MAX_ARGS = 16;
-  
-  private class LevelChainImpl implements LevelChain {
+  private class LogChainImpl implements LogChain {
     private LogLevel level;
     private String tag;
     private String format;
@@ -37,72 +35,72 @@ final class ZlgImpl implements Zlg {
     }
 
     @Override
-    public LevelChain tag(String tag) {
+    public LogChain tag(String tag) {
       if (this.tag != null) throw new DuplicateValueException("Duplicate call to tag()");
       this.tag = tag;
       return this;
     }
 
     @Override
-    public LevelChain format(String format) {
+    public LogChain format(String format) {
       if (this.format != null) throw new DuplicateValueException("Duplicate call to format()");
       this.format = format;
       return this;
     }
 
     @Override
-    public LevelChain arg(boolean arg) {
+    public LogChain arg(boolean arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(byte arg) {
+    public LogChain arg(byte arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(char arg) {
+    public LogChain arg(char arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(double arg) {
+    public LogChain arg(double arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(float arg) {
+    public LogChain arg(float arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(int arg) {
+    public LogChain arg(int arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(long arg) {
+    public LogChain arg(long arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(short arg) {
+    public LogChain arg(short arg) {
       return appendArg(arg);
     }
 
     @Override
-    public LevelChain arg(Object arg) {
+    public LogChain arg(Object arg) {
       return appendArg(arg);
     }
 
-    private LevelChain appendArg(Object arg) {
+    private LogChain appendArg(Object arg) {
       if (argc == MAX_ARGS) throw new TooManyArgsException("Number of args cannot exceed " + MAX_ARGS);
       argv[argc++] = arg;
       return this;
     }
 
     @Override
-    public LevelChain stack(Throwable throwable) {
+    public LogChain stack(Throwable throwable) {
       if (this.throwable != null) throw new DuplicateValueException("Duplicate call to exception()");
       this.throwable = throwable;
       return this;
@@ -120,17 +118,19 @@ final class ZlgImpl implements Zlg {
   
   private final LogTarget target;
   
-  private final ThreadLocal<LevelChainImpl> threadLocalChain = ThreadLocal.withInitial(LevelChainImpl::new);
+  private final ThreadLocal<LogChainImpl> threadLocalChain = ThreadLocal.withInitial(LogChainImpl::new);
   
-  ZlgImpl(String name, ZlgConfig config) {
+  ZlgImpl(String name, LogConfig config) {
     defaultLevel = config.getDefaultLevel();
-    target = config.getLogService().create(name);
+    target = config.getLogService().get(name);
   }
   
   @Override
-  public LevelChain level(LogLevel level) {
+  public LogChain level(LogLevel level) {
     if (isEnabled(level)) {
-      final LevelChainImpl chain = threadLocalChain.get();
+      if (level == LogLevel.OFF) throw new IllegalArgumentException("Cannot log at level " + level.name());
+      
+      final LogChainImpl chain = threadLocalChain.get();
       chain.level = level;
       return chain;
     } else {

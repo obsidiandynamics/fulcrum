@@ -1,17 +1,22 @@
 package com.obsidiandynamics.zlg;
 
 public final class ZlgBuilder {
-  private static final ZlgConfig defaultConfig = new ZlgConfig();
+  private static final LogConfig defaultConfigService = new LogConfig();
   
   private final String name;
   
-  private ZlgConfig config = defaultConfig;
+  private ConfigService configService = defaultConfigService;
 
   ZlgBuilder(String name) {
     this.name = name;
   }
   
+  ZlgBuilder withConfigService(ConfigService configService) {
+    this.configService = configService;
+    return this;
+  }
+  
   public Zlg get() {
-    return new ZlgImpl(name, config);
+    return new ZlgImpl(name, configService.get());
   }
 }
