@@ -1,4 +1,4 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.off;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,7 @@ import org.junit.runner.*;
 import com.esotericsoftware.minlog.*;
 import com.obsidiandynamics.testmark.*;
 
-public final class MinLogDisabledVolumeTest extends AbstractDisabledVolumeTest {
+public final class MinLogOffVolumeTest extends AbstractOffVolumeTest {
   @Test
   public void testBenchmark() {
     final String name = "MinLog";
@@ -27,6 +27,6 @@ public final class MinLogDisabledVolumeTest extends AbstractDisabledVolumeTest {
   
   public static void main(String[] args) {
     Testmark.enable();
-    JUnitCore.runClasses(MinLogDisabledVolumeTest.class);
+    JUnitCore.runClasses(MinLogOffVolumeTest.class);
   }
 }

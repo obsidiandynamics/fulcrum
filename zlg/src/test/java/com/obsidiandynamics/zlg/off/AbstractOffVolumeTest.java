@@ -1,4 +1,4 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.off;
 
 import org.junit.*;
 import org.junit.runners.*;
@@ -6,7 +6,7 @@ import org.junit.runners.*;
 import squidpony.squidmath.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public abstract class AbstractDisabledVolumeTest {
+public abstract class AbstractOffVolumeTest {
   protected static final long TEST_RUN_TIME_NANOS = 10_000_000L;
   protected static final long BENCHMARK_RUN_TIME_NANOS = 10_000_000_000L;
   

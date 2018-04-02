@@ -1,11 +1,11 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.off;
 
 import org.junit.*;
 import org.junit.runner.*;
 
 import com.obsidiandynamics.testmark.*;
 
-public final class BaselineDisabledVolumeTest extends AbstractDisabledVolumeTest {
+public final class BaselineOffVolumeTest extends AbstractOffVolumeTest {
   @Test
   public void test() {
     runBenchmark(null, TEST_RUN_TIME_NANOS, cycle());
@@ -25,6 +25,6 @@ public final class BaselineDisabledVolumeTest extends AbstractDisabledVolumeTest
   
   public static void main(String[] args) {
     Testmark.enable();
-    JUnitCore.runClasses(BaselineDisabledVolumeTest.class);
+    JUnitCore.runClasses(BaselineOffVolumeTest.class);
   }
 }

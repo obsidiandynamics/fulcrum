@@ -1,9 +1,11 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.sample;
 
 import java.util.*;
 
-public final class LoggingSample {
-  private static final Zlg z = Zlg.forClass(LoggingSample.class).get();
+import com.obsidiandynamics.zlg.*;
+
+public final class SysOutLoggingSample {
+  private static final Zlg z = Zlg.forClass(SysOutLoggingSample.class).get();
   
   public static void main(String[] args) {
     z.i("Starting with %d args: %s").arg(args.length).arg(Arrays.asList(args)).log();

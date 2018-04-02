@@ -1,4 +1,4 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.off;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,7 @@ import org.junit.runners.*;
 import com.obsidiandynamics.testmark.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
+public final class JulDisabledOffTest extends AbstractOffVolumeTest {
   @Test
   public void test1_lambdaBenchmark() {
     final String name = "JUL-lambda";
@@ -25,7 +25,7 @@ public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
   }
 
   private static TestCycle arrayCycle() {
-    final Logger logger = Logger.getLogger(JulDisabledVolumeTest.class.getName());
+    final Logger logger = Logger.getLogger(JulDisabledOffTest.class.getName());
     logger.setLevel(Level.INFO);
     assertFalse(logger.isLoggable(Level.FINEST));
     
@@ -36,7 +36,7 @@ public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
   }
 
   private static TestCycle lambdaCycle() {
-    final Logger logger = Logger.getLogger(JulDisabledVolumeTest.class.getName());
+    final Logger logger = Logger.getLogger(JulDisabledOffTest.class.getName());
     logger.setLevel(Level.INFO);
     assertFalse(logger.isLoggable(Level.FINEST));
     
@@ -48,6 +48,6 @@ public final class JulDisabledVolumeTest extends AbstractDisabledVolumeTest {
   
   public static void main(String[] args) {
     Testmark.enable();
-    JUnitCore.runClasses(JulDisabledVolumeTest.class);
+    JUnitCore.runClasses(JulDisabledOffTest.class);
   }
 }

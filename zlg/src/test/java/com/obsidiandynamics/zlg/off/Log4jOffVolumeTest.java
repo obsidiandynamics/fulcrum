@@ -1,4 +1,4 @@
-package com.obsidiandynamics.zlg;
+package com.obsidiandynamics.zlg.off;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,7 @@ import org.junit.runner.*;
 
 import com.obsidiandynamics.testmark.*;
 
-public final class Log4jDisabledVolumeTest extends AbstractDisabledVolumeTest {
+public final class Log4jOffVolumeTest extends AbstractOffVolumeTest {
   @Test
   public void testBenchmark() {
     final String name = "Log4j";
@@ -16,7 +16,7 @@ public final class Log4jDisabledVolumeTest extends AbstractDisabledVolumeTest {
   }
   
   private static TestCycle cycle() {
-    final Logger logger = Logger.getLogger(AbstractDisabledVolumeTest.class);
+    final Logger logger = Logger.getLogger(AbstractOffVolumeTest.class);
     assertFalse(logger.isTraceEnabled());
     
     return (f, d, i, l) -> {
@@ -27,6 +27,6 @@ public final class Log4jDisabledVolumeTest extends AbstractDisabledVolumeTest {
   
   public static void main(String[] args) {
     Testmark.enable();
-    JUnitCore.runClasses(Log4jDisabledVolumeTest.class);
+    JUnitCore.runClasses(Log4jOffVolumeTest.class);
   }
 }
