@@ -9,6 +9,6 @@ public final class SysOutLoggingSample {
   
   public static void main(String[] args) {
     z.i("Starting with %d args: %s").arg(args.length).arg(Arrays.asList(args)).log();
-    z.w("An error occurred at %s").arg(new Date()).stack(new RuntimeException()).log();
+    z.w("An error occurred at %s").arg(new Date()).stack(new RuntimeException()).tag("I/O").log();
   }
 }
