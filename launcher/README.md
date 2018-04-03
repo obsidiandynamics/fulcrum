@@ -1,7 +1,8 @@
-fulcrum-launcher
+<img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> `fulcrum-launcher`
 ===
+Launch applications from Gradle.
 
-Example usage:
+# Quickstart
 
 Firstly, add the following snippet to your root `build.gradle`:
 
