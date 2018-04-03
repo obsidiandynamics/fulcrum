@@ -1,4 +1,4 @@
-package com.obsidiandynamics.classes;
+package com.obsidiandynamics.func;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package com.obsidiandynamics.parallel;
+package com.obsidiandynamics.threads;
 
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;

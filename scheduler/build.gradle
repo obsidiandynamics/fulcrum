@@ -3,10 +3,10 @@ version = project(":").version
 
 dependencies {
   compile project(":fulcrum-worker")
+  
   testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-await")
   testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-parallel")
   testCompile project(":fulcrum-testmark")
   testCompile project(":fulcrum-threads")
 }

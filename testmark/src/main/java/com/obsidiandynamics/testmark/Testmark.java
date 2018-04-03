@@ -2,7 +2,6 @@ package com.obsidiandynamics.testmark;
 
 import java.util.function.*;
 
-import com.obsidiandynamics.classes.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.resolver.*;
 

@@ -3,7 +3,7 @@ package com.obsidiandynamics.resolver;
 import java.util.*;
 import java.util.function.*;
 
-import com.obsidiandynamics.classes.*;
+import com.obsidiandynamics.func.*;
 
 public final class Resolver {
   private static final ThreadLocal<Map<Class<?>, Supplier<? extends Object>>> map = ThreadLocal.withInitial(HashMap::new);

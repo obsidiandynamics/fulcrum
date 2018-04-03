@@ -1,10 +1,8 @@
-package com.obsidiandynamics.parallel;
+package com.obsidiandynamics.threads;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
-
-import com.obsidiandynamics.threads.*;
 
 public final class Parallel implements Runnable {
   private static final boolean BLOCKING = true;

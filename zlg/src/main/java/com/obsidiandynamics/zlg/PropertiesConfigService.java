@@ -3,11 +3,9 @@ package com.obsidiandynamics.zlg;
 import java.net.*;
 import java.util.*;
 
-import com.obsidiandynamics.classes.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.io.*;
 import com.obsidiandynamics.props.*;
-import com.obsidiandynamics.threads.*;
 
 public final class PropertiesConfigService implements ConfigService {
   public static final String KEY_DEFAULT_LEVEL = "zlg.default.level";
@@ -39,7 +37,7 @@ public final class PropertiesConfigService implements ConfigService {
   public LogConfig get() {
     synchronized (cacheLock) {
       if (cachedConfig == null) {
-        final Properties props = Threads.wrap(propsLoader::get, PropertiesLoadException::new);
+        final Properties props = Exceptions.wrap(propsLoader::get, PropertiesLoadException::new);
         cachedConfig = loadConfig(props);
       }
     }
@@ -56,8 +54,8 @@ public final class PropertiesConfigService implements ConfigService {
   }
   
   private static LogService instantiateLogService(String logServiceClassName) {
-    return Threads.wrap(() -> Classes.cast(Class.forName(logServiceClassName).getDeclaredConstructor().newInstance()), 
-                        ServiceInstantiationException::new);
+    return Exceptions.wrap(() -> Classes.cast(Class.forName(logServiceClassName).getDeclaredConstructor().newInstance()), 
+                           ServiceInstantiationException::new);
   }
   
   public static PropertiesLoader forUri(URI uri) {

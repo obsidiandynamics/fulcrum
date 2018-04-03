@@ -1,46 +1,42 @@
-package com.obsidiandynamics;
+package com.obsidiandynamics.threads;
 
 import static org.junit.Assert.*;
 
-import java.io.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
-import com.obsidiandynamics.threads.*;
 
 public final class ThreadsTest {
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Threads.class);
   }
-  
+
   @Test
   public void testRunUninterruptedlyNormal() {
     assertTrue(Threads.runUninterruptedly(() -> {}));
     assertFalse(Thread.interrupted());
   }
-  
+
   @Test
   public void testRunUninterruptedlyInterrupted() {
     try {
-      assertFalse(Threads.runUninterruptedly(() -> {
-        throw new InterruptedException("test interrupted");
-      }));
+      assertFalse(Threads.runUninterruptedly(Exceptions.doThrow(InterruptedException::new)));
       assertTrue(Thread.interrupted());
     } finally {
       Thread.interrupted();
     }
   }
-  
+
   @Test
   public void testNoSleepUninterrupted() {
     assertTrue(Threads.sleep(0));
     assertFalse(Thread.interrupted());
   }
-  
+
   @Test
   public void testNoSleepInterrupted() {
     try {
@@ -51,13 +47,13 @@ public final class ThreadsTest {
       Thread.interrupted();
     }
   }
-  
+
   @Test
   public void testSleepUninterrupted() {
     assertTrue(Threads.sleep(1));
     assertFalse(Thread.interrupted());
   }
-  
+
   @Test
   public void testSleepInterrupted() {
     try {
@@ -68,26 +64,7 @@ public final class ThreadsTest {
       Thread.interrupted();
     }
   }
-  
-  private static class TestRuntimeException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    
-    TestRuntimeException(Throwable cause) { super(cause); }
-  }
-  
-  @Test
-  public void testWrapInRuntimeExceptionNormal() {
-    final int out = Threads.wrap(() -> 42, TestRuntimeException::new);
-    assertEquals(42, out);
-  }
-  
-  @Test(expected=TestRuntimeException.class)
-  public void testWrapInRuntimeExceptionThrown() {
-    Threads.wrap((CheckedRunnable<?>) () -> {
-      throw new IOException("test exception");
-    }, TestRuntimeException::new);
-  }
-  
+
   @Test
   public void testAwaitBarrier() {
     final CyclicBarrier barrier = new CyclicBarrier(2);
@@ -96,7 +73,7 @@ public final class ThreadsTest {
     }).start();
     Threads.await(barrier);
   }
-  
+
   @Test
   public void testAwaitLatch() {
     final CountDownLatch latch = new CountDownLatch(1);
@@ -104,5 +81,19 @@ public final class ThreadsTest {
       latch.countDown();
     }).start();
     Threads.await(latch);
+  }
+
+  @Test
+  public void testTookNanos() {
+    final long took = Threads.tookNanos(() -> Threads.sleep(5));
+    assertTrue("took=" + took, took >= 5_000_000L);
+    assertTrue("took=" + took, took < 1_000_000_000L);
+  }
+
+  @Test
+  public void testTookMillis() {
+    final long took = Threads.tookMillis(() -> Threads.sleep(5));
+    assertTrue("took=" + took, took >= 5);
+    assertTrue("took=" + took, took < 1_000);
   }
 }

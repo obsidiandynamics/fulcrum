@@ -15,7 +15,6 @@ import org.junit.runners.*;
 
 import com.obsidiandynamics.await.*;
 import com.obsidiandynamics.junit.*;
-import com.obsidiandynamics.parallel.*;
 import com.obsidiandynamics.testmark.*;
 import com.obsidiandynamics.threads.*;
 

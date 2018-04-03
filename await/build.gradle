@@ -2,8 +2,7 @@ def packageName = "fulcrum-await"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-assert")
-  testCompile project(":fulcrum-threads")
+  testCompile project(":fulcrum-assert")
 }
 
 jar {

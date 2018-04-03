@@ -3,7 +3,9 @@ version = project(":").version
 
 dependencies {
   compile project(":fulcrum-func")
+  
   testCompile project(":fulcrum-assert")
+  testCompile project(":fulcrum-await")
 }
 
 jar {

@@ -2,10 +2,9 @@ def packageName = "fulcrum-zlg"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-classes")
+  compile project(":fulcrum-func")
   compile project(":fulcrum-io")
   compile project(":fulcrum-props")
-  compile project(":fulcrum-threads")
   
   testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-testmark")

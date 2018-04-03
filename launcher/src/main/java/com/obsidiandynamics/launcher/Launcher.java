@@ -4,7 +4,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.obsidiandynamics.classes.*;
 import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.props.*;
 import com.obsidiandynamics.resolver.*;

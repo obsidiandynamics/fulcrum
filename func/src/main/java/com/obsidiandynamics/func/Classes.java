@@ -1,4 +1,4 @@
-package com.obsidiandynamics.classes;
+package com.obsidiandynamics.func;
 
 public final class Classes {
   private Classes() {}

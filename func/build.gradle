@@ -2,6 +2,7 @@ def packageName = "fulcrum-func"
 version = project(":").version
 
 dependencies {
+  testCompile project (":fulcrum-assert")
 }
 
 jar {
@@ -46,7 +47,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Functional interfaces that throw checked exceptions"
+def packageDesc = "Assists with functional programming"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

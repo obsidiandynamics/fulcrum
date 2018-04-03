@@ -2,7 +2,7 @@ package com.obsidiandynamics.worker;
 
 import java.util.*;
 
-import com.obsidiandynamics.classes.*;
+import com.obsidiandynamics.func.*;
 
 
 /**

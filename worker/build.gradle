@@ -2,8 +2,10 @@ def packageName = "fulcrum-worker"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-classes")
+  compile project(":fulcrum-func")
   compile project(":fulcrum-concat")
+  
+  testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-await")
   testCompile project(":fulcrum-junit")
   testCompile project(":fulcrum-threads")
