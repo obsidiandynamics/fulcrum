@@ -56,7 +56,7 @@ public final class PropertiesConfigService implements ConfigService {
   }
   
   private static LogService instantiateLogService(String logServiceClassName) {
-    return Threads.wrap(() -> Classes.cast(Class.forName(logServiceClassName).newInstance()), 
+    return Threads.wrap(() -> Classes.cast(Class.forName(logServiceClassName).getDeclaredConstructor().newInstance()), 
                         ServiceInstantiationException::new);
   }
   
