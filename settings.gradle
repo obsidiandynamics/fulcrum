@@ -12,6 +12,9 @@ project(":fulcrum-concat").projectDir = new File(settingsDir, "concat")
 include "fulcrum-docker-compose"
 project(":fulcrum-docker-compose").projectDir = new File(settingsDir, "docker-compose")
 
+include "fulcrum-dyno"
+project(":fulcrum-dyno").projectDir = new File(settingsDir, "dyno")
+
 include "fulcrum-junit"
 project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
 
