@@ -13,13 +13,13 @@ public final class PropertiesConfigServiceTest {
   @Test
   public void testLoadConfigSuccessAndCache() {
     final Properties props = new Properties();
-    props.setProperty(KEY_DEFAULT_LEVEL, LogLevel.WARN.name());
+    props.setProperty(KEY_ROOT_LEVEL, LogLevel.WARN.name());
     props.setProperty(KEY_LOG_SERVICE, SysOutLogService.class.getName());
     
     final PropertiesConfigService configService = new PropertiesConfigService(() -> props);
     final LogConfig config = configService.get();
     assertNotNull(config);
-    assertEquals(LogLevel.WARN, config.getDefaultLevel());
+    assertEquals(LogLevel.WARN, config.getRootLevel());
     assertNotNull(config.getLogService());
     assertEquals(SysOutLogService.class, config.getLogService().getClass());
     
@@ -58,7 +58,7 @@ public final class PropertiesConfigServiceTest {
   public void testFromFile() {
     final LogConfig config = new PropertiesConfigService(forUri(URI.create("cp://testconfig.properties"))).get();
     assertNotNull(config);
-    assertEquals(LogLevel.WARN, config.getDefaultLevel());
+    assertEquals(LogLevel.WARN, config.getRootLevel());
     assertNotNull(config.getLogService());
     assertEquals(SysOutLogService.class, config.getLogService().getClass());
   }

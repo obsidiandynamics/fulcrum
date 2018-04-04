@@ -1,18 +1,23 @@
 package com.obsidiandynamics.zlg;
 
 public final class LogConfig implements ConfigService {
+  private static final LogLevel defaultLevel = LogLevel.CONF;
   private static final LogService defaultLogService = new SysOutLogService();
   
-  private LogLevel defaultLevel = LogLevel.CONF;
+  public static LogLevel getDefaultLevel() { return defaultLevel; }
+  
+  public static LogService getDefaultLogService() { return defaultLogService; }
+  
+  private LogLevel rootLevel = LogLevel.CONF;
   
   private LogService logService = defaultLogService;
 
-  LogLevel getDefaultLevel() {
-    return defaultLevel;
+  LogLevel getRootLevel() {
+    return rootLevel;
   }
 
-  public LogConfig withDefaultLevel(LogLevel defaultLevel) {
-    this.defaultLevel = defaultLevel;
+  public LogConfig withRootLevel(LogLevel rootLevel) {
+    this.rootLevel = rootLevel;
     return this;
   }
 
@@ -27,7 +32,7 @@ public final class LogConfig implements ConfigService {
 
   @Override
   public String toString() {
-    return LogConfig.class.getSimpleName() + " [defaultLevel=" + defaultLevel 
+    return LogConfig.class.getSimpleName() + " [rootLevel=" + rootLevel 
         + ", logService=" + logService + "]";
   }
 
