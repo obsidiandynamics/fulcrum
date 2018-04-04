@@ -16,7 +16,7 @@ final class ZlgImpl implements Zlg {
     TooManyArgsException(String m) { super(m); }
   }
   
-  private class LogChainImpl implements LogChain {
+  final class LogChainImpl implements LogChain {
     private LogLevel level;
     private String tag;
     private String format;

@@ -68,3 +68,6 @@ project(":fulcrum-worker").projectDir = new File(settingsDir, "worker")
 
 include "fulcrum-zlg"
 project(":fulcrum-zlg").projectDir = new File(settingsDir, "zlg")
+
+include "fulcrum-zlg-slf4j17"
+project(":fulcrum-zlg-slf4j17").projectDir = new File(settingsDir, "zlg-slf4j17")

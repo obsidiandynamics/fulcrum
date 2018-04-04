@@ -1,8 +1,6 @@
-package com.obsidiandynamics.zlg.sample;
+package com.obsidiandynamics.zlg;
 
 import java.util.*;
-
-import com.obsidiandynamics.zlg.*;
 
 public final class SysOutLoggingSample {
   private static final Zlg zlg = Zlg.forClass(SysOutLoggingSample.class).get();
