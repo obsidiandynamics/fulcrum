@@ -33,8 +33,18 @@ public final class PropertiesConfigServiceTest {
   }
   
   @Test(expected=FileNotFoundException.class)
-  public void testClasspathLoadFailure() throws Exception {
+  public void testFileLoadFailure() throws Exception {
     PropertiesConfigService.forUri(URI.create("file://nonexistentfile")).get();
+  }
+  
+  @Test(expected=FileNotFoundException.class)
+  public void testClasspathLoadFailure() throws Exception {
+    PropertiesConfigService.forUri(URI.create("cp://nonexistentfile")).get();
+  }
+  
+  @Test
+  public void testClasspathLoadFailureWithFailsafe() throws Exception {
+    PropertiesConfigService.forUri(URI.create("cp://nonexistentfile"), URI.create("cp://testconfig.properties")).get();
   }
   
   @Test(expected=ServiceInstantiationException.class)

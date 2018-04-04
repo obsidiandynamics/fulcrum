@@ -18,30 +18,52 @@ public final class ResourceLoaderTest {
   }
   
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(ResourceLoader.class);
   }
   
   @Test
-  public void testFile() throws FileNotFoundException, URISyntaxException {
-    in = ResourceLoader.asStream(new URI("file://src/test/resources/resource-locator.test"));
+  public void testFile() throws FileNotFoundException {
+    in = ResourceLoader.stream(URI.create("file://src/test/resources/resource-locator.test"));
+    assertNotNull(in);
+  }
+  
+  @Test(expected=FileNotFoundException.class)
+  public void testFileNotFound() throws FileNotFoundException {
+    ResourceLoader.stream(URI.create("file://src/test/resources/nonexistent"));
+  }
+  
+  @Test(expected=FileNotFoundException.class)
+  public void testClasspathNotFound() throws FileNotFoundException {
+    ResourceLoader.stream(URI.create("cp://src/test/resources/nonexistent"));
+  }
+  
+  @Test
+  public void testCP() throws FileNotFoundException {
+    in = ResourceLoader.stream(URI.create("cp://resource-locator.test"));
     assertNotNull(in);
   }
   
   @Test
-  public void testCP() throws FileNotFoundException, URISyntaxException {
-    in = ResourceLoader.asStream(new URI("cp://resource-locator.test"));
+  public void testClasspath() throws FileNotFoundException {
+    in = ResourceLoader.stream(URI.create("cp://resource-locator.test"));
     assertNotNull(in);
   }
   
   @Test
-  public void testClasspath() throws FileNotFoundException, URISyntaxException {
-    in = ResourceLoader.asStream(new URI("cp://resource-locator.test"));
+  public void testTryClasspathExists() {
+    in = ResourceLoader.tryStream(URI.create("cp://resource-locator.test"));
     assertNotNull(in);
+  }
+  
+  @Test
+  public void testTryClasspathNotFound() {
+    in = ResourceLoader.tryStream(URI.create("cp://resource-locator-nonexistent.test"));
+    assertNull(in);
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testUnsupported() throws FileNotFoundException, URISyntaxException {
-    in = ResourceLoader.asStream(new URI("xxx://resource-locator.test"));
+  public void testUnsupported() throws FileNotFoundException {
+    in = ResourceLoader.stream(URI.create("xxx://resource-locator.test"));
   }
 }

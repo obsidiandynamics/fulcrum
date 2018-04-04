@@ -1,5 +1,6 @@
 package com.obsidiandynamics.zlg;
 
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -59,9 +60,17 @@ public final class PropertiesConfigService implements ConfigService {
   }
   
   public static PropertiesLoader forUri(URI uri) {
+    return forUri(uri, uri);
+  }
+  
+  public static PropertiesLoader forUri(URI preferredUri, URI failsafeUri) {
     return () -> {
       final Properties props = new Properties();
-      props.load(ResourceLoader.asStream(uri));
+      try {
+        props.load(ResourceLoader.stream(preferredUri));
+      } catch (FileNotFoundException e) {
+        props.load(ResourceLoader.stream(failsafeUri));
+      }
       return props;
     };
   }
