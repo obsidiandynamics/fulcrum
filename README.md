@@ -10,7 +10,6 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 # Modules
 * [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) — Common assertions
 * [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) — Utility for awaiting asynchronous actions
-* [`fulcrum-classes`](https://github.com/obsidiandynamics/fulcrum/tree/master/classes) — Utilities for working with objects and classes
 * [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) — Fluid API for selective concatenation of strings
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
 * [`fulcrum-flow`](https://github.com/obsidiandynamics/fulcrum/tree/master/flow) — Strictly ordered joining of parallel tasks
@@ -21,7 +20,6 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-launcher`](https://github.com/obsidiandynamics/fulcrum/tree/master/launcher) — Launch applications from Gradle
 * [`fulcrum-nanoclock`](https://github.com/obsidiandynamics/fulcrum/tree/master/nanoclock) — Wall clock with nanosecond resolution
 * [`fulcrum-node-queue`](https://github.com/obsidiandynamics/fulcrum/tree/master/node-queue) — Lock-free multi-producer/multi-consumer queue
-* [`fulcrum-parallel`](https://github.com/obsidiandynamics/fulcrum/tree/master/parallel) — Runs jobs in parallel
 * [`fulcrum-props`](https://github.com/obsidiandynamics/fulcrum/tree/master/props) — Utilities for working with `Properties`
 * [`fulcrum-resolver`](https://github.com/obsidiandynamics/fulcrum/tree/master/resolver) — A lightweight Contextual Service Locator pattern implementation
 * [`fulcrum-retry`](https://github.com/obsidiandynamics/fulcrum/tree/master/retry) — Retries actions that may throw a `RuntimeException`
@@ -34,7 +32,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-zlg`](https://github.com/obsidiandynamics/fulcrum/tree/master/zlg) — Near-zero overhead logging for performance-sensitive applications
 
 # Getting started
-Select just the module(s) that you need from the list above. Each module has a short README describing its use.
+Select just the module(s) that you need from the list above. Some modules have a short README describing their use.
 
 The builds are hosted on JCenter. (Maven users may need to add the JCenter repository to their POM.) Simply add the following snippet to your build file. Replace the version placeholder `x.y.z` in the snippet with the version shown on the Download badge at the top of this README, and `fulcrum-module` with the name of the actual module you need.
 
