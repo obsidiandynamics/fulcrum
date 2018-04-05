@@ -4,7 +4,13 @@ Launch applications from Gradle.
 
 # Quickstart
 
-Firstly, add the following snippet to your root `build.gradle`:
+Firstly, add `fulcrum-launcher` as a test runtime dependency to your root `build.gradle` (replace `x.y.z` with the latest version):
+
+```groovy
+testRuntime "com.obsidiandynamics.fulcrum:fulcrum-launcher:x.y.z"
+```
+
+Then, add the following snippet:
 
 ```groovy
 project.ext.set("launcherClasspath", new org.gradle.api.internal.file.UnionFileCollection())
