@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.*;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.*;
 import org.openjdk.jmh.results.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
@@ -41,14 +42,18 @@ public final class JmhDriver implements BenchmarkDriver {
     
     private BenchmarkTarget target;
     
+    private final BlackholeAbyss abyss = new BlackholeAbyss();
+    
     @Setup
     public void setup() throws Exception {
       target = resolveTarget(targetClass);
     }
     
     @Benchmark
-    public Object bench() throws Exception {
-      return runTarget(target);
+    public void bench(Blackhole blackhole) throws Exception {
+      final BlackholeAbyss abyss = this.abyss;
+      abyss.blackhole = blackhole;
+      runTarget(target, abyss);
     }
     
     @TearDown
@@ -64,8 +69,8 @@ public final class JmhDriver implements BenchmarkDriver {
     return BenchmarkSupport.resolve(targetClass);
   }
   
-  private static Object runTarget(BenchmarkTarget target) throws Exception {
-    return target.call();
+  private static void runTarget(BenchmarkTarget target, Abyss abyss) throws Exception {
+    target.cycle(abyss);
   }
   
   private static void disposeTarget(BenchmarkTarget target) throws Exception {

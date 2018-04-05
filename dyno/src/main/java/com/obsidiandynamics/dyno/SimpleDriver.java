@@ -2,6 +2,8 @@ package com.obsidiandynamics.dyno;
 
 import java.util.concurrent.*;
 
+import org.openjdk.jmh.infra.*;
+
 import com.obsidiandynamics.func.*;
 
 public final class SimpleDriver implements BenchmarkDriver {
@@ -101,6 +103,8 @@ public final class SimpleDriver implements BenchmarkDriver {
     
     @Override
     public void run() {
+      final BlackholeAbyss abyss = new BlackholeAbyss();
+      abyss.blackhole = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
       try {
         while (true) {
           if (running) {
@@ -113,7 +117,7 @@ public final class SimpleDriver implements BenchmarkDriver {
               switch (group) {
                 case _1:
                   while (true) {
-                    target.call();
+                    target.cycle(abyss);
                     ops++;
                     if (! running) {
                       this.ops = ops;
@@ -122,7 +126,7 @@ public final class SimpleDriver implements BenchmarkDriver {
                   }
                 case _10:
                   while (true) {
-                    target.call();
+                    target.cycle(abyss);
                     ops++;
                     if (ops % 10 == 0 && ! running) {
                       this.ops = ops;
@@ -131,7 +135,7 @@ public final class SimpleDriver implements BenchmarkDriver {
                   }
                 case _100:
                   while (true) {
-                    target.call();
+                    target.cycle(abyss);
                     ops++;
                     if (ops % 100 == 0 && ! running) {
                       this.ops = ops;
@@ -140,7 +144,7 @@ public final class SimpleDriver implements BenchmarkDriver {
                   }
                 case _1000:
                   while (true) {
-                    target.call();
+                    target.cycle(abyss);
                     ops++;
                     if (ops % 1000 == 0 && ! running) {
                       this.ops = ops;
@@ -149,7 +153,7 @@ public final class SimpleDriver implements BenchmarkDriver {
                   }
                 case _10000:
                   while (true) {
-                    target.call();
+                    target.cycle(abyss);
                     ops++;
                     if (ops % 10000 == 0 && ! running) {
                       this.ops = ops;

@@ -4,8 +4,8 @@ import org.openjdk.jmh.annotations.*;
 
 public class JmhSample implements BenchmarkTarget {
   @Override
-  public Object call() throws Exception {
-    return Math.log(Math.exp(1));
+  public void cycle(Abyss abyss) throws Exception {
+    abyss.consume(Math.log(Math.exp(1)));
   }
   
   public static void main(String[] args) {

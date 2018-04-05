@@ -1,13 +1,56 @@
 def packageName = "fulcrum-dyno"
 version = project(":").version
 
+repositories {
+  jcenter()
+}
+
+buildscript {
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
+    }
+  }
+  dependencies {
+    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.15'
+  }
+}
+
+apply plugin: 'net.ltgt.apt'
+
 dependencies {
   compile project(":fulcrum-func")
   compile 'org.openjdk.jmh:jmh-core:1.19'
+  annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.19'
 }
 
-task gen(type: GradleBuild) {
-  buildFile 'gen.gradle'
+compileJava {
+  aptOptions.annotationProcessing = false
+}
+    
+task copySrc(type: Copy, dependsOn: compileJava) {
+  from 'build/generated/source/apt/main/com/obsidiandynamics/dyno/generated'
+  into 'src/main/java/com/obsidiandynamics/dyno/generated'
+  include '*.java'
+}
+    
+task copyMetaInf(type: Copy, dependsOn: compileJava) {
+  from 'build/classes/java/main/META-INF'
+  into 'src/main/resources/META-INF'
+  include '*'
+}
+
+task enableAnn {
+  doLast {
+    tasks.withType(JavaCompile) {
+      aptOptions.annotationProcessing = true
+    }
+  }
+}
+
+task gen(dependsOn: [enableAnn, compileJava, copySrc, copyMetaInf]) {
+  // the dependsOn order is non-deterministic; set the task dependencies explicitly
+  compileJava.mustRunAfter enableAnn
 }
 
 jar {

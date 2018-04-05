@@ -49,7 +49,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_jmhwrapper0_G.bench());
+                l_jmhwrapper0_G.bench(blackhole);
                 res.allOps++;
             }
 
@@ -59,7 +59,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_jmhwrapper0_G.bench());
+                    l_jmhwrapper0_G.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -114,7 +114,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_jmhwrapper0_G.bench());
+            l_jmhwrapper0_G.bench(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -140,7 +140,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_jmhwrapper0_G.bench());
+                l_jmhwrapper0_G.bench(blackhole);
                 res.allOps++;
             }
 
@@ -150,7 +150,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_jmhwrapper0_G.bench());
+                    l_jmhwrapper0_G.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -205,7 +205,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_jmhwrapper0_G.bench());
+            l_jmhwrapper0_G.bench(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -231,7 +231,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_jmhwrapper0_G.bench());
+                l_jmhwrapper0_G.bench(blackhole);
                 res.allOps++;
             }
 
@@ -245,7 +245,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_jmhwrapper0_G.bench());
+                    l_jmhwrapper0_G.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -307,7 +307,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             }
             for (int b = 0; b < batchSize; b++) {
                 if (control.volatileSpoiler) return;
-                blackhole.consume(l_jmhwrapper0_G.bench());
+                l_jmhwrapper0_G.bench(blackhole);
             }
             if (sample) {
                 buffer.add((System.nanoTime() - time) / opsPerInv);
@@ -387,7 +387,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         result.startTime = System.nanoTime();
         for (int b = 0; b < batchSize; b++) {
             if (control.volatileSpoiler) return;
-            blackhole.consume(l_jmhwrapper0_G.bench());
+            l_jmhwrapper0_G.bench(blackhole);
         }
         result.stopTime = System.nanoTime();
         result.realTime = realTime;

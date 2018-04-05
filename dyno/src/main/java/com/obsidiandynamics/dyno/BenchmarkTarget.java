@@ -1,9 +1,10 @@
 package com.obsidiandynamics.dyno;
 
-import java.util.concurrent.*;
-
-public interface BenchmarkTarget extends Callable<Object> {
+@FunctionalInterface
+public interface BenchmarkTarget {
   default void setup() throws Exception {}
+  
+  void cycle(Abyss abyss) throws Exception;
   
   default void tearDown() throws Exception {}
 }
