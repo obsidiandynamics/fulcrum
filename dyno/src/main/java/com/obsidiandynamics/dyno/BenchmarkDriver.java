@@ -1,11 +1,12 @@
 package com.obsidiandynamics.dyno;
 
-import java.util.function.*;
+import com.obsidiandynamics.func.*;
 
+@FunctionalInterface
 public interface BenchmarkDriver {
   BenchmarkResult run(int threads, 
-                      int warmupTime, 
-                      int benchTime, 
-                      Consumer<Exception> exceptionHandler, 
+                      int warmupTimeMillis, 
+                      int benchTimeMillis, 
+                      ExceptionHandler exceptionHandler, 
                       Class<? extends BenchmarkTarget> targetClass);
 }

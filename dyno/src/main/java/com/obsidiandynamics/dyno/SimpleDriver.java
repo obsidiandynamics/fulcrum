@@ -1,27 +1,31 @@
 package com.obsidiandynamics.dyno;
 
 import java.util.concurrent.*;
-import java.util.function.*;
+
+import com.obsidiandynamics.func.*;
 
 public final class SimpleDriver implements BenchmarkDriver {
   @Override
-  public BenchmarkResult run(int threads, int warmupTime, int benchTime, Consumer<Exception> exceptionHandler,
+  public BenchmarkResult run(int threads, 
+                             int warmupTimeMillis, 
+                             int benchTimeMillis, 
+                             ExceptionHandler exceptionHandler,
                              Class<? extends BenchmarkTarget> targetClass) {
     final BenchmarkTarget target;
     try {
       target = BenchmarkSupport.resolve(targetClass);
     } catch (Exception e) {
-      exceptionHandler.accept(e);
+      exceptionHandler.onException("Error resolving class", e);
       return null;
     }
     
     try {
-      return run(threads, warmupTime, benchTime, exceptionHandler, target);
+      return run(threads, warmupTimeMillis, benchTimeMillis, exceptionHandler, target);
     } finally {
       try {
         BenchmarkSupport.dispose(target);
       } catch (Exception e) {
-        exceptionHandler.accept(e);
+        exceptionHandler.onException("Error disposing benchmark taget", e);
       }
     }
   }
@@ -58,7 +62,7 @@ public final class SimpleDriver implements BenchmarkDriver {
 
   private static class RunnerThread extends Thread {
     private final BenchmarkTarget target;
-    private final Consumer<Exception> exceptionHandler;
+    private final ExceptionHandler exceptionHandler;
 
     private volatile boolean running;
     private volatile boolean terminated;
@@ -66,7 +70,7 @@ public final class SimpleDriver implements BenchmarkDriver {
     private volatile long ops;
     private volatile SampleIntervalGroup group;
     
-    private RunnerThread(BenchmarkTarget target, Consumer<Exception> exceptionHandler, int threadNo) {
+    private RunnerThread(BenchmarkTarget target, ExceptionHandler exceptionHandler, int threadNo) {
       super("RunnerThread-" + target.getClass().getCanonicalName() + "-" + threadNo);
       setDaemon(true);
       this.target = target;
@@ -166,12 +170,15 @@ public final class SimpleDriver implements BenchmarkDriver {
           }
         }
       } catch (Exception e) {
-        exceptionHandler.accept(e);
+        exceptionHandler.onException("Error running benchmark", e);
       }
     }
   }
   
-  private static BenchmarkResult run(int threads, int warmupTime, int benchTime, Consumer<Exception> exceptionHandler,
+  private static BenchmarkResult run(int threads, 
+                                     int warmupTimeSeconds, 
+                                     int benchTimeSeconds, 
+                                     ExceptionHandler exceptionHandler,
                                      BenchmarkTarget target) {
     final RunnerThread[] runners = new RunnerThread[threads];
     for (int threadNo = 0; threadNo < threads; threadNo++) {
@@ -179,29 +186,28 @@ public final class SimpleDriver implements BenchmarkDriver {
     }
     
     long sampleInterval = 10;
-    if (warmupTime != 0) {
-      sampleInterval = run(runners, warmupTime, sampleInterval, exceptionHandler);
+    if (warmupTimeSeconds != 0) {
+      sampleInterval = run(runners, warmupTimeSeconds, sampleInterval, exceptionHandler);
     }
     final long start = System.nanoTime();
-    final long ops = run(runners, benchTime, sampleInterval, exceptionHandler);
-    final double duration = (System.nanoTime() - start) / 1_000_000_000d;
-    final double rate = ops / duration;
+    final long ops = run(runners, benchTimeSeconds, sampleInterval, exceptionHandler);
+    final long durationMillis = (System.nanoTime() - start) / 1_000_000L;
+    final double rate = ops / durationMillis * 1000d;
     
     for (RunnerThread runner : runners) {
       runner.terminate();
     }
-    return new BenchmarkResult(duration, rate);
+    return new BenchmarkResult(durationMillis, rate, null);
   }
   
-  private static long run(RunnerThread[] runners, int time, long sampleInterval, Consumer<Exception> exceptionHandler) {
-    //System.out.println("sampleInterval=" + sampleInterval + ", group=" + SampleIntervalGroup.from(sampleInterval));
-    final SampleIntervalGroup group = SampleIntervalGroup.from(time);
+  private static long run(RunnerThread[] runners, int timeSeconds, long sampleInterval, ExceptionHandler exceptionHandler) {
+    final SampleIntervalGroup group = SampleIntervalGroup.from(sampleInterval);
     try {
       for (RunnerThread runner : runners) {
         runner.go(group);
       }
 
-      Thread.sleep(time * 1000);
+      Thread.sleep(timeSeconds * 1000);
 
       final CountDownLatch latch = new CountDownLatch(runners.length);
       for (RunnerThread runner : runners) {
@@ -216,7 +222,7 @@ public final class SimpleDriver implements BenchmarkDriver {
       }
       return ops;
     } catch (InterruptedException e) {
-      exceptionHandler.accept(e);
+      exceptionHandler.onException("Interrupted", e);
       return 0;
     }
   }

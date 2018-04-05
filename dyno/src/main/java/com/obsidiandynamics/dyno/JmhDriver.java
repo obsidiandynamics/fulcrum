@@ -8,15 +8,17 @@ import org.openjdk.jmh.results.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import com.obsidiandynamics.func.*;
+
 public final class JmhDriver implements BenchmarkDriver {
   private final Consumer<ChainedOptionsBuilder> optionsBuilder;
   
   public JmhDriver() {
-    this($ -> {});
+    this(__optionsBuilder -> {});
   }
   
-  public JmhDriver(Consumer<ChainedOptionsBuilder> optionsBuilder) {
-    this.optionsBuilder = optionsBuilder;
+  public JmhDriver(Consumer<ChainedOptionsBuilder> optionsBuilderConsumer) {
+    this.optionsBuilder = optionsBuilderConsumer;
   }
   
   /**
@@ -28,9 +30,9 @@ public final class JmhDriver implements BenchmarkDriver {
    *  3. An incompatible version of the JVM is used.<p>
    *  
    *  To regenerate run {@code gradle gen}.<br>
-   *  1. Sources will be automatically copied to {@code src/gen/java}. <em>Afterwards organise imports to 
+   *  1. Sources will be automatically copied to {@code src/main/java}. <em>Afterwards organise imports to 
    *  remove any IDE warnings.</em><br>
-   *  2. Configuration will be copied {@code src/gen/resources/META-INF}.
+   *  2. Configuration will be copied {@code src/main/resources/META-INF}.
    */
   @State(Scope.Benchmark)
   public static class JmhWrapper {
@@ -71,15 +73,18 @@ public final class JmhDriver implements BenchmarkDriver {
   }
   
   @Override
-  public BenchmarkResult run(int threads, int warmupTime, int benchTime, Consumer<Exception> exceptionHandler,
+  public BenchmarkResult run(int threads, 
+                             int warmupTimeMillis, 
+                             int benchTimeMillis, 
+                             ExceptionHandler exceptionHandler,
                              Class<? extends BenchmarkTarget> targetClass) {
     final ChainedOptionsBuilder builder = new OptionsBuilder()
     .include(JmhWrapper.class.getSimpleName())
     .threads(threads)
     .warmupIterations(1)
-    .warmupTime(TimeValue.seconds(warmupTime))
+    .warmupTime(TimeValue.milliseconds(warmupTimeMillis))
     .measurementIterations(5)
-    .measurementTime(TimeValue.seconds(benchTime))
+    .measurementTime(TimeValue.milliseconds(benchTimeMillis))
     .param("targetClass", targetClass.getName())
     .forks(1);
     
@@ -92,14 +97,16 @@ public final class JmhDriver implements BenchmarkDriver {
     try {
       results = new Runner(opts).run();
     } catch (RunnerException e) {
-      exceptionHandler.accept(e);
-      return new BenchmarkResult(0, 0);
+      exceptionHandler.onException("Unexpected exception", e);
+      return new BenchmarkResult(0, 0, Collections.emptyList());
     }
     final long took = System.currentTimeMillis() - started;
     
-    if (results.size() != 1) throw new AssertionError("Expecting exactly one result, got " + results.size());
-    
-    final Result<?> primary = results.iterator().next().getPrimaryResult();
-    return new BenchmarkResult(took / 1000d, primary.getScore());
+    final Result<?> primary = getFirstPrimaryResult(results);
+    return new BenchmarkResult(took, primary.getScore(), results);
+  }
+  
+  private static Result<?> getFirstPrimaryResult(Collection<RunResult> results) {
+    return results.iterator().next().getPrimaryResult();
   }
 }

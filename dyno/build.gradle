@@ -2,6 +2,7 @@ def packageName = "fulcrum-dyno"
 version = project(":").version
 
 dependencies {
+  compile project(":fulcrum-func")
   compile 'org.openjdk.jmh:jmh-core:1.19'
 }
 
