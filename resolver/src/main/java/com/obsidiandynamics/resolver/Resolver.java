@@ -10,6 +10,12 @@ public final class Resolver {
   
   private Resolver() {}
   
+  private static <T> T supplyNull() { return null; }
+  
+  public static <T> Supplier<T> lookup(Class<? super T> type) {
+    return lookup(type, Resolver::supplyNull);
+  }
+  
   public static <T> Supplier<T> lookup(Class<? super T> type, Supplier<T> defaultValueSupplier) {
     final Object existing = map.get().get(type);
     if (existing != null) {

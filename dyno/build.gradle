@@ -21,7 +21,11 @@ apply plugin: 'net.ltgt.apt'
 dependencies {
   compile project(":fulcrum-func")
   compile 'org.openjdk.jmh:jmh-core:1.19'
+  
   annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.19'
+  
+  testCompile project(":fulcrum-assert")
+  testCompile project(":fulcrum-resolver")
 }
 
 compileJava {

@@ -80,7 +80,7 @@ public final class JmhDriver implements BenchmarkDriver {
   @Override
   public BenchmarkResult run(int threads, 
                              int warmupTimeMillis, 
-                             int benchTimeMillis, 
+                             int benchmarkTimeMillis, 
                              ExceptionHandler exceptionHandler,
                              Class<? extends BenchmarkTarget> targetClass) {
     final ChainedOptionsBuilder builder = new OptionsBuilder()
@@ -89,7 +89,7 @@ public final class JmhDriver implements BenchmarkDriver {
     .warmupIterations(1)
     .warmupTime(TimeValue.milliseconds(warmupTimeMillis))
     .measurementIterations(5)
-    .measurementTime(TimeValue.milliseconds(benchTimeMillis))
+    .measurementTime(TimeValue.milliseconds(benchmarkTimeMillis))
     .param("targetClass", targetClass.getName())
     .forks(1);
     

@@ -4,7 +4,12 @@ import java.util.function.*;
 
 import com.obsidiandynamics.func.*;
 
+/**
+ *  Bootstraps the benchmark.
+ */
 public final class Dyno {
+  static Consumer<BenchmarkResult> defaultResultConsumer = __result -> {};
+  
   /** The driver that will execute the actual benchmark. */
   private BenchmarkDriver driver = new JmhDriver();
   
@@ -14,8 +19,8 @@ public final class Dyno {
   /** Fraction of time dedicated to warmup. (On top of benchmark time). */
   private double warmupFrac = .01f;
   
-  /** Duration of a timed run, in seconds. */
-  private int benchTimeSeconds = 5;
+  /** Duration of a timed run. */
+  private int benchmarkTimeMillis = 5;
   
   /** Handles any errors occurred during the execution of the benchmark. */
   private ExceptionHandler exceptionHandler = ExceptionHandler.forPrintStream(System.err);
@@ -24,24 +29,20 @@ public final class Dyno {
   private Class<? extends BenchmarkTarget> targetClass;
   
   /** Optional: where to send the result to. */
-  private Consumer<BenchmarkResult> consumer = __result -> {};
+  private Consumer<BenchmarkResult> resultConsumer = defaultResultConsumer;
   
   public Dyno withDriver(BenchmarkDriver driver) {
     this.driver = driver;
     return this;
   }
   
-  public Dyno multiThreaded() {
-    return withThreads(Runtime.getRuntime().availableProcessors());
-  }
-
   public Dyno withThreads(int threads) {
     this.threads = threads;
     return this;
   }
 
-  public Dyno withBenchTime(int benchTimeSeconds) {
-    this.benchTimeSeconds = benchTimeSeconds;
+  public Dyno withBenchmarkTime(int benchmarkTimeMillis) {
+    this.benchmarkTimeMillis = benchmarkTimeMillis;
     return this;
   }
   
@@ -60,15 +61,15 @@ public final class Dyno {
     return this;
   }
   
-  public Dyno withOutput(Consumer<BenchmarkResult> consumer) {
-    this.consumer = consumer;
+  public Dyno withOutput(Consumer<BenchmarkResult> resultConsumer) {
+    this.resultConsumer = resultConsumer;
     return this;
   }
   
   public BenchmarkResult run() {
-    final int warmupTimeSeconds = (int) (benchTimeSeconds * warmupFrac);
-    final BenchmarkResult result = driver.run(threads, warmupTimeSeconds, benchTimeSeconds, exceptionHandler, targetClass);
-    consumer.accept(result);
+    final int warmupTimeMillis = (int) (benchmarkTimeMillis * warmupFrac);
+    final BenchmarkResult result = driver.run(threads, warmupTimeMillis, benchmarkTimeMillis, exceptionHandler, targetClass);
+    resultConsumer.accept(result);
     return result;
   }
 }

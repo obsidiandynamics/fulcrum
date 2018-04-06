@@ -6,7 +6,7 @@ import com.obsidiandynamics.func.*;
 public interface BenchmarkDriver {
   BenchmarkResult run(int threads, 
                       int warmupTimeMillis, 
-                      int benchTimeMillis, 
+                      int benchmarkTimeMillis, 
                       ExceptionHandler exceptionHandler, 
                       Class<? extends BenchmarkTarget> targetClass);
 }

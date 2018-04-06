@@ -10,7 +10,7 @@ public final class SimpleDriver implements BenchmarkDriver {
   @Override
   public BenchmarkResult run(int threads, 
                              int warmupTimeMillis, 
-                             int benchTimeMillis, 
+                             int benchmarkTimeMillis, 
                              ExceptionHandler exceptionHandler,
                              Class<? extends BenchmarkTarget> targetClass) {
     final BenchmarkTarget target;
@@ -22,7 +22,7 @@ public final class SimpleDriver implements BenchmarkDriver {
     }
     
     try {
-      return run(threads, warmupTimeMillis, benchTimeMillis, exceptionHandler, target);
+      return run(threads, warmupTimeMillis, benchmarkTimeMillis, exceptionHandler, target);
     } finally {
       try {
         BenchmarkSupport.dispose(target);

@@ -21,7 +21,7 @@ public final class JmhSample implements BenchmarkTarget {
   
   public static void main(String[] args) {
     new Dyno()
-    .withBenchTime(1_000)
+    .withBenchmarkTime(1_000)
     .withTarget(JmhSample.class)
     .withThreads(2)
     .withDriver(new JmhDriver(opts -> opts
