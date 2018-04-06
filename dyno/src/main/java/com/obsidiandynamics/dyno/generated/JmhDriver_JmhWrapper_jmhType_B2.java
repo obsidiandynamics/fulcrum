@@ -16,7 +16,4 @@ public class JmhDriver_JmhWrapper_jmhType_B2 extends JmhDriver_JmhWrapper_jmhTyp
     public final static AtomicIntegerFieldUpdater<JmhDriver_JmhWrapper_jmhType_B2> setupInvocationMutexUpdater = AtomicIntegerFieldUpdater.newUpdater(JmhDriver_JmhWrapper_jmhType_B2.class, "setupInvocationMutex");
     public final static AtomicIntegerFieldUpdater<JmhDriver_JmhWrapper_jmhType_B2> tearInvocationMutexUpdater = AtomicIntegerFieldUpdater.newUpdater(JmhDriver_JmhWrapper_jmhType_B2.class, "tearInvocationMutex");
 
-    public volatile boolean readyTrial;
-    public volatile boolean readyIteration;
-    public volatile boolean readyInvocation;
 }

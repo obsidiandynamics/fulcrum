@@ -42,24 +42,24 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         }
         if (threadParams.getSubgroupIndex() == 0) {
             RawResults res = new RawResults();
-            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G = _jmh_tryInit_f_jmhwrapper0_G(control);
+            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0 = _jmh_tryInit_f_jmhwrapper0_0(control);
 
             control.preSetup();
 
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                l_jmhwrapper0_G.bench(blackhole);
+                l_jmhwrapper0_0.bench(blackhole);
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            bench_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_jmhwrapper0_G);
+            bench_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_jmhwrapper0_0);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    l_jmhwrapper0_G.bench(blackhole);
+                    l_jmhwrapper0_0.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -68,31 +68,8 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             }
 
             if (control.isLastIteration()) {
-                if (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.compareAndSet(l_jmhwrapper0_G, 0, 1)) {
-                    try {
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (l_jmhwrapper0_G.readyTrial) {
-                            l_jmhwrapper0_G.tearDown();
-                            l_jmhwrapper0_G.readyTrial = false;
-                        }
-                    } catch (Throwable t) {
-                        control.isFailing = true;
-                        throw t;
-                    } finally {
-                        JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.set(l_jmhwrapper0_G, 0);
-                    }
-                } else {
-                    long l_jmhwrapper0_G_backoff = 1;
-                    while (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.get(l_jmhwrapper0_G) == 1) {
-                        TimeUnit.MILLISECONDS.sleep(l_jmhwrapper0_G_backoff);
-                        l_jmhwrapper0_G_backoff = Math.max(1024, l_jmhwrapper0_G_backoff * 2);
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (Thread.interrupted()) throw new InterruptedException();
-                    }
-                }
-                synchronized(this.getClass()) {
-                    f_jmhwrapper0_G = null;
-                }
+                l_jmhwrapper0_0.tearDown();
+                f_jmhwrapper0_0 = null;
             }
             res.allOps += res.measuredOps;
             int batchSize = iterationParams.getBatchSize();
@@ -109,12 +86,12 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void bench_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G) throws Throwable {
+    public static void bench_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            l_jmhwrapper0_G.bench(blackhole);
+            l_jmhwrapper0_0.bench(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -133,24 +110,24 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         }
         if (threadParams.getSubgroupIndex() == 0) {
             RawResults res = new RawResults();
-            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G = _jmh_tryInit_f_jmhwrapper0_G(control);
+            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0 = _jmh_tryInit_f_jmhwrapper0_0(control);
 
             control.preSetup();
 
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                l_jmhwrapper0_G.bench(blackhole);
+                l_jmhwrapper0_0.bench(blackhole);
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            bench_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_jmhwrapper0_G);
+            bench_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_jmhwrapper0_0);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    l_jmhwrapper0_G.bench(blackhole);
+                    l_jmhwrapper0_0.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -159,31 +136,8 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             }
 
             if (control.isLastIteration()) {
-                if (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.compareAndSet(l_jmhwrapper0_G, 0, 1)) {
-                    try {
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (l_jmhwrapper0_G.readyTrial) {
-                            l_jmhwrapper0_G.tearDown();
-                            l_jmhwrapper0_G.readyTrial = false;
-                        }
-                    } catch (Throwable t) {
-                        control.isFailing = true;
-                        throw t;
-                    } finally {
-                        JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.set(l_jmhwrapper0_G, 0);
-                    }
-                } else {
-                    long l_jmhwrapper0_G_backoff = 1;
-                    while (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.get(l_jmhwrapper0_G) == 1) {
-                        TimeUnit.MILLISECONDS.sleep(l_jmhwrapper0_G_backoff);
-                        l_jmhwrapper0_G_backoff = Math.max(1024, l_jmhwrapper0_G_backoff * 2);
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (Thread.interrupted()) throw new InterruptedException();
-                    }
-                }
-                synchronized(this.getClass()) {
-                    f_jmhwrapper0_G = null;
-                }
+                l_jmhwrapper0_0.tearDown();
+                f_jmhwrapper0_0 = null;
             }
             res.allOps += res.measuredOps;
             int batchSize = iterationParams.getBatchSize();
@@ -200,12 +154,12 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void bench_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G) throws Throwable {
+    public static void bench_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            l_jmhwrapper0_G.bench(blackhole);
+            l_jmhwrapper0_0.bench(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -224,14 +178,14 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
         }
         if (threadParams.getSubgroupIndex() == 0) {
             RawResults res = new RawResults();
-            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G = _jmh_tryInit_f_jmhwrapper0_G(control);
+            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0 = _jmh_tryInit_f_jmhwrapper0_0(control);
 
             control.preSetup();
 
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                l_jmhwrapper0_G.bench(blackhole);
+                l_jmhwrapper0_0.bench(blackhole);
                 res.allOps++;
             }
 
@@ -240,12 +194,12 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             int batchSize = iterationParams.getBatchSize();
             int opsPerInv = benchmarkParams.getOpsPerInvocation();
             SampleBuffer buffer = new SampleBuffer();
-            bench_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_jmhwrapper0_G);
+            bench_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_jmhwrapper0_0);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    l_jmhwrapper0_G.bench(blackhole);
+                    l_jmhwrapper0_0.bench(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -254,31 +208,8 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             }
 
             if (control.isLastIteration()) {
-                if (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.compareAndSet(l_jmhwrapper0_G, 0, 1)) {
-                    try {
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (l_jmhwrapper0_G.readyTrial) {
-                            l_jmhwrapper0_G.tearDown();
-                            l_jmhwrapper0_G.readyTrial = false;
-                        }
-                    } catch (Throwable t) {
-                        control.isFailing = true;
-                        throw t;
-                    } finally {
-                        JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.set(l_jmhwrapper0_G, 0);
-                    }
-                } else {
-                    long l_jmhwrapper0_G_backoff = 1;
-                    while (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.get(l_jmhwrapper0_G) == 1) {
-                        TimeUnit.MILLISECONDS.sleep(l_jmhwrapper0_G_backoff);
-                        l_jmhwrapper0_G_backoff = Math.max(1024, l_jmhwrapper0_G_backoff * 2);
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (Thread.interrupted()) throw new InterruptedException();
-                    }
-                }
-                synchronized(this.getClass()) {
-                    f_jmhwrapper0_G = null;
-                }
+                l_jmhwrapper0_0.tearDown();
+                f_jmhwrapper0_0 = null;
             }
             res.allOps += res.measuredOps * batchSize;
             res.allOps *= opsPerInv;
@@ -292,7 +223,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void bench_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G) throws Throwable {
+    public static void bench_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0) throws Throwable {
         long realTime = 0;
         long operations = 0;
         int rnd = (int)System.nanoTime();
@@ -307,7 +238,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             }
             for (int b = 0; b < batchSize; b++) {
                 if (control.volatileSpoiler) return;
-                l_jmhwrapper0_G.bench(blackhole);
+                l_jmhwrapper0_0.bench(blackhole);
             }
             if (sample) {
                 buffer.add((System.nanoTime() - time) / opsPerInv);
@@ -334,7 +265,7 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             this.blackhole = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
         }
         if (threadParams.getSubgroupIndex() == 0) {
-            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G = _jmh_tryInit_f_jmhwrapper0_G(control);
+            JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0 = _jmh_tryInit_f_jmhwrapper0_0(control);
 
             control.preSetup();
 
@@ -342,35 +273,12 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             notifyControl.startMeasurement = true;
             RawResults res = new RawResults();
             int batchSize = iterationParams.getBatchSize();
-            bench_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_jmhwrapper0_G);
+            bench_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_jmhwrapper0_0);
             control.preTearDown();
 
             if (control.isLastIteration()) {
-                if (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.compareAndSet(l_jmhwrapper0_G, 0, 1)) {
-                    try {
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (l_jmhwrapper0_G.readyTrial) {
-                            l_jmhwrapper0_G.tearDown();
-                            l_jmhwrapper0_G.readyTrial = false;
-                        }
-                    } catch (Throwable t) {
-                        control.isFailing = true;
-                        throw t;
-                    } finally {
-                        JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.set(l_jmhwrapper0_G, 0);
-                    }
-                } else {
-                    long l_jmhwrapper0_G_backoff = 1;
-                    while (JmhDriver_JmhWrapper_jmhType.tearTrialMutexUpdater.get(l_jmhwrapper0_G) == 1) {
-                        TimeUnit.MILLISECONDS.sleep(l_jmhwrapper0_G_backoff);
-                        l_jmhwrapper0_G_backoff = Math.max(1024, l_jmhwrapper0_G_backoff * 2);
-                        if (control.isFailing) throw new FailureAssistException();
-                        if (Thread.interrupted()) throw new InterruptedException();
-                    }
-                }
-                synchronized(this.getClass()) {
-                    f_jmhwrapper0_G = null;
-                }
+                l_jmhwrapper0_0.tearDown();
+                f_jmhwrapper0_0 = null;
             }
             int opsPerInv = control.benchmarkParams.getOpsPerInvocation();
             long totalOps = opsPerInv;
@@ -382,44 +290,31 @@ public final class JmhDriver_JmhWrapper_bench_jmhTest {
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void bench_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_G) throws Throwable {
+    public static void bench_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, JmhDriver_JmhWrapper_jmhType l_jmhwrapper0_0) throws Throwable {
         long realTime = 0;
         result.startTime = System.nanoTime();
         for (int b = 0; b < batchSize; b++) {
             if (control.volatileSpoiler) return;
-            l_jmhwrapper0_G.bench(blackhole);
+            l_jmhwrapper0_0.bench(blackhole);
         }
         result.stopTime = System.nanoTime();
         result.realTime = realTime;
     }
 
     
-    static volatile JmhDriver_JmhWrapper_jmhType f_jmhwrapper0_G;
+    JmhDriver_JmhWrapper_jmhType f_jmhwrapper0_0;
     
-    JmhDriver_JmhWrapper_jmhType _jmh_tryInit_f_jmhwrapper0_G(InfraControl control) throws Throwable {
-        JmhDriver_JmhWrapper_jmhType val = f_jmhwrapper0_G;
-        if (val != null) {
-            return val;
-        }
-        synchronized(this.getClass()) {
-            try {
-            if (control.isFailing) throw new FailureAssistException();
-            val = f_jmhwrapper0_G;
-            if (val != null) {
-                return val;
-            }
+    JmhDriver_JmhWrapper_jmhType _jmh_tryInit_f_jmhwrapper0_0(InfraControl control) throws Throwable {
+        if (control.isFailing) throw new FailureAssistException();
+        JmhDriver_JmhWrapper_jmhType val = f_jmhwrapper0_0;
+        if (val == null) {
             val = new JmhDriver_JmhWrapper_jmhType();
-            Field f;
-            f = com.obsidiandynamics.dyno.JmhDriver.JmhWrapper.class.getDeclaredField("targetClass");
-            f.setAccessible(true);
-            f.set(val, control.getParam("targetClass"));
+                Field f;
+                f = com.obsidiandynamics.dyno.JmhDriver.JmhWrapper.class.getDeclaredField("targetClass");
+                f.setAccessible(true);
+                f.set(val, control.getParam("targetClass"));
             val.setup();
-            val.readyTrial = true;
-            f_jmhwrapper0_G = val;
-            } catch (Throwable t) {
-                control.isFailing = true;
-                throw t;
-            }
+            f_jmhwrapper0_0 = val;
         }
         return val;
     }

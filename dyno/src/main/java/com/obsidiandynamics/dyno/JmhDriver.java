@@ -35,7 +35,7 @@ public final class JmhDriver implements BenchmarkDriver {
    *  remove any IDE warnings.</em><br>
    *  2. Configuration will be copied {@code src/main/resources/META-INF}.
    */
-  @State(Scope.Benchmark)
+  @State(Scope.Thread)
   public static class JmhWrapper {
     @Param("")
     private String targetClass;
