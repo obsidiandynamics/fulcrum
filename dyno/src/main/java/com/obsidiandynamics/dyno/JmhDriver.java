@@ -110,7 +110,6 @@ public final class JmhDriver implements BenchmarkDriver {
   public BenchmarkResult run(int threads, 
                              int warmupTimeMillis, 
                              int benchmarkTimeMillis, 
-                             ExceptionHandler exceptionHandler,
                              Class<? extends BenchmarkTarget> targetClass) {
     final Options opts = buildOptions(threads, warmupTimeMillis, benchmarkTimeMillis,
                                       targetClass, optionsBuilderConsumer);

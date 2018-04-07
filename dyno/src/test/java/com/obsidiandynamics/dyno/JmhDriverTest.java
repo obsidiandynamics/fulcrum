@@ -16,6 +16,11 @@ import com.obsidiandynamics.func.*;
 
 public final class JmhDriverTest {
   @Test
+  public void testDefaultOptionsBuilderConsumerCoverage() {
+    JmhDriver.defaultOptionsBuilderConsumer.accept(null);
+  }
+  
+  @Test
   public void testBuildOptions() {
     final Options options = JmhDriver.buildOptions(2, 100, 200, BenchmarkTarget.class, opts -> opts.forks(4));
     assertEquals(Optional.of(2), options.getThreads());
@@ -41,7 +46,7 @@ public final class JmhDriverTest {
                                                      .verbosity(VerboseMode.NORMAL)
                                                      .warmupIterations(0)
                                                      .measurementIterations(1))
-        .run(1, 0, 10, exceptionHandler, ThreadGroupScopedBenchmarkTarget.class);
+        .run(1, 0, 10, ThreadGroupScopedBenchmarkTarget.class);
         verifyNoMoreInteractions(exceptionHandler);
         try {
           verify(delegate).setup();

@@ -15,19 +15,17 @@ public final class DynoTest {
   public void testConfigAndRun() {
     final BenchmarkDriver driver = mock(BenchmarkDriver.class);
     final BenchmarkResult result = new BenchmarkResult(100, 200, null);
-    when(driver.run(anyInt(), anyInt(), anyInt(), any(), any())).thenReturn(result);
+    when(driver.run(anyInt(), anyInt(), anyInt(), any())).thenReturn(result);
     
     final int threads = 4;
     final int benchmarkTime = 100;
     final double warmupFrac = 0.25;
-    final ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
     final Class<BenchmarkTarget> targetClass = BenchmarkTarget.class;
     final Consumer<BenchmarkResult> consumer = Classes.cast(mock(Consumer.class));
     
     final BenchmarkResult returned = new Dyno()
         .withBenchmarkTime(benchmarkTime)
         .withDriver(driver)
-        .withExceptionHandler(exceptionHandler)
         .withOutput(consumer)
         .withTarget(targetClass)
         .withThreads(threads)
@@ -37,8 +35,7 @@ public final class DynoTest {
     assertSame(result, returned);
     verify(consumer).accept(eq(result));
     final int warmupTime = (int) (benchmarkTime * warmupFrac);
-    verify(driver).run(eq(threads), eq(warmupTime), eq(benchmarkTime), eq(exceptionHandler), eq(targetClass));
-    verifyNoMoreInteractions(exceptionHandler);
+    verify(driver).run(eq(threads), eq(warmupTime), eq(benchmarkTime), eq(targetClass));
   }
   
   @Test

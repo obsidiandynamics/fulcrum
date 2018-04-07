@@ -2,8 +2,6 @@ package com.obsidiandynamics.dyno;
 
 import java.util.function.*;
 
-import com.obsidiandynamics.func.*;
-
 /**
  *  Bootstraps the benchmark.
  */
@@ -21,9 +19,6 @@ public final class Dyno {
   
   /** Duration of a timed run. */
   private int benchmarkTimeMillis = 5;
-  
-  /** Handles any errors occurred during the execution of the benchmark. */
-  private ExceptionHandler exceptionHandler = ExceptionHandler.forPrintStream(System.err);
   
   /** Class containing the benchmark body and setup/tear-down routines. */
   private Class<? extends BenchmarkTarget> targetClass;
@@ -51,11 +46,6 @@ public final class Dyno {
     return this;
   }
 
-  public Dyno withExceptionHandler(ExceptionHandler exceptionHandler) {
-    this.exceptionHandler = exceptionHandler;
-    return this;
-  }
-
   public Dyno withTarget(Class<? extends BenchmarkTarget> targetClass) {
     this.targetClass = targetClass;
     return this;
@@ -68,7 +58,7 @@ public final class Dyno {
   
   public BenchmarkResult run() {
     final int warmupTimeMillis = (int) (benchmarkTimeMillis * warmupFrac);
-    final BenchmarkResult result = driver.run(threads, warmupTimeMillis, benchmarkTimeMillis, exceptionHandler, targetClass);
+    final BenchmarkResult result = driver.run(threads, warmupTimeMillis, benchmarkTimeMillis, targetClass);
     resultConsumer.accept(result);
     return result;
   }
