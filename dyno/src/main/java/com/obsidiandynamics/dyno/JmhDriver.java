@@ -115,7 +115,7 @@ public final class JmhDriver implements BenchmarkDriver {
                                       targetClass, optionsBuilderConsumer);
 
     final long started = System.currentTimeMillis();
-    final Collection<RunResult> results = Exceptions.wrap(() -> new Runner(opts).run(), BenchmarkException::new);
+    final Collection<RunResult> results = Exceptions.wrap(() -> new Runner(opts).run(), BenchmarkError::new);
     final long took = System.currentTimeMillis() - started;
 
     final Result<?> primary = getFirstPrimaryResult(results);

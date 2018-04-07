@@ -27,6 +27,11 @@ public final class BenchmarkResult {
   
   @Override
   public String toString() {
-    return String.format("took %,d ms, score: %6.3e, result: %s", durationMillis, score, result);
+    final String mainFormat = "took %,d ms, score: %6.3e";
+    if (result != null) {
+      return String.format(mainFormat + ", result: %s", durationMillis, score, result);
+    } else {
+      return String.format(mainFormat, durationMillis, score);
+    }
   }
 }

@@ -12,8 +12,6 @@ import org.junit.*;
 import org.openjdk.jmh.runner.options.*;
 import org.openjdk.jmh.util.Optional;
 
-import com.obsidiandynamics.func.*;
-
 public final class JmhDriverTest {
   @Test
   public void testDefaultOptionsBuilderConsumerCoverage() {
@@ -31,23 +29,30 @@ public final class JmhDriverTest {
     assertEquals(BenchmarkTarget.class.getName(), params.iterator().next());
     assertEquals(Optional.of(4), options.getForkCount());
   }
+  
+
+  /**
+   *  Note: Running JMH will result in an illegal reflective access, which has been promoted
+   *  to a warning in Java 9 and later, and will show up in the build log.
+   */
+  private static final boolean TEST_REAL_JMH = true;
 
   @Test
-  public void testRun() throws Exception {
+  public void testRunWithoutFork() throws Exception {
+    Assume.assumeTrue(TEST_REAL_JMH);
+    
     final AtomicReference<Exception> error = new AtomicReference<>();
     final ThreadGroup group = new ThreadGroup(UUID.randomUUID().toString());
     final Thread thread = new Thread(group, () -> {
       final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
       ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
       try {
-        final ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
         final BenchmarkResult result = new JmhDriver(opts -> opts
                                                      .forks(0)
                                                      .verbosity(VerboseMode.NORMAL)
                                                      .warmupIterations(0)
                                                      .measurementIterations(1))
         .run(1, 0, 10, ThreadGroupScopedBenchmarkTarget.class);
-        verifyNoMoreInteractions(exceptionHandler);
         try {
           verify(delegate).setup();
           verify(delegate, atLeastOnce()).cycle(isA(BlackholeAbyss.class));
@@ -66,5 +71,24 @@ public final class JmhDriverTest {
     thread.start();
     thread.join();
     assertNull(error.get());
+  }
+  
+  public static final class NopBenchmarkTarget implements BenchmarkTarget {
+    @Override
+    public void cycle(Abyss abyss) throws Exception {}
+  }
+
+  @Test
+  public void testRunWithFork() throws Exception {
+    Assume.assumeTrue(TEST_REAL_JMH);
+    
+    final BenchmarkResult result = new JmhDriver(opts -> opts
+                                                 .forks(1)
+                                                 .verbosity(VerboseMode.NORMAL)
+                                                 .warmupIterations(0)
+                                                 .measurementIterations(1))
+    .run(1, 0, 10, NopBenchmarkTarget.class);
+    assertTrue("result.duration=" + result.getDuration(), result.getDuration() > 0);
+    assertTrue("result.duration=" + result.getScore(), result.getScore() > 0);
   }
 }

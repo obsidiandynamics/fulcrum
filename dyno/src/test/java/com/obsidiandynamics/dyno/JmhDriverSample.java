@@ -3,7 +3,7 @@ package com.obsidiandynamics.dyno;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.options.*;
 
-public final class JmhSample implements BenchmarkTarget {
+public final class JmhDriverSample implements BenchmarkTarget {
   @Override
   public void setup() {
     // optional setup code
@@ -22,7 +22,7 @@ public final class JmhSample implements BenchmarkTarget {
   public static void main(String[] args) {
     new Dyno()
     .withBenchmarkTime(1_000)
-    .withTarget(JmhSample.class)
+    .withTarget(JmhDriverSample.class)
     .withThreads(2)
     .withDriver(new JmhDriver(opts -> opts
                               .mode(Mode.Throughput)

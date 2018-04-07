@@ -1,225 +1,142 @@
 package com.obsidiandynamics.dyno;
 
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 import org.openjdk.jmh.infra.*;
 
+import com.obsidiandynamics.func.*;
+
 public final class SimpleDriver implements BenchmarkDriver {
+  private boolean verbose;
+  
+  public SimpleDriver withVerbose(boolean verbose) {
+    this.verbose = verbose;
+    return this;
+  }
+  
+  private void log(String format, Object... args) {
+    if (verbose) System.out.format(format, args);
+  }
+  
   @Override
   public BenchmarkResult run(int threads, 
                              int warmupTimeMillis, 
                              int benchmarkTimeMillis, 
                              Class<? extends BenchmarkTarget> targetClass) {
-    final BenchmarkTarget target;
-    try {
-      target = BenchmarkSupport.resolve(targetClass);
-    } catch (Exception e) {
-      return null;
-    }
-    
-    try {
-      return run(threads, warmupTimeMillis, benchmarkTimeMillis, target);
-    } finally {
-      try {
-        BenchmarkSupport.dispose(target);
-      } catch (Exception e) {
-        return null;
+    return Exceptions.wrap(() -> {
+      int batchSize = 1_000;
+      if (warmupTimeMillis != 0) {
+        log("# Warming up... ");
+        final SimpleRunner r = new SimpleRunner(batchSize, warmupTimeMillis, targetClass, new CyclicBarrier(1));
+        r.join();
+        final double warmupRate = (double) r.cycles / r.tookMillis;
+        if (verbose) System.out.format("done in %,d ms\n", r.tookMillis);
+        batchSize = calibrateBatchSize(warmupRate, benchmarkTimeMillis);
+        log("# Warmup rate: %,.3f cycles/sec\n", warmupRate * 1_000);
+        log("# Recalibrated batch size to %,d cycles\n", batchSize);
       }
-    }
+
+      log("Starting timed run... ");
+      final List<SimpleRunner> runners = new ArrayList<>(threads);
+      final CyclicBarrier barrier = new CyclicBarrier(threads);
+      final long start = System.currentTimeMillis();
+      for (int i = 0; i < threads; i++) {
+        runners.add(new SimpleRunner(batchSize, benchmarkTimeMillis, targetClass, barrier));
+      }
+      
+      // wait for all the runners to finish
+      for (SimpleRunner runner : runners) {
+        runner.join();
+      }
+      log("done in %,d ms\n", System.currentTimeMillis() - start);
+
+      // if any of the runners throw an error, rethrow that error here
+      final Throwable error = runners.stream().map(r -> r.error.get()).filter(e -> e != null).findFirst().orElse(null);
+      if (error != null) {
+        throw new BenchmarkError(error);
+      }
+      
+      final double averageTimeMillis = runners.stream().mapToLong(r -> r.runTimeMillis).average().getAsDouble();
+      final long totalCycles = runners.stream().mapToLong(r -> r.cycles).sum();
+      final double rate = totalCycles / averageTimeMillis * 1_000d;
+      log("Measured rate: %,.3f cycles/sec\n", rate);
+      
+      return new BenchmarkResult((long) averageTimeMillis, rate, null);
+    }, BenchmarkError::new);
   }
   
   /**
-   *  Staggered brackets of sampling intervals used as a switch statement constant.<p> 
+   *  Calibrates a batch size so that a check is performed at most approximately once every 10 millis or
+   *  {@code benchmarkTimeMillis}, whichever is lower.
    *  
-   *  The reason for implementing seemingly redundant logic in switch statements is that
-   *  it allows the loops to make comparisons against constants, thereby benefiting from
-   *  compiler inlining.
+   *  @param cyclesPerMillisecond
+   *  @param benchmarkTimeMillis
+   *  @return
    */
-  private enum SampleIntervalGroup {
-    _1,
-    _10,
-    _100,
-    _1000,
-    _10000;
-    
-    private final int value;
-    
-    private SampleIntervalGroup() { 
-      value = Integer.parseInt(name().substring(1));
-    }
-    
-    static SampleIntervalGroup from(long sampleInterval) {
-      for (int i = values().length - 1; i >= 0; i--) {
-        if (values()[i].value <= sampleInterval) {
-          return values()[i];
-        }
-      }
-      throw new IllegalArgumentException("Invalid sample interval");
-    }
+  static int calibrateBatchSize(double cyclesPerMillisecond, int benchmarkTimeMillis) {
+    final int checkIntervalMillis = Math.min(benchmarkTimeMillis, 10);
+    return Math.max((int) (cyclesPerMillisecond * checkIntervalMillis), 1);
   }
-
-  private static class RunnerThread extends Thread {
-    private final BenchmarkTarget target;
-
-    private volatile boolean running;
-    private volatile boolean terminated;
-    private volatile CountDownLatch latch;
-    private volatile long ops;
-    private volatile SampleIntervalGroup group;
+  
+  private static class SimpleRunner extends Thread {
+    private final int batchSize;
     
-    private RunnerThread(BenchmarkTarget target, int threadNo) {
-      super("RunnerThread-" + target.getClass().getCanonicalName() + "-" + threadNo);
-      setDaemon(true);
-      this.target = target;
+    private final int runTimeMillis;
+    
+    private final Class<? extends BenchmarkTarget> targetClass;
+    
+    private final CyclicBarrier barrier;
+    
+    private final AtomicReference<Throwable> error = new AtomicReference<>();
+    
+    private long cycles;
+    
+    private long tookMillis;
+    
+    SimpleRunner(int batchSize, int runTimeMillis, Class<? extends BenchmarkTarget> targetClass, CyclicBarrier barrier) {
+      super(SimpleRunner.class.getSimpleName());
+      this.batchSize = batchSize;
+      this.runTimeMillis = runTimeMillis;
+      this.targetClass = targetClass;
+      this.barrier = barrier;
       start();
     }
-    
-    void go(SampleIntervalGroup group) {
-      ops = 0;
-      this.group = group;
-      running = true;
-      synchronized (this) {
-        notify();
-      }
-    }
-    
-    void stop(CountDownLatch latch) {
-      this.latch = latch;
-      running = false;
-    }
-    
-    void terminate() {
-      terminated = true;
-      synchronized (this) {
-        notify();
-      }
-    }
-    
+
     @Override
     public void run() {
-      final BlackholeAbyss abyss = new BlackholeAbyss();
-      abyss.blackhole = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
       try {
-        while (true) {
-          if (running) {
-            inner: while (true) {
-              long ops = 0;
-              // The only thing different among the case statements is the ops modulo used to determine when
-              // the loop should be stopped. By duplicating code and using constants, the benchmark harness is
-              // roughly an order of magnitude more efficient, as one of the operands to the mod operator is a 
-              // constant, which will be subjected to inlining by the bytecode compiler.
-              switch (group) {
-                case _1:
-                  while (true) {
-                    target.cycle(abyss);
-                    ops++;
-                    if (! running) {
-                      this.ops = ops;
-                      break inner;
-                    }
-                  }
-                case _10:
-                  while (true) {
-                    target.cycle(abyss);
-                    ops++;
-                    if (ops % 10 == 0 && ! running) {
-                      this.ops = ops;
-                      break inner;
-                    }
-                  }
-                case _100:
-                  while (true) {
-                    target.cycle(abyss);
-                    ops++;
-                    if (ops % 100 == 0 && ! running) {
-                      this.ops = ops;
-                      break inner;
-                    }
-                  }
-                case _1000:
-                  while (true) {
-                    target.cycle(abyss);
-                    ops++;
-                    if (ops % 1000 == 0 && ! running) {
-                      this.ops = ops;
-                      break inner;
-                    }
-                  }
-                case _10000:
-                  while (true) {
-                    target.cycle(abyss);
-                    ops++;
-                    if (ops % 10000 == 0 && ! running) {
-                      this.ops = ops;
-                      break inner;
-                    }
-                  }
-                default:
-                  throw new IllegalStateException();
-              }
+        final BenchmarkTarget target = BenchmarkSupport.resolve(targetClass);
+        final BlackholeAbyss abyss = new BlackholeAbyss();
+        abyss.blackhole = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
+        final long runTimeNanos = runTimeMillis * 1_000_000L;
+        final int batchSize = this.batchSize;
+        
+        barrier.await();
+        
+        final long start = System.nanoTime();
+        long cycles = 0;
+        try {
+          for (;;) {
+            for (int i = 0; i < batchSize; i++) {
+              target.cycle(abyss);
             }
-          } else if (terminated) {
-            return;
-          } else {
-            if (latch != null) latch.countDown();
-            synchronized (this) {
-              wait(1000);
+            
+            final long tookNanos = System.nanoTime() - start;
+            cycles += batchSize;
+            if (tookNanos >= runTimeNanos) {
+              this.cycles = cycles;
+              this.tookMillis = tookNanos / 1_000_000L;
+              return;
             }
           }
+        } finally {
+          BenchmarkSupport.dispose(target);
         }
-      } catch (Exception e) {
-        throw new RuntimeException("Error running benchmark", e);
+      } catch (Throwable e) {
+        error.set(e);
       }
-    }
-  }
-  
-  private static BenchmarkResult run(int threads, 
-                                     int warmupTimeSeconds, 
-                                     int benchTimeSeconds, 
-                                     BenchmarkTarget target) {
-    final RunnerThread[] runners = new RunnerThread[threads];
-    for (int threadNo = 0; threadNo < threads; threadNo++) {
-      runners[threadNo] = new RunnerThread(target, threadNo);
-    }
-    
-    long sampleInterval = 10;
-    if (warmupTimeSeconds != 0) {
-      sampleInterval = run(runners, warmupTimeSeconds, sampleInterval);
-    }
-    final long start = System.nanoTime();
-    final long ops = run(runners, benchTimeSeconds, sampleInterval);
-    final long durationMillis = (System.nanoTime() - start) / 1_000_000L;
-    final double rate = ops / durationMillis * 1000d;
-    
-    for (RunnerThread runner : runners) {
-      runner.terminate();
-    }
-    return new BenchmarkResult(durationMillis, rate, null);
-  }
-  
-  private static long run(RunnerThread[] runners, int timeSeconds, long sampleInterval) {
-    final SampleIntervalGroup group = SampleIntervalGroup.from(sampleInterval);
-    try {
-      for (RunnerThread runner : runners) {
-        runner.go(group);
-      }
-
-      Thread.sleep(timeSeconds * 1000);
-
-      final CountDownLatch latch = new CountDownLatch(runners.length);
-      for (RunnerThread runner : runners) {
-        runner.stop(latch);
-      }
-
-      latch.await();
-      
-      long ops = 0;
-      for (RunnerThread runner : runners) {
-        ops += runner.ops;
-      }
-      return ops;
-    } catch (InterruptedException e) {
-      throw new RuntimeException("Interrupted", e);
     }
   }
 }
