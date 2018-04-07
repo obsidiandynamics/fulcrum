@@ -47,16 +47,18 @@ public final class JmhDriverTest {
       final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
       ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
       try {
+        final int threads = 2;
         final BenchmarkResult result = new JmhDriver(opts -> opts
+                                                     .threads(threads)
                                                      .forks(0)
                                                      .verbosity(VerboseMode.NORMAL)
                                                      .warmupIterations(0)
                                                      .measurementIterations(1))
         .run(1, 0, 10, ThreadGroupScopedBenchmarkTarget.class);
         try {
-          verify(delegate).setup();
-          verify(delegate, atLeastOnce()).cycle(isA(BlackholeAbyss.class));
-          verify(delegate).tearDown();
+          verify(delegate, times(threads)).setup();
+          verify(delegate, atLeast(threads)).cycle(isA(BlackholeAbyss.class));
+          verify(delegate, times(threads)).tearDown();
         } catch (Exception e) {
           error.set(e);
           e.printStackTrace();

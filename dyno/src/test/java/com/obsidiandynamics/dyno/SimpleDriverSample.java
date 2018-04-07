@@ -21,7 +21,7 @@ public final class SimpleDriverSample implements BenchmarkTarget {
     .withBenchmarkTime(1_000)
     .withTarget(SimpleDriverSample.class)
     .withThreads(2)
-    .withDriver(new SimpleDriver().withVerbose(true))
+    .withDriver(new SimpleDriver().withVerbose(true).withLogPrinter(System.out::print))
     .withWarmupFraction(0.2)
     .withOutput(System.out::println)
     .run();

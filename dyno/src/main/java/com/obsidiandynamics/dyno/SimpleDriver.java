@@ -3,6 +3,7 @@ package com.obsidiandynamics.dyno;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 import org.openjdk.jmh.infra.*;
 
@@ -11,13 +12,22 @@ import com.obsidiandynamics.func.*;
 public final class SimpleDriver implements BenchmarkDriver {
   private boolean verbose;
   
+  private Consumer<String> logPrinter = System.out::print;
+  
   public SimpleDriver withVerbose(boolean verbose) {
     this.verbose = verbose;
     return this;
   }
   
-  private void log(String format, Object... args) {
-    if (verbose) System.out.format(format, args);
+  public SimpleDriver withLogPrinter(Consumer<String> logPrinter) {
+    this.logPrinter = logPrinter;
+    return this;
+  }
+  
+  void log(String format, Object... args) {
+    if (verbose) {
+      logPrinter.accept(String.format(format, args));
+    }
   }
   
   @Override
@@ -32,7 +42,7 @@ public final class SimpleDriver implements BenchmarkDriver {
         final SimpleRunner r = new SimpleRunner(batchSize, warmupTimeMillis, targetClass, new CyclicBarrier(1));
         r.join();
         final double warmupRate = (double) r.cycles / r.tookMillis;
-        if (verbose) System.out.format("done in %,d ms\n", r.tookMillis);
+        log("done in %,d ms\n", r.tookMillis);
         batchSize = calibrateBatchSize(warmupRate, benchmarkTimeMillis);
         log("# Warmup rate: %,.3f cycles/sec\n", warmupRate * 1_000);
         log("# Recalibrated batch size to %,d cycles\n", batchSize);
@@ -61,7 +71,7 @@ public final class SimpleDriver implements BenchmarkDriver {
       final double averageTimeMillis = runners.stream().mapToLong(r -> r.runTimeMillis).average().getAsDouble();
       final long totalCycles = runners.stream().mapToLong(r -> r.cycles).sum();
       final double rate = totalCycles / averageTimeMillis * 1_000d;
-      log("Measured rate: %,.3f cycles/sec\n", rate);
+      log("Measured rate: %,.3f cycles/sec (%,.3f ns/cycle)\n", rate, 1_000_000_000d / rate);
       
       return new BenchmarkResult((long) averageTimeMillis, rate, null);
     }, BenchmarkError::new);
