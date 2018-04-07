@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.lang.management.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
@@ -85,7 +84,7 @@ public final class JmhDriverTest {
     Assume.assumeTrue(TEST_REAL_JMH);
     
     // When running from an older (JDK 1.8) build using Gradle wrapper, the forking of a JVM will 
-    // otherwise fail due to Gradle's security manager (only seems to be installed when running with the wrapper);
+    // otherwise fail due to Gradle's security manager (only seems to be installed when running from the wrapper);
     // override Gradle's security manager with a permissive alternative to avoid failure.
     final String securityManagerJvmArg = "-Djava.security.manager=" + PermissiveSecurityManager.class.getName();
     

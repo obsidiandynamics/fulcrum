@@ -57,7 +57,7 @@ public final class SimpleDriverTest {
     final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
     ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
     final int warmupTimeMillis = 5;
-    final int benchmarkTimeMillis = 10;
+    final int benchmarkTimeMillis = 20;
 
     final int threads = 2;
     final BenchmarkResult result = new SimpleDriver().run(threads, warmupTimeMillis, benchmarkTimeMillis, ThreadGroupScopedBenchmarkTarget.class);
@@ -67,5 +67,14 @@ public final class SimpleDriverTest {
     verify(delegate, times(threads + 1)).setup();
     verify(delegate, atLeast(threads + 1)).cycle(isA(BlackholeAbyss.class));
     verify(delegate, times(threads + 1)).tearDown();
+  }
+  
+  @Test(expected=BenchmarkError.class)
+  public void testWithException() throws Exception {
+    final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
+    doThrow(new RuntimeException("simulated error")).when(delegate).cycle(any());
+    ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
+    
+    new SimpleDriver().run(1, 0, 10, ThreadGroupScopedBenchmarkTarget.class);
   }
 }
