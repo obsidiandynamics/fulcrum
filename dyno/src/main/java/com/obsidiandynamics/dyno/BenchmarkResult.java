@@ -4,12 +4,12 @@ import com.obsidiandynamics.func.*;
 
 public final class BenchmarkResult {
   private final long durationMillis;
-  private final double primaryScore;
+  private final double score;
   private final Object result;
 
-  BenchmarkResult(long durationMillis, double primaryScore, Object result) {
+  BenchmarkResult(long durationMillis, double score, Object result) {
     this.durationMillis = durationMillis;
-    this.primaryScore = primaryScore;
+    this.score = score;
     this.result = result;
   }
   
@@ -17,8 +17,8 @@ public final class BenchmarkResult {
     return durationMillis;
   }
 
-  public double getPrimaryScore() {
-    return primaryScore;
+  public double getScore() {
+    return score;
   }
 
   public <T> T getResult() {
@@ -27,6 +27,6 @@ public final class BenchmarkResult {
   
   @Override
   public String toString() {
-    return String.format("took %,d ms, score: %6.3e, result: %s", durationMillis, primaryScore, result);
+    return String.format("took %,d ms, score: %6.3e, result: %s", durationMillis, score, result);
   }
 }

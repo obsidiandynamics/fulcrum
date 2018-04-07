@@ -11,7 +11,7 @@ public final class BenchmarkResultTest {
   public void test() {
     final BenchmarkResult result = new BenchmarkResult(100, 3.14, "result");
     assertEquals(100, result.getDuration());
-    assertEquals(3.14, result.getPrimaryScore(), Double.MIN_VALUE);
+    assertEquals(3.14, result.getScore(), Double.MIN_VALUE);
     assertEquals("result", result.getResult());
     
     Assertions.assertToStringOverride(result);

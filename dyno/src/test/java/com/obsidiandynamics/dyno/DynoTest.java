@@ -38,6 +38,7 @@ public final class DynoTest {
     verify(consumer).accept(eq(result));
     final int warmupTime = (int) (benchmarkTime * warmupFrac);
     verify(driver).run(eq(threads), eq(warmupTime), eq(benchmarkTime), eq(exceptionHandler), eq(targetClass));
+    verifyNoMoreInteractions(exceptionHandler);
   }
   
   @Test
