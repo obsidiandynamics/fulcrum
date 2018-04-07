@@ -10,6 +10,10 @@ public final class Resolver {
   
   private static final Scope defaultScope = Scope.THREAD;
   
+  public static Scope getDefaultScope() {
+    return defaultScope;
+  }
+  
   static {
     for (Scope scope : Scope.values()) {
       scopes.put(scope, scope.make());

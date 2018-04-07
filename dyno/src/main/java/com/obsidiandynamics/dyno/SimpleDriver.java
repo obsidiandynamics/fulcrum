@@ -2,7 +2,6 @@ package com.obsidiandynamics.dyno;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 import org.openjdk.jmh.infra.*;
@@ -63,7 +62,7 @@ public final class SimpleDriver implements BenchmarkDriver {
       log("done in %,d ms\n", System.currentTimeMillis() - start);
 
       // if any of the runners throw an error, rethrow that error here
-      final Throwable error = runners.stream().map(r -> r.error.get()).filter(e -> e != null).findFirst().orElse(null);
+      final Throwable error = runners.stream().map(r -> r.error).filter(e -> e != null).findFirst().orElse(null);
       if (error != null) {
         throw new BenchmarkError(error);
       }
@@ -99,7 +98,7 @@ public final class SimpleDriver implements BenchmarkDriver {
     
     private final CyclicBarrier barrier;
     
-    private final AtomicReference<Throwable> error = new AtomicReference<>();
+    private Throwable error;
     
     private long cycles;
     
@@ -145,7 +144,7 @@ public final class SimpleDriver implements BenchmarkDriver {
           BenchmarkSupport.dispose(target);
         }
       } catch (Throwable e) {
-        error.set(e);
+        error = e;
       }
     }
   }
