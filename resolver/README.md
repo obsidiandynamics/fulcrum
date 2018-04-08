@@ -69,7 +69,89 @@ Resolver.reset(Catalogue.class);
 # Scopes
 Resolver presently supports two scopes — _thread_ and _thread group_.
 
+## Thread scope
+Scopes the lookup context to a thread of execution, exhibiting behaviour analogous to a `ThreadLocal` (upon which this implementation is based).
 
+Context passing for this scope is implicit; merely calling the `Resolver.scope(Scope)` method is sufficient for the resolver to extract the thread's identity from the caller's execution thread behind the scenes. 
+
+This is the default scope, and one that we have used in our examples.
+
+## Thread group scope
+Thread scope is appropriate when sharing occurs within the context of a single execution thread, and is independent of all other threads in the JVM. Sometimes we need to create child threads or run tasks from a thread pool.
+
+Java doesn't have a _persistent_ notion of a thread hierarchy. (Parent-child relationships are only considered during thread initialisation; the child thread inherits certain attributes of its parent, but following initialisation the reference to the parent is discarded.) Instead, Java offers a `ThreadGroup` — a hierarchical container for related threads (and related thread groups).
+
+The thread group scope binds the lookup context to a thread group, allowing related (by group) threads to share the same context.
+
+Like the thread scope, context passing for this scope is implicit; calling the `Resolver.scope(Scope)` method is sufficient for the resolver to extract the thread group's identity from the caller's execution thread behind the scenes. 
+
+There are a few notable caveats when using thread group scope.
+
+### Excessive sharing
+If a thread group is not passed to the constructor of `Thread`, the new thread assumes the group of its creator. While this is useful for spawning child threads, it also applies to the spawning thread itself and, by extension, its parent. Unless a thread group is created and assigned explicitly, using `Scope.THREAD_GROUP` may have an unintended effect of excessive sharing. In the extreme scenario where every thread in the application has been spawned using the default thread group, `Scope.THREAD_GROUP` would be reduced to an application-wide singleton.
+
+To suppress the sharing of registry with the parent hierarchy, use the _parent-nanny-children pattern_, as illustrated below.
+
+```java
+final Thread nannyThread = new Thread(new ThreadGroup("nanny"), () -> {
+  // assignment in the nanny thread
+  Resolver.scope(Scope.THREAD_GROUP).assign(String.class, Singleton.of("nanny and children only"));
+  
+  // lookup in the parent
+  System.out.println("parent: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  
+  new Thread(() -> {
+    // lookup in the child
+    System.out.println("child 1: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  }).start();
+  
+  new Thread(() -> {
+    // lookup in the child
+    System.out.println("child 2: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  }).start();
+});
+nannyThread.start();
+nannyThread.join();
+
+// lookup in the parent
+System.out.println("parent: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+```
+
+This pattern creates an intermediate _nanny_ thread that is responsible for spawning child threads. The nanny is assigned an explicit thread group that is different from the parent thread. The child threads simply inherit the nanny's group. Any dependencies that the child threads need would be injected by the nanny, using any direct references sourced from the enclosing scope (which would typically come from the parent).
+
+Running this code produces the following output, clearly showing that the parent has been cut off from the children.
+
+```
+final ThreadGroup nannyGroup = new ThreadGroup("nanny");
+nannyGroup.setDaemon(true);
+final Thread nannyThread = new Thread(nannyGroup, () -> {
+  // assignment in the nanny thread
+  Resolver.scope(Scope.THREAD_GROUP).assign(String.class, Singleton.of("nanny and children only"));
+  
+  // lookup in the parent
+  System.out.println("parent: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  
+  new Thread(() -> {
+    // lookup in the child
+    System.out.println("child 1: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  }).start();
+  
+  new Thread(() -> {
+    // lookup in the child
+    System.out.println("child 2: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+  }).start();
+});
+nannyThread.start();
+nannyThread.join();
+
+// lookup in the parent
+System.out.println("parent: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+```
+
+### Garbage collection and daemon thread groups
+The lifespan of a thread group is at least as long as that of its threads. However, if the thread group is not a daemon group, it will remain for the lifetime of the JVM. Because thread group context binds a registry directly to the thread group's identity, a non-daemon thread group will render its registry ineligible for garbage collection. When creating a new `ThreadGroup` instance, make sure you set its daemon flag explicitly, or otherwise inherit from a daemon parent thread group. Beware, the default (main) thread group is _not_ a daemon.
+
+### Use with shared executors
 
 # Singleton suppliers
 

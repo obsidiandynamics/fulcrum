@@ -18,7 +18,9 @@ public final class ResolverThreadGroupScopeTest {
   public void testWithDefaultValueSupplier() throws InterruptedException {
     final AtomicReference<Throwable> error = new AtomicReference<>();
     
-    final Thread parent = new Thread(new ThreadGroup(UUID.randomUUID().toString()), () -> {
+    final ThreadGroup nannyGroup = new ThreadGroup(UUID.randomUUID().toString());
+    nannyGroup.setDaemon(true);
+    final Thread nanny = new Thread(nannyGroup, () -> {
       try {
         assertNull(scoped().assign(String.class, Singleton.of("assigned")));
         assertEquals("assigned", scoped().lookup(String.class, () -> "unassigned").get());
@@ -32,7 +34,6 @@ public final class ResolverThreadGroupScopeTest {
         sameGroupThread.join();
         assertEquals("assigned", sameGroupValue.get());
         
-
         // verify that the value can't be read by a thread with a different group
         final AtomicReference<String> diffGroupValue = new AtomicReference<>();
         final Thread diffGroupThread = new Thread(new ThreadGroup(UUID.randomUUID().toString()), () -> {
@@ -49,9 +50,9 @@ public final class ResolverThreadGroupScopeTest {
       } finally {
         scoped().reset();
       }
-    }, "parent");
-    parent.start();
-    parent.join();
+    }, "nanny");
+    nanny.start();
+    nanny.join();
     
     if (error.get() != null) throw new AssertionError(error.get().getMessage(), error.get());
   }

@@ -42,6 +42,7 @@ public final class JmhDriverTest {
     
     final AtomicReference<Exception> error = new AtomicReference<>();
     final ThreadGroup group = new ThreadGroup(UUID.randomUUID().toString());
+    group.setDaemon(true);
     final Thread thread = new Thread(group, () -> {
       final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
       ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
