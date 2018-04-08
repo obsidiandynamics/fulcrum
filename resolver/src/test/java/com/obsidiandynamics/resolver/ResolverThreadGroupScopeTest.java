@@ -11,7 +11,7 @@ import com.obsidiandynamics.resolver.Resolver.*;
 
 public final class ResolverThreadGroupScopeTest {
   private static ScopedResolver scoped() {
-    return Resolver.scoped(Scope.THREAD_GROUP);
+    return Resolver.scope(Scope.THREAD_GROUP);
   }
   
   @Test

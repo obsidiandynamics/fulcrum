@@ -11,7 +11,7 @@ import com.obsidiandynamics.resolver.Resolver.*;
 
 public final class ResolverInheritableThreadScopeTest {
   private static ScopedResolver scoped() {
-    return Resolver.scoped(Scope.INHERITABLE_THREAD);
+    return Resolver.scope(Scope.INHERITABLE_THREAD);
   }
   
   @After
@@ -36,6 +36,24 @@ public final class ResolverInheritableThreadScopeTest {
     scoped().reset(String.class);
     assertEquals("default", scoped().lookup(String.class, () -> "default").get());
   }
+//  
+//  /**
+//   *  Tests context initialisation by a child thread, which is not reflected in
+//   *  the parent.
+//   *  
+//   *  @throws InterruptedException
+//   */
+//  @Test
+//  public void testLateContextInit() throws InterruptedException {
+//    final Thread childThread = new Thread(() -> {
+//      scoped().assign(String.class, Singleton.of("assigned"));
+//      assertEquals("assigned", scoped().lookup(String.class, () -> "unassigned").get());
+//    });
+//    childThread.start();
+//    childThread.join();
+//    
+//    assertEquals("unassigned", scoped().lookup(String.class, () -> "unassigned").get());
+//  }
   
   @Test
   public void testResetAll() {
