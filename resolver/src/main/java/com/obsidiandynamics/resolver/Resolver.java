@@ -6,7 +6,8 @@ import java.util.function.*;
 import com.obsidiandynamics.func.*;
 
 /**
- *  <em>Resolver</em> is an implementation of a Contextual Service Locator (CSL) pattern, enabling 
+ *  <em>Resolver</em> is a lightweight implementation of a Contextual Service Locator (CSL) 
+ *  pattern, enabling 
  *  distinct parts of an application that are not otherwise directly aware of one another to 
  *  share services. However, unlike a traditional Service Locator, a CSL isn't 'static',
  *  and so doesn't negatively impact qualities such as testability or maintainability.<p>

@@ -1,6 +1,7 @@
 package com.obsidiandynamics.resolver;
 
 import java.util.*;
+import java.util.function.*;
 
 /**
  *  Illustrates the sharing of a hypothetical catalogue of books (mapping of titles to ISBNs)
@@ -17,13 +18,15 @@ public final class ResolverSample {
     catalogue.put("Java performance and scalability", "9781482348019");
     catalogue.put("Java performance: the definitive guide", "9781449358457");
     
+    // register the catalogue in thread scope
     Resolver.scope(Scope.THREAD).assign(Catalogue.class, Singleton.of(catalogue));
   }
   
   private static void laterInTheApplication() {
-    final Catalogue catalogue = Resolver.scope(Scope.THREAD).lookup(Catalogue.class).get();
+    final Supplier<Catalogue> catalogueSupp = Resolver.scope(Scope.THREAD).lookup(Catalogue.class);
     
-    catalogue.entrySet().stream().filter(e -> e.getKey().contains("Java")).forEach(System.out::println);
+    // print all books about Java
+    catalogueSupp.get().entrySet().stream().filter(e -> e.getKey().contains("Java")).forEach(System.out::println);
   }
   
   private static void somewhereAtTheEnd() {
