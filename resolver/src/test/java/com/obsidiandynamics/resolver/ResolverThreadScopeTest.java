@@ -22,7 +22,7 @@ public final class ResolverThreadScopeTest {
 
   @Test
   public void testWithDefaultValueSupplier() throws InterruptedException {
-    Resolver.assign(String.class, Singleton.of("assigned"));
+    assertNull(Resolver.assign(String.class, Singleton.of("assigned")));
     assertEquals("assigned", Resolver.lookup(String.class, () -> "unassigned").get());
     
     // verify that the value can't be read by another thread
@@ -34,13 +34,13 @@ public final class ResolverThreadScopeTest {
     otherThread.join();
     assertEquals("unassigned", other.get());
     
-    Resolver.reset(String.class);
+    assertNotNull(Resolver.reset(String.class));
     assertEquals("default", Resolver.lookup(String.class, () -> "default").get());
   }
   
   @Test
   public void testResetAll() {
-    Resolver.assign(String.class, Singleton.of("assigned"));
+    assertNull(Resolver.assign(String.class, Singleton.of("assigned")));
     assertEquals("assigned", Resolver.lookup(String.class).get());
     
     Resolver.reset();
@@ -56,6 +56,6 @@ public final class ResolverThreadScopeTest {
   
   @Test
   public void testDefaultScope() {
-    assertEquals(Scope.THREAD, Resolver.getDefaultScope());
+    assertEquals(Scope.THREAD, Resolver.defaultScope());
   }
 }

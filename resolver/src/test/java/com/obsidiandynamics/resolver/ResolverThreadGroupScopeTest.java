@@ -20,7 +20,7 @@ public final class ResolverThreadGroupScopeTest {
     
     final Thread parent = new Thread(new ThreadGroup(UUID.randomUUID().toString()), () -> {
       try {
-        scoped().assign(String.class, Singleton.of("assigned"));
+        assertNull(scoped().assign(String.class, Singleton.of("assigned")));
         assertEquals("assigned", scoped().lookup(String.class, () -> "unassigned").get());
         
         // verify that the value can be read by a child thread (with the same group)
@@ -42,7 +42,7 @@ public final class ResolverThreadGroupScopeTest {
         diffGroupThread.join();
         assertEquals("unassigned", diffGroupValue.get());
         
-        scoped().reset(String.class);
+        assertNotNull(scoped().reset(String.class));
         assertEquals("default", scoped().lookup(String.class, () -> "default").get());
       } catch (Throwable e) {
         error.set(e);

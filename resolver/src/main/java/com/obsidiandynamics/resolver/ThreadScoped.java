@@ -8,7 +8,7 @@ import java.util.function.*;
  *  behaviour analogous to a {@link ThreadLocal} (upon which this implementation
  *  is based).<p>
  *  
- *  {@link ThreadScoped} is the default scope used in {@link Resolver}.
+ *  {@link ThreadScoped} is the <em>default</em> scope used in {@link Resolver}.
  */
 final class ThreadScoped implements Scoped {
   private final ThreadLocal<Map<Class<?>, Supplier<Object>>> map = ThreadLocal.withInitial(HashMap::new);
