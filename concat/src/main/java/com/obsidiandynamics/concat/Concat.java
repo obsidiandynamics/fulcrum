@@ -3,10 +3,10 @@ package com.obsidiandynamics.concat;
 import java.util.function.*;
 
 /**
- *  A chainable string builder that allows conditional appending of strings, e.g.:<p>
+ *  A chainable string builder that allows conditional concatenation of strings, e.g.:<p>
  *  
  *  {@code
- *  new StringChainer("foo").when(someCondition).append(" bar");
+ *  new Concat("foo").when(someCondition).append(" bar");
  *  }<p>
  *  
  *  Produces "foo" if {@code someCondition} is false and "foo bar" if {@code someCondition}
