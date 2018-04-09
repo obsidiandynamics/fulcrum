@@ -5,18 +5,18 @@ import java.util.stream.*;
 
 public final class ThreadGroupExecutorSample {
   public static void main(String[] args) throws InterruptedException {
-    parentNannyChildrenWithExecutor();
+    parentSurrogateChildrenWithExecutor();
   }
   
-  private static void parentNannyChildrenWithExecutor() throws InterruptedException {
-    final ThreadGroup nannyGroup = new ThreadGroup("nanny");
-    nannyGroup.setDaemon(true);
-    final Thread nannyThread = new Thread(nannyGroup, () -> {
-      // assignment in the nanny thread
-      Resolver.scope(Scope.THREAD_GROUP).assign(String.class, Singleton.of("nanny and children only"));
+  private static void parentSurrogateChildrenWithExecutor() throws InterruptedException {
+    final ThreadGroup surrogateGroup = new ThreadGroup("surrogate");
+    surrogateGroup.setDaemon(true);
+    final Thread surrogateThread = new Thread(surrogateGroup, () -> {
+      // assignment in the surrogate thread
+      Resolver.scope(Scope.THREAD_GROUP).assign(String.class, Singleton.of("surrogate and children only"));
 
-      // lookup in the nanny (should work)
-      System.out.println("nanny: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
+      // lookup in the surrogate (should work)
+      System.out.println("surrogate: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
       
       final ExecutorService exec = Executors.newFixedThreadPool(2);
       final int numChildren = 2;
@@ -27,8 +27,8 @@ public final class ThreadGroupExecutorSample {
 
       exec.shutdown();
     });
-    nannyThread.start();
-    nannyThread.join();
+    surrogateThread.start();
+    surrogateThread.join();
     
     // lookup in the parent (should fail)
     System.out.println("parent: " + Resolver.scope(Scope.THREAD_GROUP).lookup(String.class).get());
