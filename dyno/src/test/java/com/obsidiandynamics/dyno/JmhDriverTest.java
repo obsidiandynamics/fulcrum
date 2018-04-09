@@ -99,4 +99,9 @@ public final class JmhDriverTest {
     assertTrue("result.duration=" + result.getDuration(), result.getDuration() > 0);
     assertTrue("result.duration=" + result.getScore(), result.getScore() > 0);
   }
+  
+  @Test(expected=IllegalArgumentException.class)
+  public void testAveragePrimaryScoreEmpty() {
+    JmhDriver.getAveragePrimaryScore(Collections.emptyList());
+  }
 }

@@ -2,6 +2,7 @@ package com.obsidiandynamics.dyno;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.*;
@@ -118,11 +119,12 @@ public final class JmhDriver implements BenchmarkDriver {
     final Collection<RunResult> results = Exceptions.wrap(() -> new Runner(opts).run(), BenchmarkError::new);
     final long took = System.currentTimeMillis() - started;
 
-    final Result<?> primary = getFirstPrimaryResult(results);
-    return new BenchmarkResult(took, primary.getScore(), results);
+    final double averagePrimaryScore = getAveragePrimaryScore(results);
+    return new BenchmarkResult(took, averagePrimaryScore, results);
   }
 
-  private static Result<?> getFirstPrimaryResult(Collection<RunResult> results) {
-    return results.iterator().next().getPrimaryResult();
+  static double getAveragePrimaryScore(Collection<RunResult> results) {
+    if (results.isEmpty()) throw new IllegalArgumentException("Empty results collection");
+    return results.stream().collect(Collectors.averagingDouble(r -> r.getPrimaryResult().getScore())).doubleValue();
   }
 }

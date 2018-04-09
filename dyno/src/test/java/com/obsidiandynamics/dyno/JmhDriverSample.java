@@ -27,9 +27,9 @@ public final class JmhDriverSample implements BenchmarkTarget {
     .withDriver(new JmhDriver(opts -> opts
                               .mode(Mode.Throughput)
                               .verbosity(VerboseMode.EXTRA)
-                              .forks(1)
+                              .forks(2)
                               .shouldDoGC(true)
-                              .measurementIterations(2)))
+                              .measurementIterations(1)))
     .withWarmupFraction(0.1)
     .withOutput(System.out::println)
     .run();
