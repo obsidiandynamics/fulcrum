@@ -32,8 +32,8 @@ public final class JmhDriverTest {
   }
 
   /**
-   *  Note: Running JMH will result in an illegal reflective access, which has been promoted
-   *  to a warning in Java 9 and later, and will show up in the build log.
+   *  Note: Running JMH (1.20) will result in an illegal reflective access, which has been promoted
+   *  to a warning in Java 9, and will show up in the build log.
    */
   private static final boolean TEST_REAL_JMH = true;
 
