@@ -28,6 +28,7 @@ public final class JmhDriverTest {
     assertEquals(1, params.size());
     assertEquals(BenchmarkTarget.class.getName(), params.iterator().next());
     assertEquals(Optional.of(4), options.getForkCount());
+    assertTrue(options.shouldFailOnError().get());
   }
 
   /**

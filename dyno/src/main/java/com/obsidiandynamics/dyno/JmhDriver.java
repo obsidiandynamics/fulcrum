@@ -100,6 +100,7 @@ public final class JmhDriver implements BenchmarkDriver {
         .measurementIterations(5)
         .measurementTime(TimeValue.milliseconds(benchmarkTimeMillis))
         .param("targetClass", targetClass.getName())
+        .shouldFailOnError(true)
         .forks(1);
 
     optionsBuilderConsumer.accept(builder);
