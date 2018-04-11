@@ -20,7 +20,7 @@ public final class Group implements AutoCloseable {
   
   private final ConcurrentMap<Serializable, Set<HostMessageHandler>> idHandlers = new ConcurrentHashMap<>();
   
-  private LogLine debug = LogLine.forPrintStream(System.err);
+  private LogLine debug = LogLine.nop();
   
   private ExceptionHandler errorHandler = ExceptionHandler.forPrintStream(System.err);
       
