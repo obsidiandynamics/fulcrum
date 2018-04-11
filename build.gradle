@@ -12,10 +12,10 @@ def envKey = "BINTRAY_KEY"
 task bintrayCredentialsCheck {
   doLast {
     if (System.getenv(envUser) == null) {
-      throw new GradleException('No Bintray username specified; set with "export ${envUser}=<username>"')
+      throw new GradleException("No Bintray username specified; set with 'export ${envUser}=<username>'")
     }
     if (System.getenv(envKey) == null) {
-      throw new GradleException('No Bintray key specified; set with "export ${envKey}=<key>"')
+      throw new GradleException("No Bintray key specified; set with 'export ${envKey}=<key>'")
     }
   }
 }
