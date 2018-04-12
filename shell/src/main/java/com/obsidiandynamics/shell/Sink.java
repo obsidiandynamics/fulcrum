@@ -7,4 +7,6 @@ import java.util.function.*;
  *  invoked multiple times during the course of execution.
  */
 @FunctionalInterface
-public interface Sink extends Consumer<String> {}
+public interface Sink extends Consumer<String> {
+  static Sink nop() { return __ -> {}; }
+}
