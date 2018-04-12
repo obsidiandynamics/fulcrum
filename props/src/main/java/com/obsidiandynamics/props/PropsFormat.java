@@ -5,6 +5,8 @@ import static java.lang.String.*;
 import java.util.*;
 import java.util.function.*;
 
+import com.obsidiandynamics.func.*;
+
 public final class PropsFormat {
   private PropsFormat() {}
   
@@ -16,7 +18,7 @@ public final class PropsFormat {
         .max(Integer::compare).orElse(0);
   }
   
-  public static void printStandard(Consumer<String> logLine, 
+  public static void printStandard(LogLine logLine, 
                                    Properties props,
                                    int maxKeyPad, 
                                    String keyPrefix) {
@@ -49,7 +51,7 @@ public final class PropsFormat {
     return s -> true;
   }
   
-  public static void printProps(Consumer<String> logLine,
+  public static void printProps(LogLine logLine,
                                 Properties props, 
                                 Function<String, String> keyFormat,
                                 Function<String, String> valueFormat,
@@ -57,7 +59,7 @@ public final class PropsFormat {
     for (Enumeration<?> keys = props.propertyNames(); keys.hasMoreElements();) {
       final String key = (String) keys.nextElement();
       if (keyPredicate.test(key)) {
-        logLine.accept(keyFormat.apply(key) + ":" + valueFormat.apply(props.getProperty(key)));
+        logLine.println(keyFormat.apply(key) + ":" + valueFormat.apply(props.getProperty(key)));
       }
     }
   }

@@ -17,6 +17,7 @@ import org.jgroups.util.*;
 import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
+import org.mockito.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.await.*;
@@ -98,9 +99,9 @@ public final class GroupTest {
     assertEquals(1, g1.numMessageHandlers());
     assertNotNull(g0.channel());
     
-    final LogLine l0 = mock(LogLine.class);
+    final LogLine l0 = mock(LogLine.class, Answers.CALLS_REAL_METHODS);
     doCallRealMethod().when(l0).printf(any(), any());
-    final LogLine l1 = mock(LogLine.class);
+    final LogLine l1 = mock(LogLine.class, Answers.CALLS_REAL_METHODS);
     doCallRealMethod().when(l1).printf(any(), any());
     g0.withDebug(l0);
     g1.withDebug(l1);
@@ -120,7 +121,7 @@ public final class GroupTest {
     assertEquals(0, g1.numMessageHandlers());
     
     verifyNoMoreInteractions(l0);
-    verify(l1).println(notNull());
+    verify(l1).accept(notNull());
   }
   
   @Test
@@ -132,7 +133,7 @@ public final class GroupTest {
       throw new Exception("testHandlerError");
     }).connect(cluster);
     
-    final LogLine l1 = mock(LogLine.class);
+    final LogLine l1 = mock(LogLine.class, Answers.CALLS_REAL_METHODS);
     doCallRealMethod().when(l1).printf(any(), any());
     g1.withDebug(l1);
     
@@ -146,7 +147,7 @@ public final class GroupTest {
     wait.until(() -> {
       verify(eh1).onException(notNull(), notNull());
     });
-    verify(l1).println(notNull());
+    verify(l1).accept(notNull());
   }
   
   @Test

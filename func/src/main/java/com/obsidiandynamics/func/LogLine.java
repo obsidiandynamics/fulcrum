@@ -1,9 +1,10 @@
 package com.obsidiandynamics.func;
 
 import java.io.*;
+import java.util.function.*;
 
 @FunctionalInterface
-public interface LogLine {
+public interface LogLine extends Consumer<String> {
   static LogLine nop() {
     return __message -> {};
   }
@@ -12,9 +13,11 @@ public interface LogLine {
     return message -> stream.println(message);
   }
   
-  void println(String message);
+  default void println(String message) {
+    accept(message);
+  }
   
   default void printf(String format, Object... args) {
-    println(String.format(format, args));
+    accept(String.format(format, args));
   }
 }

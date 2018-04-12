@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.*;
+import org.mockito.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
@@ -44,14 +45,14 @@ public final class TestmarkTest {
   @Test
   public void testEnabledWithName() throws Throwable {
     final CheckedRunnable<?> r = mock(CheckedRunnable.class);
-    final LogLine logLine = mock(LogLine.class);
+    final LogLine logLine = mock(LogLine.class, Answers.CALLS_REAL_METHODS);
     doCallRealMethod().when(logLine).printf(any(), any());
     Testmark.enable().withOptions(LogLine.class, logLine);
     assertTrue(Testmark.isEnabled());
     
     Testmark.ifEnabled("name", r);
     verify(r).run();
-    verify(logLine).println(isNotNull());
+    verify(logLine).accept(isNotNull());
   }
   
   @Test

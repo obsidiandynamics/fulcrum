@@ -2,6 +2,8 @@ def packageName = "fulcrum-props"
 version = project(":").version
 
 dependencies {
+  compile project(":fulcrum-func")
+  
   testCompile project(":fulcrum-assert")
 }
 
