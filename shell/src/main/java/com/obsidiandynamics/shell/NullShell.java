@@ -5,6 +5,12 @@ package com.obsidiandynamics.shell;
  *  in a shell.
  */
 public final class NullShell implements Shell {
+  private static final NullShell instance = new NullShell();
+  
+  public static NullShell getIntance() { return instance; }
+  
+  private NullShell() {}
+  
   @Override
   public String[] prepare(String[] command) {
     return command;

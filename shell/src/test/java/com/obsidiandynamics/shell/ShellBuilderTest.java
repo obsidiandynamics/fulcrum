@@ -58,7 +58,7 @@ public final class ShellBuilderTest {
   
   @Test
   public void testEcho() throws IOException {
-    builder.withShell(new NullShell());
+    builder.withShell(NullShell.getIntance());
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
     final String command = "command";

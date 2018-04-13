@@ -25,7 +25,7 @@ public final class DockerComposeTest {
   @Before
   public void before() throws IOException {
     executor = mock(ProcessExecutor.class);
-    compose = new DockerCompose().withExecutor(executor).withShell(new NullShell());
+    compose = new DockerCompose().withExecutor(executor).withShell(NullShell.getIntance());
     process = mock(Process.class);
     when(executor.run(any())).thenReturn(process);
     when(process.getInputStream()).thenReturn(new ByteArrayInputStream("test output".getBytes()));
