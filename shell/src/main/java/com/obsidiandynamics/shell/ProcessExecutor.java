@@ -46,6 +46,6 @@ public interface ProcessExecutor {
    *  @return The default executor.
    */
   static ProcessExecutor getDefault() {
-    return new DefaultProcessExecutor();
+    return DefaultProcessExecutor.getInstance();
   }
 }

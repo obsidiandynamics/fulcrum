@@ -28,7 +28,7 @@ public final class BourneShell implements Shell {
      *  @return True if the shell is installed.
      */
     boolean isAvailable() {
-      return new DefaultProcessExecutor().canTryRun(new String[] { "sh", "-c", "pwd" });
+      return DefaultProcessExecutor.getInstance().canTryRun(new String[] { "sh", "-c", "pwd" });
     }
   }
   
