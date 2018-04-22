@@ -19,19 +19,18 @@ public abstract class SyncPacket implements Serializable {
   public final String baseToString() {
     return "id=" + id;
   }
-
+  
   @Override
-  public int hashCode() {
-    return id.hashCode();
+  public final int hashCode() {
+    return Objects.hashCode(id);
   }
-
+  
   @Override
-  public boolean equals(Object obj) {
+  public final boolean equals(Object obj) {
     if (this == obj) {
       return true;
     } else if (obj instanceof SyncPacket) {
-      final SyncPacket that = (SyncPacket) obj;
-      return Objects.equals(id, that.id);
+      return Objects.equals(id, ((SyncPacket) obj).id);
     } else {
       return false;
     }

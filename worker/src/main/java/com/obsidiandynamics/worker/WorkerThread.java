@@ -1,5 +1,6 @@
 package com.obsidiandynamics.worker;
 
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 public final class WorkerThread implements Terminable, Joinable {
@@ -162,12 +163,19 @@ public final class WorkerThread implements Terminable, Joinable {
   
   @Override
   public final int hashCode() {
-    return driver.hashCode();
+    return Objects.hashCode(driver);
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj instanceof WorkerThread ? driver.equals(((WorkerThread) obj).driver) : false;
+    if (this == obj) {
+      return true;
+    } else if (obj instanceof WorkerThread) {
+      final WorkerThread that = (WorkerThread) obj;
+      return Objects.equals(driver, that.driver);
+    } else {
+      return false;
+    }
   }
 
   @Override

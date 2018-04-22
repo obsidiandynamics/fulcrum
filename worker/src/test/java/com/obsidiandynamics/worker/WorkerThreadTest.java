@@ -18,6 +18,8 @@ import com.obsidiandynamics.await.*;
 import com.obsidiandynamics.junit.*;
 import com.obsidiandynamics.threads.*;
 
+import nl.jqno.equalsverifier.*;
+
 @RunWith(Parameterized.class)
 public final class WorkerThreadTest {
   @Parameterized.Parameters
@@ -183,18 +185,10 @@ public final class WorkerThreadTest {
   
   @Test
   public void testEqualsHashCode() {
-    final WorkerThread t1 = WorkerThread.builder()
-        .onCycle(t -> {})
-        .build();
-    final WorkerThread t2 = WorkerThread.builder()
-        .onCycle(t -> {})
-        .build();
-    final WorkerThread t3 = t1;
-    final Object t4 = new Object();
-    assertFalse(t1.equals(t2));
-    assertTrue(t1.equals(t3));
-    assertFalse(t1.equals(t4));
-    assertTrue(t1.hashCode() == t3.hashCode());
+    EqualsVerifier.forClass(WorkerThread.class)
+    .withPrefabValues(Thread.class, new Thread("red"), new Thread("black"))
+    .withOnlyTheseFields("driver")
+    .verify();
   }
   
   private static class ListExceptionHandler implements WorkerExceptionHandler {
