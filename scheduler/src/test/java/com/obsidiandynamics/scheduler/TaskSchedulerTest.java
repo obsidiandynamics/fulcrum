@@ -378,7 +378,7 @@ public final class TaskSchedulerTest {
   public void testScheduleVolumeBenchmark() {
     Testmark.ifEnabled(() -> {
       final int scale = Testmark.getOptions(Scale.class, Scale.unity()).magnitude();
-      testScheduleVolumeBenchmark(10_000_000 * scale,
+      testScheduleVolumeBenchmark(10_000_000L * scale,
                                   1,
                                   10_000_000,
                                   50_000_000,

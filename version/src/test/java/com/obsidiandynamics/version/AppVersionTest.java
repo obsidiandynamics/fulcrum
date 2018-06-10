@@ -27,6 +27,11 @@ public final class AppVersionTest {
     assertEquals("default", version);
   }
   
+  @Test(expected=EOFException.class)
+  public void testEmpty() throws IOException {
+    AppVersion.getFile("empty.version", new Constant("default"));
+  }
+  
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(AppVersion.class);

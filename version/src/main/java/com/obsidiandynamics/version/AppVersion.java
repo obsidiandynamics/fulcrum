@@ -81,7 +81,12 @@ public final class AppVersion {
     if (url == null) return defaultValueSupplier.get();
     
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-      return reader.readLine().trim();
+      final String line = reader.readLine();
+      if (line != null) {
+        return line.trim();
+      } else {
+        throw new EOFException();
+      }
     }
   }
 }
