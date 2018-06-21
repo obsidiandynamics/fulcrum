@@ -74,18 +74,18 @@ public final class Retry {
         + ", exceptionMatcher=" + exceptionMatcher + "]";
   }
   
-  public <X extends Exception> void run(CheckedRunnable<X> operation) throws X {
+  public <X extends Throwable> void run(CheckedRunnable<X> operation) throws X {
     run(toVoidSupplier(operation));
   }
   
-  private static <X extends Exception> CheckedSupplier<Void, X> toVoidSupplier(CheckedRunnable<X> r) {
+  private static <X extends Throwable> CheckedSupplier<Void, X> toVoidSupplier(CheckedRunnable<X> r) {
     return () -> {
       r.run();
       return null;
     };
   }
   
-  public <T, X extends Exception> T run(CheckedSupplier<? extends T, X> operation) throws X {
+  public <T, X extends Throwable> T run(CheckedSupplier<? extends T, X> operation) throws X {
     for (int attempt = 0;; attempt++) {
       try {
         return operation.get();
