@@ -39,7 +39,7 @@ allprojects {
   dependencies {
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.18.0"
-    testCompile "nl.jqno.equalsverifier:equalsverifier:2.4.6"
+    testCompile "nl.jqno.equalsverifier:equalsverifier:2.4.7"
   }
 
   test {
