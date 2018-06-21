@@ -106,8 +106,8 @@ public final class WorkerThread implements Terminable, Joinable {
           // indicate that we've finished cycling - this way we won't get interrupted and 
           // can call the shutdown hook safely
         } else {
-          // we may get interrupted - wait before proceeding with the shutdown hook
-          while (! interrupted) Thread.yield();
+          // we will imminently get interrupted  wait before proceeding with the shutdown hook
+          whileNotInterrupted(Thread::yield);
           Thread.interrupted(); // clear the interrupt before invoking the shutdown hook
         }
         
@@ -122,6 +122,10 @@ public final class WorkerThread implements Terminable, Joinable {
         }
       }
     }
+  }
+  
+  void whileNotInterrupted(Runnable r) {
+    while (! interrupted) r.run();
   }
   
   private void handleUncaughtException(Throwable exception) {

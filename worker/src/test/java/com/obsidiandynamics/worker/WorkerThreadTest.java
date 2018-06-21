@@ -28,7 +28,7 @@ public final class WorkerThreadTest {
   }
 
   private final Timesert wait = Timesert.wait(10_000);
-  
+
   @Test
   public void testSingleRun() {
     final AtomicInteger counter = new AtomicInteger();
@@ -44,7 +44,7 @@ public final class WorkerThreadTest {
         .build();
     assertEquals(WorkerState.CONCEIVED, thread.getState());
     thread.start();
-    
+
     final boolean joined = thread.joinSilently(60_000);
     assertTrue(joined);
     assertEquals(1, counter.get());
@@ -66,7 +66,7 @@ public final class WorkerThreadTest {
         .onShutdown(onShutdown)
         .buildAndStart();
     thread.joinSilently();
-    
+
     assertEquals(WorkerState.TERMINATED, thread.getState());
     assertEquals(1, counter.get());
     assertFalse(thread.getDriverThread().isAlive());
@@ -86,12 +86,12 @@ public final class WorkerThreadTest {
         .build();
     thread.start();
     thread.joinSilently();
-    
+
     assertEquals(WorkerState.TERMINATED, thread.getState());
     assertFalse(thread.getDriverThread().isAlive());
     verify(onShutdown).handle(eq(thread), eq(exception));
   }
-  
+
   @Test
   public void testLifecycleEvents() {
     final WorkerStartup onStartup = mock(WorkerStartup.class);
@@ -102,14 +102,14 @@ public final class WorkerThreadTest {
         .onShutdown(onShutdown)
         .build();
     thread.start();
-    
+
     wait.until(() -> {
       verify(onStartup).handle(eq(thread));
     });
     thread.terminate().joinSilently();
     verify(onShutdown).handle(eq(thread), any());
   }
-  
+
   @Test(expected=IllegalStateException.class)
   public void testTerminateOnConceive() {
     final WorkerThread thread = WorkerThread.builder()
@@ -119,12 +119,12 @@ public final class WorkerThreadTest {
     assertEquals(WorkerState.TERMINATED, thread.getState());
     thread.start();
   }
-  
+
   @Test(expected=IllegalStateException.class)
   public void testBuildWithWorker() {
     WorkerThread.builder().build();
   }
-  
+
   @Test(expected=IllegalStateException.class)
   public void testStartTwice() {
     final WorkerThread thread = WorkerThread.builder()
@@ -133,7 +133,7 @@ public final class WorkerThreadTest {
     thread.start();
     thread.start(); // this call should throw an exception
   }
-  
+
   @Test
   public void testToString() {
     final WorkerThread thread = WorkerThread.builder()
@@ -141,7 +141,7 @@ public final class WorkerThreadTest {
         .build();
     Assertions.assertToStringOverride(thread);
   }
-  
+
   @Test
   public void testJoinInterrupted() {
     final WorkerThread thread = WorkerThread.builder()
@@ -151,10 +151,29 @@ public final class WorkerThreadTest {
     Thread.currentThread().interrupt();
     thread.joinSilently();
     assertTrue(Thread.interrupted());
-    
+
     thread.terminate().joinSilently();
   }
-  
+
+  @Test
+  public void testWhileNotInterrupted() {
+    final WorkerThread thread = WorkerThread.builder()
+        .onCycle(t -> Thread.sleep(10))
+        .buildAndStart();
+
+    final Runnable r = mock(Runnable.class);
+    new Thread(() -> {
+      Timesert.wait(1_000).until(() -> {
+        verify(r, atLeastOnce()).run();
+      });
+      thread.terminate();
+    }, "terminator-thread").start();
+
+    thread.whileNotInterrupted(r);
+    thread.joinSilently();
+    assertFalse(Thread.interrupted());
+  }
+
   @Test
   public void testJoinTimeout() throws InterruptedException {
     final WorkerThread thread = WorkerThread.builder()
@@ -163,10 +182,10 @@ public final class WorkerThreadTest {
     thread.start();
     final boolean joined = thread.join(10);
     assertFalse(joined);
-    
+
     thread.terminate().join();
   }
-  
+
   @Test
   public void testOptions() {
     final WorkerOptions options = new WorkerOptions()
@@ -182,7 +201,7 @@ public final class WorkerThreadTest {
     assertEquals(options.getPriority(), thread.getPriority());
     Assertions.assertToStringOverride(options);
   }
-  
+
   @Test
   public void testEqualsHashCode() {
     EqualsVerifier.forClass(WorkerThread.class)
@@ -190,7 +209,7 @@ public final class WorkerThreadTest {
     .withOnlyTheseFields("driver")
     .verify();
   }
-  
+
   private static class ListExceptionHandler implements WorkerExceptionHandler {
     private final List<Throwable> exceptions = new CopyOnWriteArrayList<>();
 
@@ -199,7 +218,7 @@ public final class WorkerThreadTest {
       exceptions.add(exception);
     }
   }
-  
+
   @Test
   public void testUncaughtExceptionHandlerOnStartup() {
     final RuntimeException causeOnStartup = new RuntimeException();
@@ -214,11 +233,11 @@ public final class WorkerThreadTest {
 
     thread.start();
     thread.joinSilently();
-    
+
     assertEquals(1, handler.exceptions.size());
     assertEquals(causeOnStartup, handler.exceptions.get(0));
   }
-  
+
   @Test
   public void testUncaughtExceptionHandlerOnCycle() {
     final RuntimeException causeOnCycle = new RuntimeException();
@@ -232,11 +251,11 @@ public final class WorkerThreadTest {
 
     thread.start();
     thread.joinSilently();
-    
+
     assertEquals(1, handler.exceptions.size());
     assertEquals(causeOnCycle, handler.exceptions.get(0));
   }
-  
+
   @Test
   public void testUncaughtExceptionHandlerOnShutdown() {
     final RuntimeException causeOnCycle = new RuntimeException();
@@ -254,12 +273,12 @@ public final class WorkerThreadTest {
 
     thread.start();
     thread.joinSilently();
-    
+
     assertEquals(2, handler.exceptions.size());
     assertEquals(causeOnCycle, handler.exceptions.get(0));
     assertEquals(causeOnShutdown, handler.exceptions.get(1));
   }
-  
+
   @Test
   public void testExceptionInUncaughtExceptionHandler() {
     final RuntimeException causeOnCycle = new RuntimeException();
@@ -279,12 +298,12 @@ public final class WorkerThreadTest {
     thread.getDriverThread().setUncaughtExceptionHandler((t, x) -> driverExceptionHandler.set(x));
     thread.start();
     thread.joinSilently();
-    
+
     assertEquals(1, handler.exceptions.size());
     assertEquals(causeOnCycle, handler.exceptions.get(0));
     assertEquals(causeOnUncaughtException, driverExceptionHandler.get());
   }
-  
+
   @Test
   public void testPrintStreamUncaughtExceptionHandler() {
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -293,29 +312,29 @@ public final class WorkerThreadTest {
         .onCycle(t -> {
           throw new RuntimeException("boom");
         })
-    .onUncaughtException(WorkerThreadBuilder.createPrintStreamUncaughtExceptionHandler(p))
-    .build();
-    
+        .onUncaughtException(WorkerThreadBuilder.createPrintStreamUncaughtExceptionHandler(p))
+        .build();
+
     thread.start();
     thread.joinSilently();
-    
+
     assertTrue(baos.toByteArray().length > 0);
   }
-  
+
   @Test
   public void testWithNameNoFrags() {
     final WorkerOptions opts = new WorkerOptions()
         .withName(WorkerThreadTest.class);
     assertEquals(WorkerThreadTest.class.getSimpleName(), opts.getName());
   }
-  
+
   @Test
   public void testWithNameFrags() {
     final WorkerOptions opts = new WorkerOptions()
         .withName(WorkerThreadTest.class, 1, 2, 3);
     assertEquals(WorkerThreadTest.class.getSimpleName() + "-1-2-3", opts.getName());
   }
-  
+
   @Test
   public void testDaemon() {
     final WorkerOptions opts = new WorkerOptions().daemon();
