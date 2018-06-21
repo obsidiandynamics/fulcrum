@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import java.io.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 import org.junit.*;
 
@@ -28,11 +29,28 @@ public final class RetryTest {
   }
   
   @Test
+  public void testIsAMatcher() {
+    final Predicate<Throwable> matcher = Retry.isA(TestRuntimeException.class);
+    assertTrue(matcher.test(new TestRuntimeException("")));
+    assertFalse(matcher.test(new IOException()));
+    Assertions.assertToStringOverride(matcher);
+  }
+  
+  @Test
+  public void testHasCauseThatMatcher() {
+    final Predicate<Throwable> matcher = Retry.hasCauseThat(Retry.isA(IOException.class));
+    assertFalse(matcher.test(new IllegalStateException()));
+    assertTrue(matcher.test(new IllegalStateException(new IOException())));
+    assertFalse(matcher.test(new IOException()));
+    Assertions.assertToStringOverride(matcher);
+  }
+  
+  @Test
   public void testSuccess() {
     final ExceptionHandler faultHandler = mock(ExceptionHandler.class);
     final ExceptionHandler errorHandler = mock(ExceptionHandler.class);
     final int answer = new Retry()
-        .withExceptionClass(TestRuntimeException.class)
+        .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
         .withAttempts(1)
         .withFaultHandler(faultHandler)
         .withErrorHandler(errorHandler)
@@ -47,7 +65,7 @@ public final class RetryTest {
     final ExceptionHandler faultHandler = mock(ExceptionHandler.class);
     final ExceptionHandler errorHandler = mock(ExceptionHandler.class);
     new Retry()
-    .withExceptionClass(TestRuntimeException.class)
+    .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
     .withBackoff(0)
     .withAttempts(2)
     .withFaultHandler(faultHandler)
@@ -65,7 +83,7 @@ public final class RetryTest {
     try {
       Thread.currentThread().interrupt();
       new Retry()
-      .withExceptionClass(TestRuntimeException.class)
+      .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
       .withBackoff(0)
       .withAttempts(2)
       .withFaultHandler(faultHandler)
@@ -87,7 +105,7 @@ public final class RetryTest {
     final ExceptionHandler errorHandler = mock(ExceptionHandler.class);
     try {
       new Retry()
-      .withExceptionClass(TestRuntimeException.class)
+      .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
       .withBackoff(0).withAttempts(2)
       .withFaultHandler(faultHandler)
       .withErrorHandler(errorHandler)
@@ -109,7 +127,7 @@ public final class RetryTest {
     final CheckedSupplier<Integer, Exception> supplier = RetryTest::throwCheckedException;
     try {
       new Retry()
-      .withExceptionClass(TestRuntimeException.class)
+      .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
       .withBackoff(0)
       .withAttempts(1)
       .withFaultHandler(faultHandler)
@@ -128,7 +146,7 @@ public final class RetryTest {
     final CheckedSupplier<Integer, InterruptedException> supplier = () -> { throw new InterruptedException("test"); };
     try {
       new Retry()
-      .withExceptionClass(TestRuntimeException.class)
+      .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
       .withBackoff(0)
       .withAttempts(1)
       .withFaultHandler(faultHandler)
@@ -145,7 +163,8 @@ public final class RetryTest {
   public void testUncaughtRuntimeException() {
     final ExceptionHandler faultHandler = mock(ExceptionHandler.class);
     final ExceptionHandler errorHandler = mock(ExceptionHandler.class);
-    new Retry().withExceptionClass(TestRuntimeException.class)
+    new Retry()
+    .withExceptionMatcher(Retry.isA(TestRuntimeException.class))
     .withFaultHandler(faultHandler)
     .withErrorHandler(errorHandler)
     .run(() -> {
@@ -164,7 +183,7 @@ public final class RetryTest {
     final ExceptionHandler errorHandler = ExceptionHandler.nop();
     
     final Retry r = new Retry()
-        .withExceptionClass(exceptionClass)
+        .withExceptionMatcher(Retry.isA(exceptionClass))
         .withAttempts(attempts)
         .withBackoff(backoffMillis)
         .withFaultHandler(faultHandler)
