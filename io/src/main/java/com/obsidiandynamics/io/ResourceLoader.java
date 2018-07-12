@@ -39,11 +39,11 @@ public final class ResourceLoader {
   public static InputStream stream(URI uri) throws FileNotFoundException {
     switch (uri.getScheme()) {
       case "file":
-        return new FileInputStream(new File(uri.getHost() + uri.getPath()));
+        return new FileInputStream(new File(stripScheme(uri)));
         
       case "cp":
       case "classpath":
-        final InputStream in = ResourceLoader.class.getClassLoader().getResourceAsStream(uri.getHost() + uri.getPath());
+        final InputStream in = ResourceLoader.class.getClassLoader().getResourceAsStream(stripScheme(uri));
         if (in != null) {
           return in;
         } else {
@@ -53,5 +53,16 @@ public final class ResourceLoader {
       default:
         throw new IllegalArgumentException("Unsupported URI scheme " + uri.getScheme());
     }
+  }
+  
+  /**
+   *  Removes the scheme and the {@code ://} separator from the URI. For example, the URI
+   *  {@code file://dir/hello.txt} becomes {@code dir/hello.txt}.
+   *  
+   *  @param uri The URI to strip.
+   *  @return The stripped string.
+   */
+  private static String stripScheme(URI uri) {
+    return uri.toString().substring((uri.getScheme() + "://").length());
   }
 }

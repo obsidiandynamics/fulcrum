@@ -28,6 +28,12 @@ public final class ResourceLoaderTest {
     assertNotNull(in);
   }
   
+  @Test
+  public void testFileBackRelative() throws FileNotFoundException {
+    in = ResourceLoader.stream(URI.create("file://../io/src/test/resources/resource-locator.test"));
+    assertNotNull(in);
+  }
+  
   @Test(expected=FileNotFoundException.class)
   public void testFileNotFound() throws FileNotFoundException {
     ResourceLoader.stream(URI.create("file://src/test/resources/nonexistent"));
