@@ -60,15 +60,15 @@ public final class Select<V, R> implements SelectRoot<R> {
       return when(instanceOf(type)).transform(obj -> type.cast(obj));
     }
     
-    public <X extends Exception> Select<V, R>.Checked otherwise(CheckedConsumer<? super V, X> action) throws X {
+    public <X extends Throwable> Select<V, R>.Checked otherwise(CheckedConsumer<? super V, X> action) throws X {
       return otherwise().then(action);
     }
     
-    public <X extends Exception> Select<V, R>.Checked otherwiseReturn(CheckedFunction<? super V, ? extends R, X> action) throws X {
+    public <X extends Throwable> Select<V, R>.Checked otherwiseReturn(CheckedFunction<? super V, ? extends R, X> action) throws X {
       return otherwise().thenReturn(action);
     }
     
-    public <X extends Exception> Select<V, R>.Checked otherwiseThrow(Supplier<X> exceptionSupplier) throws X {
+    public <X extends Throwable> Select<V, R>.Checked otherwiseThrow(Supplier<X> exceptionSupplier) throws X {
       return otherwise().thenThrow(exceptionSupplier);
     }
     
@@ -128,7 +128,7 @@ public final class Select<V, R> implements SelectRoot<R> {
     return v -> true;
   }
   
-  public static <V, X extends Exception> CheckedConsumer<V, X> throwCheckedFromConsumer(Supplier<? extends X> exceptionSupplier) {
+  public static <V, X extends Throwable> CheckedConsumer<V, X> throwCheckedFromConsumer(Supplier<? extends X> exceptionSupplier) {
     return __v -> { throw exceptionSupplier.get(); };
   }
   
@@ -136,7 +136,7 @@ public final class Select<V, R> implements SelectRoot<R> {
     return __v -> { throw exceptionSupplier.get(); };
   }
   
-  public static <X extends Exception> CheckedRunnable<X> throwCheckedFromRunnable(Supplier<? extends X> exceptionSupplier) {
+  public static <X extends Throwable> CheckedRunnable<X> throwCheckedFromRunnable(Supplier<? extends X> exceptionSupplier) {
     return () -> { throw exceptionSupplier.get(); };
   }
   

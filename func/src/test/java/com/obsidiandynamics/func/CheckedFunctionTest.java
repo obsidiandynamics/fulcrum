@@ -10,10 +10,10 @@ public final class CheckedFunctionTest {
   }
   
   @Test
-  public void testApply() throws Exception {
+  public void testApply() throws Throwable {
     final ThrowingFunction<String, Integer> f0 = Integer::parseInt;
-    final CheckedFunction<String, Integer, Exception> f1 = f0.andThen(CheckedFunctionTest::timesTwo);
-    final CheckedFunction<byte[], Integer, Exception> f2 = f1.compose(String::new);
+    final CheckedFunction<String, Integer, Throwable> f1 = f0.andThen(CheckedFunctionTest::timesTwo);
+    final CheckedFunction<byte[], Integer, Throwable> f2 = f1.compose(String::new);
     assertEquals(20, (int) f2.apply("10".getBytes()));
   }
   

@@ -6,7 +6,7 @@ import org.junit.*;
 
 public final class CheckedSupplierTest {
   @Test
-  public void testGet() throws Exception {
+  public void testGet() throws Throwable {
     final ThrowingSupplier<String> s = () -> "test";
     assertEquals("test", s.get());
   }

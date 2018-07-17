@@ -75,7 +75,7 @@ public final class GroupTest {
     return () -> assertEquals(expected, ref.get());
   }
   
-  private static <P extends SyncPacket> ThrowingConsumer<P> ack(JChannel chan, Message m) {
+  private static <P extends SyncPacket> CheckedConsumer<P, Exception> ack(JChannel chan, Message m) {
     return p -> chan.send(new Message(m.getSrc(), Ack.of(p)).setFlag(DONT_BUNDLE));
   }
   

@@ -8,11 +8,11 @@ import org.junit.*;
 
 public final class CheckedConsumerTest {
   @Test
-  public void testAccept() throws Exception {
+  public void testAccept() throws Throwable {
     final AtomicReference<String> consumed0 = new AtomicReference<>();
     final AtomicReference<String> consumed1 = new AtomicReference<>();
     final ThrowingConsumer<String> c = consumed0::set;
-    final CheckedConsumer<String, Exception> cc = c.andThen(consumed1::set);
+    final CheckedConsumer<String, Throwable> cc = c.andThen(consumed1::set);
     cc.accept("test");
     
     assertEquals("test", consumed0.get());

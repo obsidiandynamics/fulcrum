@@ -41,25 +41,25 @@ public final class ValueThen<S extends SelectRoot<R>, V, R> {
   public final class Checked {
     Checked() {}
     
-    public <X extends Exception> S then(CheckedConsumer<? super V, X> action) throws X {
+    public <X extends Throwable> S then(CheckedConsumer<? super V, X> action) throws X {
       return thenReturn(value -> {
         action.accept(value);
         return null;
       });
     }
     
-    public <X extends Exception> S thenReturn(CheckedFunction<? super V, ? extends R, X> action) throws X {
+    public <X extends Throwable> S thenReturn(CheckedFunction<? super V, ? extends R, X> action) throws X {
       if (fire) {
         select.setReturn(action.apply(value));
       }
       return select;
     }
     
-    public <X extends Exception> S thenThrow(Supplier<X> exceptionSupplier) throws X {
+    public <X extends Throwable> S thenThrow(Supplier<X> exceptionSupplier) throws X {
       return then(Select.throwCheckedFromConsumer(exceptionSupplier));
     }
     
-    public <W, X extends Exception> ValueThen<S, W, R>.Checked transform(CheckedFunction<? super V, ? extends W, X> transform) throws X {
+    public <W, X extends Throwable> ValueThen<S, W, R>.Checked transform(CheckedFunction<? super V, ? extends W, X> transform) throws X {
       final W newValue = fire ? transform.apply(value) : null;
       return new ValueThen<>(select, newValue, fire).checked();
     }

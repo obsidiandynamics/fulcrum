@@ -92,7 +92,7 @@ public final class Launcher {
   static void runAndLogException(ThrowingRunnable runnable, PrintStream err) {
     try {
       runnable.run();
-    } catch (Exception e) {
+    } catch (Throwable e) {
       err.printf("Error: %s\n", e);
       e.printStackTrace(err);
     }
