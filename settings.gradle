@@ -6,6 +6,9 @@ project(":fulcrum-assert").projectDir = new File(settingsDir, "assert")
 include "fulcrum-await"
 project(":fulcrum-await").projectDir = new File(settingsDir, "await")
 
+include "fulcrum-combinations"
+project(":fulcrum-combinations").projectDir = new File(settingsDir, "combinations")
+
 include "fulcrum-concat"
 project(":fulcrum-concat").projectDir = new File(settingsDir, "concat")
 

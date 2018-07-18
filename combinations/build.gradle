@@ -1,14 +1,10 @@
-def packageName = "fulcrum-verifier"
+def packageName = "fulcrum-combinations"
 version = project(":").version
 
 dependencies {
   compile project(":fulcrum-func")
-  compile "pl.pojo:pojo-tester:0.7.6" // needed for PojoVerifier
-  compile "nl.jqno.equalsverifier:equalsverifier:2.4.7" // needed for FluentVerifier
   
   testCompile project(":fulcrum-assert")
-  testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.5"
-  testCompile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5"
 }
 
 jar {
@@ -53,7 +49,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Verifiers of conventional class/object behaviour"
+def packageDesc = "Generates combinations of elements in a 2D array"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

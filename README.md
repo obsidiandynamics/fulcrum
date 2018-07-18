@@ -9,6 +9,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 # Modules
 * [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) — Common assertions
 * [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) — Utility for awaiting asynchronous actions
+* [`fulcrum-combinations`](https://github.com/obsidiandynamics/fulcrum/tree/master/combinations) — Generates combinations of elements in a 2D array
 * [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) — Fluid API for selective concatenation of strings
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
 * [`fulcrum-dyno`](https://github.com/obsidiandynamics/fulcrum/tree/master/dyno) — Micro-benchmarking harness
@@ -27,6 +28,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-select`](https://github.com/obsidiandynamics/fulcrum/tree/master/select) — Functional object matching
 * [`fulcrum-shell`](https://github.com/obsidiandynamics/fulcrum/tree/master/shell) — Assists in the execution of shells and processes
 * [`fulcrum-testmark`](https://github.com/obsidiandynamics/fulcrum/tree/master/testmark) — Toggleable benchmark for use in unit tests
+* [`fulcrum-verifier`](https://github.com/obsidiandynamics/fulcrum/tree/master/verifier) — Verifiers of conventional class/object behaviour
 * [`fulcrum-version`](https://github.com/obsidiandynamics/fulcrum/tree/master/version) — Loads the application version and build number
 * [`fulcrum-worker`](https://github.com/obsidiandynamics/fulcrum/tree/master/worker) — Worker thread with lifecycle management
 
