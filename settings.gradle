@@ -63,6 +63,9 @@ project(":fulcrum-testmark").projectDir = new File(settingsDir, "testmark")
 include "fulcrum-threads"
 project(":fulcrum-threads").projectDir = new File(settingsDir, "threads")
 
+include "fulcrum-verifier"
+project(":fulcrum-verifier").projectDir = new File(settingsDir, "verifier")
+
 include "fulcrum-version"
 project(":fulcrum-version").projectDir = new File(settingsDir, "version")
 
