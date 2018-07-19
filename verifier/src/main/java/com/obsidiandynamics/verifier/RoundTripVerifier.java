@@ -7,12 +7,6 @@ import java.util.*;
 import com.obsidiandynamics.func.*;
 
 public final class RoundTripVerifier<T> {
-  interface Codec {
-    byte[] toBytes(Object obj) throws Exception;
-    
-    <T> T toObject(byte[] bytes, Class<T> type) throws Exception;
-  }
-  
   private final T object;
   
   private Class<? super T> type;
