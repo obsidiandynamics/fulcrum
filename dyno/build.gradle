@@ -12,20 +12,23 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.15'
+    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.17'
   }
 }
 
 apply plugin: 'net.ltgt.apt'
 
 dependencies {
+  def jmhVersion = "1.21"
+
   compile project(":fulcrum-func")
-  compile 'org.openjdk.jmh:jmh-core:1.20'
+  compileOnly "org.openjdk.jmh:jmh-core:${jmhVersion}"
   
-  annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.20'
+  annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
   
   testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-resolver")
+  testCompile "org.openjdk.jmh:jmh-core:${jmhVersion}"
 }
 
 compileJava {

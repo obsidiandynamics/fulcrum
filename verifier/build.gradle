@@ -3,12 +3,11 @@ version = project(":").version
 
 dependencies {
   compile project(":fulcrum-func")
-  compile "pl.pojo:pojo-tester:0.7.6" // needed for PojoVerifier
-  compile "nl.jqno.equalsverifier:equalsverifier:2.4.7" // needed for FluentVerifier
+  compileOnly "pl.pojo:pojo-tester:${pojotesterVersion}"
+  compileOnly "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
   
   testCompile project(":fulcrum-assert")
-  testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.5"
-  testCompile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5"
+  testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
 }
 
 jar {

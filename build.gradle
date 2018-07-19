@@ -1,5 +1,6 @@
 plugins {
-  id "com.jfrog.bintray" version "1.7.3"
+  id "com.jfrog.bintray" version "1.8.4"
+  id "com.github.ben-manes.versions" version "0.20.0"
 }
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
@@ -36,17 +37,23 @@ allprojects {
     }
   }
   
+  ext {
+    equalsverifierVersion = "2.4.8"
+    pojotesterVersion = "0.7.6"
+  }
+  
   dependencies {
     testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:2.18.0"
-    testCompile "nl.jqno.equalsverifier:equalsverifier:2.4.7"
+    testCompile "pl.pojo:pojo-tester:${pojotesterVersion}"
+    testCompile "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
+    testCompile "org.mockito:mockito-core:2.19.1"
   }
 
   test {
     exclude "**/*IT.class"
   }
   
-  task integrationTest(type: Test, description: "Runs integration tests.", group: "Verification") {
+  task integrationTest(type: Test, description: "Runs integration tests", group: "Verification") {
     include "**/*IT.class"
   }
 
@@ -58,6 +65,7 @@ allprojects {
     additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(sourceSets.main.allSource.srcDirs)
     classDirectories = files(sourceSets.main.output)
+    executionData = files("$buildDir/jacoco/test.exec") + files("$buildDir/jacoco/integrationTest.exec")
     reports {
       html.enabled true
       xml.enabled true
@@ -81,7 +89,7 @@ subprojects {
 }
 
 task jacocoRootReport(type: JacocoReport) {
-  dependsOn = allprojects.test
+  mustRunAfter = allprojects.test + allprojects.integrationTest
   additionalSourceDirs = files(allprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories = files(allprojects.sourceSets.main.allSource.srcDirs)
   classDirectories = files(allprojects.sourceSets.main.output)
