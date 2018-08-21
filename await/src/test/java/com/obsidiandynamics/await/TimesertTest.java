@@ -1,5 +1,7 @@
 package com.obsidiandynamics.await;
 
+import static org.junit.Assert.*;
+
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
@@ -9,12 +11,12 @@ import junit.framework.*;
 public final class TimesertTest {
   @Test
   public void testPass() {
-    Timesert.wait(10).withScale(2).withIntervalMillis(1).until(() -> {});
+    Timesert.wait(10).scale(2).withIntervalMillis(1).until(() -> {});
   }
   
   @Test
   public void testPassBoolean() {
-    Timesert.wait(10).withScale(2).withIntervalMillis(1).untilTrue(() -> true);
+    Timesert.wait(10).scale(2).withIntervalMillis(1).untilTrue(() -> true);
   }
   
   @Test
@@ -57,6 +59,7 @@ public final class TimesertTest {
         return false;
       });
     } catch (AssertionError ae) {
+      fail("Unexpeced exception");
     } finally {
       TestCase.assertTrue(Thread.interrupted());
     }

@@ -21,7 +21,7 @@ import java.util.function.*;
  *  without resorting to {@link Thread#sleep(long)}.
  */
 public final class Timesert {
-  private int waitMillis;
+  private final int waitMillis;
   
   private int intervalMillis = Await.DEF_INTERVAL;
   
@@ -37,18 +37,6 @@ public final class Timesert {
    */
   public static Timesert wait(int waitMillis) {
     return new Timesert(waitMillis);
-  }
-  
-  /**
-   *  Applies a multiplier to the current value of {@link #waitMillis}. This is convenient
-   *  when the caller has no control over the creation of the {@link Timesert} instance.
-   *  
-   *  @param scale The multiplier to apply.
-   *  @return The current {@link Timesert} instance for method chaining.
-   */
-  public Timesert withScale(int scale) {
-    waitMillis *= scale;
-    return this;
   }
   
   /**
@@ -97,6 +85,18 @@ public final class Timesert {
    */
   public void untilTrue(BooleanSupplier test) {
     until(fromBoolean(test));
+  }
+  
+  /**
+   *  Applies a multiplier to the current value of {@link #waitMillis}, returning a 
+   *  scaled {@link Timesert} instance. This is convenient when the caller has no 
+   *  control over the creation of the {@link Timesert} instance.
+   *  
+   *  @param scale The multiplier to apply.
+   *  @return A new {@link Timesert} instance.
+   */
+  public Timesert scale(int scale) {
+    return new Timesert(waitMillis).withIntervalMillis(intervalMillis);
   }
   
   private static Runnable fromBoolean(BooleanSupplier test) {
