@@ -119,7 +119,7 @@ public final class SimpleDriver implements BenchmarkDriver {
         final BenchmarkTarget target = BenchmarkSupport.resolve(targetClass);
         final BlackholeAbyss abyss = new BlackholeAbyss();
         abyss.blackhole = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
-        final long runTimeNanos = runTimeMillis * 1_000_000L;
+        final long runTimeNanos = runTimeMillis * 10_000_000L;
         final int batchSize = this.batchSize;
         
         barrier.await();
