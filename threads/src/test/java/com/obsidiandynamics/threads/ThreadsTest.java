@@ -3,11 +3,13 @@ package com.obsidiandynamics.threads;
 import static org.junit.Assert.*;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
+import com.obsidiandynamics.threads.Threads.*;
 
 public final class ThreadsTest {
   @Test
@@ -74,6 +76,23 @@ public final class ThreadsTest {
     Threads.await(barrier);
   }
 
+  @Test(expected=RuntimeBrokenBarrierException.class)
+  public void testAwaitBarrierBroken() throws InterruptedException {
+    final CyclicBarrier barrier = new CyclicBarrier(2);
+    final AtomicBoolean threadWasInterrupted = new AtomicBoolean();
+    final Thread thread = new Thread(() -> {
+      Threads.await(barrier);
+      assertTrue(Thread.interrupted());
+      threadWasInterrupted.set(true);;
+    });
+    thread.start();
+    thread.interrupt(); // interrupting the thread breaks the barrier
+    Threads.await(barrier);
+    
+    thread.join();
+    assertTrue(threadWasInterrupted.get());
+  }
+
   @Test
   public void testAwaitLatch() {
     final CountDownLatch latch = new CountDownLatch(1);
@@ -81,6 +100,22 @@ public final class ThreadsTest {
       latch.countDown();
     }).start();
     Threads.await(latch);
+  }
+
+  @Test
+  public void testAwaitLatchInterrupted() throws InterruptedException {
+    final AtomicBoolean threadWasInterrupted = new AtomicBoolean();
+    final CountDownLatch latch = new CountDownLatch(1);
+    final Thread thread = new Thread(() -> {
+      Threads.await(latch);
+      assertTrue(Thread.interrupted());
+      threadWasInterrupted.set(true);;
+    });
+    thread.start();
+    thread.interrupt();
+    
+    thread.join();
+    assertTrue(threadWasInterrupted.get());
   }
 
   @Test

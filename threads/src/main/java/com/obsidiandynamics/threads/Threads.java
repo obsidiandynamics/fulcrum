@@ -10,10 +10,21 @@ public final class Threads {
   public static boolean await(CountDownLatch latch) {
     return runUninterruptedly(latch::await);
   }
+  
+  public static final class RuntimeBrokenBarrierException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+    
+    RuntimeBrokenBarrierException(Throwable cause) { super(cause); }
+  }
 
   public static boolean await(CyclicBarrier barrier) {
-    return runUninterruptedly(() -> Exceptions.wrap((CheckedRunnable<?>) barrier::await, 
-                                                    IllegalStateException::new));
+    return runUninterruptedly(() -> {
+      try {
+        barrier.await();
+      } catch (BrokenBarrierException e) {
+        throw new RuntimeBrokenBarrierException(e);
+      }
+    });
   }
 
   public static boolean sleep(long millis) {
