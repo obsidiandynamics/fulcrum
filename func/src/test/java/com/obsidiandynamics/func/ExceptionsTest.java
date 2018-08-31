@@ -8,7 +8,7 @@ import org.junit.*;
 
 import com.obsidiandynamics.assertion.*;
 
-public class ExceptionsTest {
+public final class ExceptionsTest {
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Exceptions.class);
@@ -21,9 +21,50 @@ public class ExceptionsTest {
   }
   
   @Test
+  public void testWrapNormal() {
+    Exceptions.wrap(() -> {}, TestRuntimeException::new);
+  }
+  
+  @Test
   public void testWrapInRuntimeExceptionNormal() {
-    final int out = Exceptions.wrap(() -> 42, TestRuntimeException::new);
+    final int out = Exceptions.wrap(ExceptionsTest::get42, TestRuntimeException::new);
     assertEquals(42, out);
+  }
+  
+  private interface AmbiguousGetter {
+    Object supply();    // the real method that we want
+    
+    void supply(int x); // intended to cause compiler confusion
+    
+    void run();         // the real method that we want
+    
+    void run(int x);    // intended to cause compiler confusion
+  }
+  
+  @Test
+  public void testWrapAmbiguous() {
+    final AmbiguousGetter dataSource = new AmbiguousGetter() {
+      @Override
+      public Object supply() {
+        return null;
+      }
+
+      @Override
+      public void supply(int x) {}
+
+      @Override
+      public void run() {}
+
+      @Override
+      public void run(int x) {}
+    };
+    
+    Exceptions.wrapSupplier(dataSource::supply, TestRuntimeException::new);
+    Exceptions.wrapRunnable(dataSource::run, TestRuntimeException::new);
+  }
+  
+  private static int get42() {
+    return 42;
   }
   
   @Test(expected=TestRuntimeException.class)
