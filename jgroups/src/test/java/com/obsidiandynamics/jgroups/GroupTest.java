@@ -49,7 +49,7 @@ public final class GroupTest {
   
   private final Set<Group> groups = new HashSet<>();
   
-  private final Timesert wait = Timesert.wait(10_000);
+  private final Timesert await = Timesert.wait(10_000);
   
   @After
   public void after() {
@@ -106,11 +106,11 @@ public final class GroupTest {
     g0.withDebug(l0);
     g1.withDebug(l1);
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
     
     g0.send(new Message(null, "test").setFlag(DONT_BUNDLE));
-    wait.until(received("test", g1Received));
+    await.until(received("test", g1Received));
     assertNotNull(g1Received.get());
     assertNull(g0Received.get());
     
@@ -140,11 +140,11 @@ public final class GroupTest {
     final ExceptionHandler eh1 = mock(ExceptionHandler.class);
     g1.withErrorHandler(eh1);
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
     
     g0.send(new Message(null, "test").setFlag(DONT_BUNDLE));
-    wait.until(() -> {
+    await.until(() -> {
       verify(eh1).onException(notNull(), notNull());
     });
     verify(l1).accept(notNull());
@@ -167,14 +167,14 @@ public final class GroupTest {
     assertEquals(1, g0.numMessageHandlers(handledId));
     assertEquals(2, g1.numMessageHandlers(handledId));
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
 
     final TestPacket unhandledPacket = new TestPacket(unhandledId);
     final TestPacket handledPacket = new TestPacket(handledId);
     g0.send(new Message(null, handledPacket).setFlag(DONT_BUNDLE));
     g0.send(new Message(null, unhandledPacket).setFlag(DONT_BUNDLE));
-    wait.until(received(handledPacket, g1Received));
+    await.until(received(handledPacket, g1Received));
     assertNull(g0Received.get());
     
     g0.removeMessageHandler(handledId, g0Handler);
@@ -193,8 +193,8 @@ public final class GroupTest {
     final Group g0 = create().connect(cluster);
     final Group g1 = create().connect(cluster);
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
     
     final HostMessageHandler handler = 
         (chan, m) -> Select.from(m.getObject()).checked().whenInstanceOf(TestPacket.class).then(ack(chan, m));
@@ -220,8 +220,8 @@ public final class GroupTest {
     final Group g0 = create().connect(cluster);
     final Group g1 = create().connect(cluster);
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
     
     final HostMessageHandler handler = 
         (chan, m) -> Select.from(m.getObject()).checked().whenInstanceOf(TestPacket.class).then(ack(chan, m));
@@ -232,7 +232,7 @@ public final class GroupTest {
     final UUID packetId = UUID.randomUUID();
     final AtomicReference<Message> callbackRef = new AtomicReference<>();
     final ResponseSync responseSync = g0.request(address, new TestPacket(packetId), (chan, resp) -> callbackRef.set(resp), DONT_BUNDLE);
-    wait.untilTrue(() -> callbackRef.get() != null);
+    await.untilTrue(() -> callbackRef.get() != null);
     assertEquals(0, g0.numMessageHandlers(packetId));
     assertNotNull(callbackRef.get());
     assertEquals(Ack.forId(packetId), callbackRef.get().getObject());
@@ -245,8 +245,8 @@ public final class GroupTest {
     final Group g0 = create().connect(cluster);
     final Group g1 = create().connect(cluster);
     
-    wait.until(viewSize(2, g0));
-    wait.until(viewSize(2, g1));
+    await.until(viewSize(2, g0));
+    await.until(viewSize(2, g1));
     
     final Address address = g0.peer();
     final UUID packetId = UUID.randomUUID();
@@ -267,9 +267,9 @@ public final class GroupTest {
     final Group g1 = create().connect(cluster);
     final Group g2 = create().connect(cluster);
     
-    wait.until(viewSize(3, g0));
-    wait.until(viewSize(3, g1));
-    wait.until(viewSize(3, g2));
+    await.until(viewSize(3, g0));
+    await.until(viewSize(3, g1));
+    await.until(viewSize(3, g2));
     
     final HostMessageHandler handler = 
         (chan, m) -> Select.from(m.getObject()).checked().whenInstanceOf(TestPacket.class).then(ack(chan, m));
@@ -297,9 +297,9 @@ public final class GroupTest {
     final Group g1 = create().connect(cluster);
     final Group g2 = create().connect(cluster);
     
-    wait.until(viewSize(3, g0));
-    wait.until(viewSize(3, g1));
-    wait.until(viewSize(3, g2));
+    await.until(viewSize(3, g0));
+    await.until(viewSize(3, g1));
+    await.until(viewSize(3, g2));
     
     final HostMessageHandler handler = 
         (chan, m) -> Select.from(m.getObject()).checked().whenInstanceOf(TestPacket.class).then(ack(chan, m));
@@ -310,7 +310,7 @@ public final class GroupTest {
     final UUID packetId = UUID.randomUUID();
     final AtomicReference<Map<Address, Message>> callbackRef = new AtomicReference<>();
     final ResponseSync responseSync = g0.gather(new TestPacket(packetId), (chan, messages) -> callbackRef.set(messages), DONT_BUNDLE);
-    wait.untilTrue(() -> callbackRef.get() != null);
+    await.untilTrue(() -> callbackRef.get() != null);
     responseSync.cancel();
     Assertions.assertToStringOverride(responseSync);
     assertEquals(0, g0.numMessageHandlers(packetId));
@@ -325,9 +325,9 @@ public final class GroupTest {
     final Group g1 = create().connect(cluster);
     final Group g2 = create().connect(cluster);
     
-    wait.until(viewSize(3, g0));
-    wait.until(viewSize(3, g1));
-    wait.until(viewSize(3, g2));
+    await.until(viewSize(3, g0));
+    await.until(viewSize(3, g1));
+    await.until(viewSize(3, g2));
     
     final UUID packetId = UUID.randomUUID();
     final Future<Map<Address, Message>> f = g0.gather(new TestPacket(packetId), DONT_BUNDLE);

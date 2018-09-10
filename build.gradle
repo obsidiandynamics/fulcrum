@@ -38,15 +38,18 @@ allprojects {
   }
   
   ext {
-    equalsverifierVersion = "2.4.8"
+    equalsverifierVersion = "2.5.2"
+    log4jVersion = "1.2.17"
+    mockitoVersion = "2.22.0"
     pojotesterVersion = "0.7.6"
+    slf4jVersion = "1.7.25"
   }
   
   dependencies {
     testCompile "junit:junit:4.12"
     testCompile "pl.pojo:pojo-tester:${pojotesterVersion}"
     testCompile "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
-    testCompile "org.mockito:mockito-core:2.19.1"
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
   }
 
   test {

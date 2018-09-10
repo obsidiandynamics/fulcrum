@@ -19,6 +19,6 @@ public final class ResponseSync {
 
   @Override
   public String toString() {
-    return ResponseSync.class.getSimpleName() + "[id=" + id + "]";
+    return ResponseSync.class.getSimpleName() + " [id=" + id + "]";
   }
 }

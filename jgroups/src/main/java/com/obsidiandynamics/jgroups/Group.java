@@ -217,7 +217,9 @@ public final class Group implements AutoCloseable {
                         createGMS(),
                         new UFC(),
                         new MFC(),
-                        new FRAG2());
+                        new FRAG2(),
+                        new RSVP(),
+                        new STATE_TRANSFER());
   }
   
   /**
@@ -239,7 +241,8 @@ public final class Group implements AutoCloseable {
                         createGMS(),
                         new UFC(),
                         new MFC(),
-                        new FRAG2());
+                        new FRAG2(),
+                        new STATE_TRANSFER());
   }
   
   private static GMS createGMS() {

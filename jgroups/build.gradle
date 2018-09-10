@@ -2,7 +2,7 @@ def packageName = "fulcrum-jgroups"
 version = project(":").version
 
 dependencies {
-  def jgroupsVersion = "4.0.12.Final"
+  def jgroupsVersion = "4.0.13.Final"
 
   compile project(":fulcrum-func")
   compileOnly "org.jgroups:jgroups:${jgroupsVersion}"
@@ -12,6 +12,8 @@ dependencies {
   testCompile project(":fulcrum-junit")
   testCompile project(":fulcrum-select")
   testCompile "org.jgroups:jgroups:${jgroupsVersion}"
+  testRuntime "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+  testRuntime "log4j:log4j:${log4jVersion}"
 }
 
 jar {
