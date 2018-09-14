@@ -194,9 +194,10 @@ public final class Group implements AutoCloseable {
   /**
    *  Creates a new UDP-based {@link JChannel}.
    *  
-   *  @param bindAddress The address to bind to, or {@code null} to bind to the default external interface.
-   *                     Note: you may consider setting {@code -Djava.net.preferIPv4Stack=true} if binding
-   *                     to an external interface.
+   *  @param bindAddress The address to bind to, or {@code null} to bind to the default external interface
+   *                     (which is also equivalent to {@link AddressScope#NON_LOOPBACK}).
+   *                     Note: you may need to set {@code -Djava.net.preferIPv4Stack=true} if binding
+   *                     to an external interface with an IP v4 address.
    *  @return A new channel.
    *  @throws Exception If an error occurs.
    *  
