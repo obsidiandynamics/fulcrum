@@ -7,7 +7,11 @@ dependencies {
   compileOnly "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
   
   testCompile project(":fulcrum-assert")
-  testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
+  testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.7"
+  
+  // Dependency fix: pojo-tester:0.7.6 depends on commons-lang3:3.7.0, which doesn't support Java 11;
+  // including commons-lang3:3.8.1 fixes this in the interim.
+  testCompile "org.apache.commons:commons-lang3:3.8.1"
 }
 
 jar {

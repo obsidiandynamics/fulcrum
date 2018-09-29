@@ -7,12 +7,15 @@ import java.util.stream.*;
 import com.obsidiandynamics.func.*;
 
 import nl.jqno.equalsverifier.internal.prefabvalues.*;
+import nl.jqno.equalsverifier.internal.prefabvalues.factories.*;
 import nl.jqno.equalsverifier.internal.reflection.*;
 
 public final class FluentVerifier {
   private final Class<?> classUnderTest;
   
-  private final PrefabValues prefab = new PrefabValues();
+  private final FactoryCache factoryCache;
+  
+  private final PrefabValues prefabValues;
   
   private final Set<String> excludedFields = new HashSet<>();
   
@@ -20,7 +23,10 @@ public final class FluentVerifier {
 
   FluentVerifier(Class<?> classUnderTest) {
     this.classUnderTest = classUnderTest;
-    JavaApiPrefabValues.addTo(prefab);
+    
+    final FactoryCache initialCache = new FactoryCache();
+    factoryCache = JavaApiPrefabValues.build().merge(initialCache);
+    prefabValues = new PrefabValues(factoryCache);
   }
   
   public FluentVerifier withMethodNameFormat(MethodNameFormat methodNameFormat) {
@@ -58,12 +64,19 @@ public final class FluentVerifier {
       throw new IllegalArgumentException("Both 'red' and 'black' values are equal");
     }
 
+    final T redCopy;
     if (red.getClass().isArray()) {
-      prefab.addFactory(type, red, black, red);
+      redCopy = red;
     } else {
-      final T redCopy = ObjectAccessor.of(red).copy();
-      prefab.addFactory(type, red, black, redCopy);
+      redCopy = ObjectAccessor.of(red).copy();
     }
+    
+    factoryCache.put(type, new PrefabValueFactory<T>() {
+      @Override
+      public Tuple<T> createValues(TypeTag tag, PrefabValues prefabValues, LinkedHashSet<TypeTag> typeStack) {
+        return new Tuple<T>(red, black, redCopy);
+      }
+    });
     return this;
   }
 
@@ -105,7 +118,7 @@ public final class FluentVerifier {
     final List<Field> fields = getFields(classUnderTest, excludedFields);
     if (fields.isEmpty()) throw new NoFieldsError("No eligible fields to verify");
     
-    final Object instance = prefab.giveRed(new TypeTag(classUnderTest));
+    final Object instance = prefabValues.giveRed(new TypeTag(classUnderTest));
     final TypeTag instanceType = new TypeTag(classUnderTest);
     for (Field field : fields) {
       field.setAccessible(true);
@@ -124,7 +137,7 @@ public final class FluentVerifier {
         throw new IllegalMethodModifierError("The method " + methodName + " may not be private, abstract or static");
       }
 
-      final Object alternateFieldValue = prefab.giveOther(fieldTypeTag, currentFieldValue);
+      final Object alternateFieldValue = prefabValues.giveOther(fieldTypeTag, currentFieldValue);
       final Object returnValue = Exceptions.wrap(() -> method.invoke(instance, alternateFieldValue), ReflectionError::new);
       if (returnValue != instance) {
         throw new MethodNotChainableError("Return from method " + methodName + " did not match the enclosing instance");
