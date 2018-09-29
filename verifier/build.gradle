@@ -11,7 +11,7 @@ dependencies {
   
   // Dependency fix: pojo-tester:0.7.6 depends on commons-lang3:3.7.0, which doesn't support Java 11;
   // including commons-lang3:3.8.1 fixes this in the interim.
-  testCompile "org.apache.commons:commons-lang3:3.8.1"
+  testRuntime "org.apache.commons:commons-lang3:3.8.1"
 }
 
 jar {
