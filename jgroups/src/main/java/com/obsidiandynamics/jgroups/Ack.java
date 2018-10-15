@@ -19,6 +19,6 @@ public final class Ack extends SyncPacket {
   
   @Override
   public String toString() {
-    return Ack.class.getSimpleName() + "[" + baseToString() + "]";
+    return Ack.class.getSimpleName() + " [" + baseToString() + "]";
   }
 }
