@@ -62,7 +62,7 @@ public final class Resolver {
      *
      *  @param <T> Value type.
      *  @param type The class type.
-     *  @return A {@link Supplier} instance that will produce an instance of the mapped,
+     *  @return A {@link Supplier} instance that will produce an instance of the mapped
      *          type, or a {@link Supplier} of {@code null} if the type isn't mapped.
      */
     public <T> Supplier<T> lookup(Class<? super T> type) {
@@ -77,7 +77,7 @@ public final class Resolver {
      *  @param <T> Value type.
      *  @param type The class type.
      *  @param defaultValueSupplier A {@link Supplier} of a default value.
-     *  @return A {@link Supplier} instance that will produce an instance of the mapped,
+     *  @return A {@link Supplier} instance that will produce an instance of the mapped
      *          type, or the {@code defaultValueSupplier} if the type isn't mapped. 
      */
     public <T> Supplier<T> lookup(Class<? super T> type, Supplier<T> defaultValueSupplier) {
@@ -144,7 +144,7 @@ public final class Resolver {
    *  
    *  @param <T> Value type.
    *  @param type The class type.
-   *  @return A {@link Supplier} instance that will produce an instance of the mapped,
+   *  @return A {@link Supplier} instance that will produce an instance of the mapped
    *          type, or a {@link Supplier} of {@code null} if the type isn't mapped.
    */
   public static <T> Supplier<T> lookup(Class<? super T> type) {
@@ -160,7 +160,7 @@ public final class Resolver {
    *  @param <T> Value type.
    *  @param type The class type.
    *  @param defaultValueSupplier A {@link Supplier} of a default value.
-   *  @return A {@link Supplier} instance that will produce an instance of the mapped,
+   *  @return A {@link Supplier} instance that will produce an instance of the mapped
    *          type, or the {@code defaultValueSupplier} if the type isn't mapped. 
    */
   public static <T> Supplier<T> lookup(Class<? super T> type, Supplier<T> defaultValueSupplier) {
