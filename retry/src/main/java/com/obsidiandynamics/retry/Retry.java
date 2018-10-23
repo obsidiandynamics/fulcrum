@@ -91,15 +91,18 @@ public final class Retry {
         return operation.get();
       } catch (Throwable e) {
         if (exceptionMatcher.test(e)) {
-          final String message = String.format("Fault: (attempt #%,d of %,d)", attempt + 1, attempts);
           if (attempt == attempts - 1) {
-            errorHandler.onException(message, e);
+            final String faultMessage = String.format("Fault (attempt #%,d of %,d): aborting", attempt + 1, attempts);
+            errorHandler.onException(faultMessage, e);
             throw e;
           } else {
-            if (Threads.sleep(backoffMillis)) {
-              faultHandler.onException(message, e);
-            } else {
-              errorHandler.onException(message, e);
+            final String retryMessage = String.format("Fault (attempt #%,d of %,d): retrying in %,d ms", 
+                                                      attempt + 1, attempts, backoffMillis);
+            faultHandler.onException(retryMessage, e);
+            if (! Threads.sleep(backoffMillis)) {
+              final String interruptMessage = String.format("Fault (attempt #%,d of %,d): aborting due to interrupt", 
+                                                            attempt + 1, attempts);
+              errorHandler.onException(interruptMessage, e);
               throw e;
             }
           }

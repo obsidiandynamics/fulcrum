@@ -72,7 +72,7 @@ public final class RetryTest {
     .withErrorHandler(errorHandler)
     .run(failFor(1));
     
-    verify(faultHandler).onException(isNotNull(), isNotNull());
+    verify(faultHandler).onException(eq("Fault (attempt #1 of 2): retrying in 0 ms"), isA(TestRuntimeException.class));
     verifyNoMoreInteractions(errorHandler);
   }
   
@@ -92,8 +92,8 @@ public final class RetryTest {
       fail("Did not throw expected exception");
     } catch (TestRuntimeException e) {
       assertTrue(Thread.interrupted());
-      verifyNoMoreInteractions(faultHandler);
-      verify(errorHandler).onException(isNotNull(), isNotNull());
+      verify(faultHandler).onException(eq("Fault (attempt #1 of 2): retrying in 0 ms"), isA(TestRuntimeException.class));
+      verify(errorHandler).onException(eq("Fault (attempt #1 of 2): aborting due to interrupt"), isA(TestRuntimeException.class));
     } finally {
       Thread.interrupted();
     }
@@ -111,8 +111,8 @@ public final class RetryTest {
       .withErrorHandler(errorHandler)
       .run(failFor(2));
     } finally {
-      verify(faultHandler).onException(isNotNull(), isNotNull());
-      verify(errorHandler).onException(isNotNull(), isNotNull());
+      verify(faultHandler).onException(eq("Fault (attempt #1 of 2): retrying in 0 ms"), isA(TestRuntimeException.class));
+      verify(errorHandler).onException(eq("Fault (attempt #2 of 2): aborting"), isA(TestRuntimeException.class));
     }
   }
   
