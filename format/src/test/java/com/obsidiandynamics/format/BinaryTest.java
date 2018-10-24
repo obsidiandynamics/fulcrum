@@ -150,6 +150,14 @@ public final class BinaryTest {
   }
   
   @Test
+  public void testToHexArray() {
+    assertEquals("00", Binary.toHex(Binary.toByteArray(0x00)));
+    assertEquals("10", Binary.toHex(Binary.toByteArray(0x10)));
+    assertEquals("ff", Binary.toHex(Binary.toByteArray(0xFF)));
+    assertEquals("0010ff", Binary.toHex(Binary.toByteArray(0x00, 0x10, 0xFF)));
+  }
+  
+  @Test
   public void testToByteArray() {
     final byte[] expected = { (byte) 0x00, (byte) 0x01, (byte) 0x10, (byte) 0xFF };
     assertArrayEquals(expected, Binary.toByteArray(0x00, 0x01, 0x10, 0xFF));

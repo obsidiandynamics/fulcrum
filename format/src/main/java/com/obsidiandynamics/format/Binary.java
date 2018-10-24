@@ -131,6 +131,23 @@ public final class Binary {
   }
   
   /**
+   *  Converts a given byte array to a string of hex characters. The resulting 
+   *  representation is lower case and has double the number of characters as
+   *  there are bytes in the given array. (Use {@link String#toUpperCase()} on 
+   *  the resulting value if necessary.)
+   *  
+   *  @param bytes The byte array.
+   *  @return The hex string.
+   */
+  public static String toHex(byte[] bytes) {
+    final StringBuilder buf = new StringBuilder(bytes.length * 2);
+    for (byte b : bytes) {
+      buf.append(toHex(b));
+    }
+    return buf.toString();
+  }
+  
+  /**
    *  Converts a varargs array of integers into a byte array, where each of the
    *  integers is assumed to be holding an unsigned byte value.
    *  
