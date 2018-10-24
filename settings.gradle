@@ -1,4 +1,5 @@
 rootProject.name = "fulcrum"
+enableFeaturePreview('STABLE_PUBLISHING') // Gradle 5.0 forward compatibility testing
 
 include "fulcrum-assert"
 project(":fulcrum-assert").projectDir = new File(settingsDir, "assert")
@@ -23,6 +24,9 @@ project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
 
 include "fulcrum-flow"
 project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
+
+include "fulcrum-format"
+project(":fulcrum-format").projectDir = new File(settingsDir, "format")
 
 include "fulcrum-func"
 project(":fulcrum-func").projectDir = new File(settingsDir, "func")
