@@ -117,7 +117,7 @@ public final class Binary {
   
   /**
    *  Converts a given byte to a pair of hex characters, zero-padded if
-   *  the value is lower than 0x10. The resulting representation
+   *  the unsigned value is lower than 0x10. The resulting representation
    *  is lower case. (Use {@link String#toUpperCase()} on the resulting
    *  value if necessary.)
    *  
@@ -125,8 +125,9 @@ public final class Binary {
    *  @return The hex string.
    */
   public static String toHex(byte b) {
-    final String str = Integer.toHexString(Byte.toUnsignedInt(b));
-    return str.length() < 2 ? "0" + str : str;
+    final int unsignedInt = Byte.toUnsignedInt(b);
+    final String str = Integer.toHexString(unsignedInt);
+    return unsignedInt < 0x10 ? "0" + str : str;
   }
   
   /**
