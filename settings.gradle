@@ -49,6 +49,9 @@ project(":fulcrum-node-queue").projectDir = new File(settingsDir, "node-queue")
 include "fulcrum-props"
 project(":fulcrum-props").projectDir = new File(settingsDir, "props")
 
+include "fulcrum-random"
+project(":fulcrum-random").projectDir = new File(settingsDir, "random")
+
 include "fulcrum-resolver"
 project(":fulcrum-resolver").projectDir = new File(settingsDir, "resolver")
 
