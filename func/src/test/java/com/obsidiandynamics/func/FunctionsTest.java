@@ -121,6 +121,16 @@ public final class FunctionsTest {
   }
 
   @Test
+  public void testMustNotBeEqualWithNonEqualValues() throws Exception {
+    Functions.mustNotBeEqual(43, 42, Exception::new);
+  }
+
+  @Test(expected=Exception.class)
+  public void testMustNotBeEqualWithEqualValues() throws Exception {
+    Functions.mustNotBeEqual(42, 42, Exception::new);
+  }
+
+  @Test
   public void testWithMessageString() {
     final Supplier<Throwable> exceptionSupplier = Functions.withMessage("message", Exception::new);
     final Throwable exception = exceptionSupplier.get();

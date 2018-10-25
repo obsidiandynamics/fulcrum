@@ -2,32 +2,105 @@ package com.obsidiandynamics.func;
 
 import java.util.*;
 import java.util.Map.*;
+import java.util.concurrent.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+/**
+ *  Helper methods assisting with a range of FP (functional programming) patterns, 
+ *  particularly (although not only) scenarios that rely on functions that throw checked 
+ *  exceptions.
+ */
 public final class Functions {
   private Functions() {}
   
+  /**
+   *  Applies a function to the result of a supplier, thereby creating a new supplier.
+   *  
+   *  @param <U> Original type supplied by {@code before} and input to the {@code after} function.
+   *  @param <V> Output type of the {@code after} function.
+   *  @param <X> Exception type.
+   *  @param before The original value supplier.
+   *  @param after The transformation to apply to the supplied value.
+   *  @return A composite {@link CheckedSupplier}.
+   *  @throws X If an error occurs.
+   */
   public static <U, V, X extends Throwable> CheckedSupplier<V, X> chain(CheckedSupplier<U, X> before, 
                                                                         CheckedFunction<U, V, X> after) throws X {
     return () -> after.apply(before.get());
   }
 
+  /**
+   *  Chains the output of one function into the input of another, thereby creating a new
+   *  function.
+   *  
+   *  @param <U> Initial input type of the {@code before} function.
+   *  @param <V> Output type of the {@code before} function and the input of {@code after}.
+   *  @param <W> Output type of the {@code after} function.
+   *  @param <X> Exception type.
+   *  @param before The initial function.
+   *  @param after The function to chain to.
+   *  @return A composite {@link CheckedFunction}.
+   *  @throws X If an error occurs.
+   */
   public static <U, V, W, X extends Throwable> CheckedFunction<U, W, X> chain(CheckedFunction<U, V, X> before, 
                                                                               CheckedFunction<V, W, X> after) throws X {
     return u -> after.apply(before.apply(u));
   }
 
+  /**
+   *  Chains the output of a function into the input of a consumer, thereby creating a new
+   *  consumer.
+   *  
+   *  @param <U> Input type of the {@code before} function.
+   *  @param <V> Output type of the {@code before} function and input type of the {@code after} consumer.
+   *  @param <X> Exception type.
+   *  @param before The initial function to apply.
+   *  @param after The consumer to chain to.
+   *  @return A composite {@link CheckedConsumer}.
+   *  @throws X If an error occurs.
+   */
   public static <U, V, X extends Throwable> CheckedConsumer<U, X> chain(CheckedFunction<U, V, X> before, 
                                                                         CheckedConsumer<V, X> after) throws X {
     return u -> after.accept(before.apply(u));
   }
 
+  /**
+   *  Maps values from the {@code source} map to a new {@link LinkedHashMap} instance, 
+   *  using the given {@code converter} mapping function. The mapping function only 
+   *  operates on the values; the keys are copied as-is.
+   *  
+   *  @param <K> Key type.
+   *  @param <U> Source value type.
+   *  @param <V> Target value type.
+   *  @param <X> Exception type.
+   *  @param source The source map.
+   *  @param converter The mapping function applied to values.
+   *  @return The target {@link LinkedHashMap}.
+   *  @throws X If an error occurs.
+   */
   public static <K, U, V, X extends Throwable> LinkedHashMap<K, V> 
       mapValues(Map<K, ? extends U> source, 
                 CheckedFunction<? super U, ? extends V, X> converter) throws X {
     return mapValues(source, converter, LinkedHashMap::new);
   }
 
+  /**
+   *  Maps values from the {@code source} map to a new map instance, using the given
+   *  {@code converter} mapping function. The mapping function only works on the values;
+   *  the keys are copied as-is.
+   *  
+   *  @param <K> Key type.
+   *  @param <U> Source value type.
+   *  @param <V> Target value type.
+   *  @param <M> Target map type.
+   *  @param <X> Exception type.
+   *  @param source The source map.
+   *  @param converter The mapping function applied to values.
+   *  @param mapMaker A way of creating a new map instance to store the mapped entries.
+   *  @return The target map.
+   *  @throws X If an error occurs.
+   */
   public static <K, U, V, M extends Map<K, V>, X extends Throwable> M 
       mapValues(Map<K, ? extends U> source, 
                 CheckedFunction<? super U, ? extends V, X> converter,
@@ -43,12 +116,38 @@ public final class Functions {
     }
   }
 
+  /**
+   *  Maps elements from the {@code source} collection to a new {@link ArrayList} instance,
+   *  using the given {@code converter} mapping function.
+   *  
+   *  @param <U> Source element type.
+   *  @param <V> Target element type.
+   *  @param <X> Exception type.
+   *  @param source The source collection.
+   *  @param converter The mapping function applied to elements.
+   *  @return The target {@link ArrayList}.
+   *  @throws X If an error occurs.
+   */
   public static <U, V, X extends Throwable> ArrayList<V> 
       mapCollection(Collection<? extends U> source, 
                     CheckedFunction<? super U, ? extends V, X> converter) throws X {
     return mapCollection(source, converter, ArrayList::new);
   }
 
+  /**
+   *  Maps elements from the {@code source} collection to a new collection instance,
+   *  using the given {@code converter} mapping function.
+   *  
+   *  @param <U> Source element type.
+   *  @param <V> Target element type.
+   *  @param <C> Target collection type.
+   *  @param <X> Exception type.
+   *  @param source The source collection.
+   *  @param converter The mapping function applied to elements.
+   *  @param collectionMaker A way of creating a new collection to store the mapped elements.
+   *  @return The target collection.
+   *  @throws X If an error occurs.
+   */
   public static <U, V, C extends Collection<V>, X extends Throwable> C
       mapCollection(Collection<? extends U> source, 
                     CheckedFunction<? super U, ? extends V, X> converter,
@@ -64,16 +163,49 @@ public final class Functions {
     }
   }
 
+  /**
+   *  Creates a supplier of a custom {@link Throwable} that is constructed using a given {@code message}.
+   *  
+   *  @param <X> Exception type.
+   *  @param message The exception message.
+   *  @param exceptionMaker A way of creating a {@link Throwable} that uses this message.
+   *  @return The exception {@code Supplier}.
+   */
   public static <X extends Throwable> Supplier<X> withMessage(String message,
                                                               Function<String, X> exceptionMaker) {
     return () -> exceptionMaker.apply(message);
   }
 
+  /**
+   *  Creates a supplier of a custom {@link Throwable} that is constructed using a given
+   *  (lazily evaluated) message supplier.
+   *  
+   *  @param <X> Exception type.
+   *  @param messageSupplier Supplies the exception message when invoked.
+   *  @param exceptionMaker A way of creating a {@link Throwable} that uses this message.
+   *  @return The exception {@code Supplier}.
+   */
   public static <X extends Throwable> Supplier<X> withMessage(Supplier<String> messageSupplier,
                                                               Function<String, X> exceptionMaker) {
     return () -> exceptionMaker.apply(messageSupplier.get());
   }
 
+  /**
+   *  Ensures that the given {@code map} contains the specified {@code key} and returns the
+   *  mapped value. Otherwise, an exception specified by the given {@code exceptionMaker} is
+   *  thrown.
+   *  
+   *  @param <K> Key type.
+   *  @param <V> Value type.
+   *  @param <X> Exception type.
+   *  @param map The map to query.
+   *  @param key The key that must be present.
+   *  @param errorTemplate The template for forming the error, where the single format specifier
+   *                       '%s' is substituted for the missing key.
+   *  @param exceptionMaker A way of creating the exception for a missing value.
+   *  @return The value.
+   *  @throws X If the mapping wasn't present.
+   */
   public static <K, V, X extends Throwable> V mustExist(Map<K, V> map, 
                                                         K key, 
                                                         String errorTemplate, 
@@ -81,6 +213,17 @@ public final class Functions {
     return mustExist(map.get(key), withMessage(() -> String.format(errorTemplate, key), exceptionMaker));
   }
 
+  /**
+   *  Ensures that the given value must exist (i.e. it cannot be {@code null}). Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to check.
+   *  @param exceptionMaker A way of creating the exception for a {@code null} value.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the given value is {@code null}.
+   */
   public static <T, X extends Throwable> T mustExist(T value, Supplier<X> exceptionMaker) throws X {
     if (value != null) {
       return value;
@@ -89,77 +232,465 @@ public final class Functions {
     }
   }
 
-  public static <T, X extends Throwable> T mustBeSubtype(Object obj, Class<T> type, Supplier<X> exceptionMaker) throws X {
-    if (type.isInstance(obj)) {
-      return type.cast(obj);
+  /**
+   *  Ensures that the given value is {@code null}. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to test.
+   *  @param exceptionMaker A way of creating the exception for a non-{@code null} value.
+   *  @throws X If the value is not {@code null}.
+   */
+  public static <X extends Throwable> void mustBeNull(Object value, Supplier<X> exceptionMaker) throws X {
+    mustBeTrue(value == null, exceptionMaker);
+  }
+
+  /**
+   *  Ensures that the given object is a subclass of the specified class type. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <T> Object type.
+   *  @param <X> Exception type.
+   *  @param value The object to verify.
+   *  @param type The class type that the object must be a type of.
+   *  @param exceptionMaker A way of creating the exception for a non-matching object.
+   *  @return The verified object, as supplied to this method.
+   *  @throws X If the given object is not of a matching type.
+   */
+  public static <T, X extends Throwable> T mustBeSubtype(Object value, Class<T> type, Supplier<X> exceptionMaker) throws X {
+    if (type.isInstance(value)) {
+      return type.cast(value);
     } else {
       throw exceptionMaker.get();
     }
   }
 
+  /**
+   *  Ensures that the given {@code expected} and {@code actual} values are equal. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param expected The expected value.
+   *  @param actual The actual value.
+   *  @param exceptionMaker A way of creating the exception for non-equal objects.
+   *  @throws X If the two objects are not equal.
+   */
   public static <X extends Throwable> void mustBeEqual(Object expected, Object actual, Supplier<X> exceptionMaker) throws X {
     mustBeTrue(Objects.equals(expected, actual), exceptionMaker);
   }
 
-  public static <X extends Throwable> void mustBeNull(Object obj, Supplier<X> exceptionMaker) throws X {
-    mustBeTrue(obj == null, exceptionMaker);
+  /**
+   *  Ensures that the given {@code unexpected} and {@code actual} values are not equal. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param unexpected The unexpected value.
+   *  @param actual The actual value.
+   *  @param exceptionMaker A way of creating the exception for equal objects.
+   *  @throws X If the two objects are equal.
+   */
+  public static <X extends Throwable> void mustNotBeEqual(Object unexpected, Object actual, Supplier<X> exceptionMaker) throws X {
+    mustBeFalse(Objects.equals(unexpected, actual), exceptionMaker);
   }
 
+  /**
+   *  Ensures that the given Boolean {@code test} value is {@code true}. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param test The Boolean value to test.
+   *  @param exceptionMaker A way of creating the exception for a {@code false} value.
+   *  @throws X If the value is {@code false}.
+   */
   public static <X extends Throwable> void mustBeTrue(boolean test, Supplier<X> exceptionMaker) throws X {
     if (! test) {
       throw exceptionMaker.get();
     }
   }
 
+  /**
+   *  Ensures that the given Boolean {@code test} value is {@code false}. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param test The Boolean value to test.
+   *  @param exceptionMaker A way of creating the exception for a {@code true} value.
+   *  @throws X If the value is {@code true}.
+   */
+  public static <X extends Throwable> void mustBeFalse(boolean test, Supplier<X> exceptionMaker) throws X {
+    if (test) {
+      throw exceptionMaker.get();
+    }
+  }
+
+  /**
+   *  A variant of {@link #ifPresent(Object, CheckedFunction)} that operates on {@link Optional} values,
+   *  returning the result of applying the given {@code mapper} to the encapsulated value if the
+   *  latter is present, or {@code null} otherwise. <p>
+   *  
+   *  This is similar to {@link Optional#map(Function)}, with two notable differences: <br>
+   *  - This method does not create intermediate objects; and <br>
+   *  - This method accepts a {@link CheckedFunction}, permitting exceptions.
+   *  
+   *  @param <T> Value type.
+   *  @param <U> Mapped type.
+   *  @param <X> Exception type.  
+   *  @param value The optional value.
+   *  @param mapper The mapping function.
+   *  @return The mapped value if the initial value isn't empty, or {@code null} otherwise.
+   *  @throws X If an error occurs.
+   */
   public static <T, U, X extends Throwable> U ifPresentOptional(Optional<T> value,
                                                                 CheckedFunction<? super T, ? extends U, X> mapper) throws X {
     return ifPresent(value.orElse(null), mapper);
   }
   
+  /**
+   *  Evaluates a given {@code mapper} function, passing it the given {@code value} if the latter
+   *  is non-{@code null}, returning the mapped value. Otherwise, if the given {@code value} is
+   *  {@code null}, a {@code null} is returned. This is the functional equivalent of the
+   *  Elvis operator. <p>
+   *  
+   *  Note: as the mapping function is free to output {@code null}, this method can return a
+   *  {@code null} for a non-{@code null} input value.
+   *  
+   *  @param <T> Value type.
+   *  @param <U> Mapped type.
+   *  @param <X> Exception type.
+   *  @param value The value to map, if it isn't {@code null}.
+   *  @param mapper The mapping function to invoke if the value isn't {@code null}.
+   *  @return The mapped value if the initial value isn't {@code null}, or {@code null} otherwise.
+   *  @throws X If an error occurs inside the mapping function.
+   */
   public static <T, U, X extends Throwable> U ifPresent(T value, 
                                                         CheckedFunction<? super T, ? extends U, X> mapper) throws X {
     return value != null ? mapper.apply(value) : null;
   }
 
+  /**
+   *  A variant of {@link #ifAbsent(Object, CheckedSupplier)} that operates on {@link Optional} values,
+   *  returning the encapsulated value if set, or sourcing the value from the given {@code supplier}
+   *  otherwise. <p>
+   *  
+   *  This is similar to {@link Optional#orElseGet(Supplier)}, with two notable differences: <br>
+   *  - This method does not create intermediate objects; and <br>
+   *  - This method accepts a {@link CheckedSupplier}, permitting exceptions.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The optional value.
+   *  @param supplier Supplier to invoke if the value is empty.
+   *  @return The extracted value (as-is) if it is set, or the value produced by the supplier otherwise.
+   *  @throws X If an error occurs inside the supplier.
+   */
   public static <T, X extends Throwable> T ifAbsentOptional(Optional<T> value, 
                                                             CheckedSupplier<? extends T, X> supplier) throws X {
     return ifAbsent(value.orElse(null), supplier);
   }
 
+  /**
+   *  Returns the given {@code value} if it is non-{@code null}, otherwise a value produced
+   *  by the given {@code supplier} is returned instead. <p>
+   *  
+   *  Note: as the supplier is free to output {@code null}, this method can return a
+   *  {@code null} for a {@code null} input value.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to consider.
+   *  @param supplier Supplier to invoke if the given value is {@code null}.
+   *  @return The given value (as-is) if it is non-{@code null}, or the value produced by the supplier otherwise.
+   *  @throws X If an error occurs inside the supplier.
+   */
   public static <T, X extends Throwable> T ifAbsent(T value, 
                                                     CheckedSupplier<? extends T, X> supplier) throws X {
     return value != null ? value : supplier.get();
   }
 
+  /**
+   *  A variant of {@link #ifEither(Object, CheckedFunction, CheckedSupplier)} that operates on
+   *  {@link Optional} values.
+   *  
+   *  @param <T> Value type.
+   *  @param <U> Mapped or supplied type.
+   *  @param <X> Exception type.
+   *  @param value The optional value.
+   *  @param mapperIfPresent The mapping function to invoke if the value is set.
+   *  @param supplierIfAbsent The supplier to invoke if the value is empty.
+   *  @return The mapped value if the initial value isn't empty, or the value produced by
+   *          the supplier otherwise.
+   *  @throws X If an error occurs inside either the mapping function or the supplier.
+   */
   public static <T, U, X extends Throwable> U ifEitherOptional(Optional<T> value, 
                                                                CheckedFunction<? super T, ? extends U, X> mapperIfPresent, 
                                                                CheckedSupplier<? extends U, X> supplierIfAbsent) throws X {
     return ifEither(value.orElse(null), mapperIfPresent, supplierIfAbsent);
   }
 
+  /**
+   *  A hybrid of {@link #ifPresent(Object, CheckedFunction)} and {@link #ifAbsent(Object, CheckedSupplier)},
+   *  returning the application of the {@code mapperIfPresent} function to the given {@code value} if it 
+   *  isn't {@code null}, or sourcing the value from the given {@code supplierIfAbsent} supplier if the 
+   *  value is {@code null}.
+   *  
+   *  @param <T> Value type.
+   *  @param <U> Mapped or supplied type.
+   *  @param <X> Exception type.
+   *  @param value The value to consider.
+   *  @param mapperIfPresent The mapping function to invoke if the value is non-{@code null}.
+   *  @param supplierIfAbsent The supplier to invoke if the value is {@code null}.
+   *  @return The mapped value if the initial value isn't {@code null}, or the value produced by
+   *          the supplier otherwise.
+   *  @throws X If an error occurs inside either the mapping function or the supplier.
+   */
   public static <T, U, X extends Throwable> U ifEither(T value, 
                                                        CheckedFunction<? super T, ? extends U, X> mapperIfPresent, 
                                                        CheckedSupplier<? extends U, X> supplierIfAbsent) throws X {
     return value != null ? mapperIfPresent.apply(value) : supplierIfAbsent.get();
   }
 
-  public static <T> T ifThrew(ThrowingSupplier<? extends T> supplier, Supplier<? extends T> supplierIfThrew) {
+  /**
+   *  Attempts to return the value produced by the given {@code preferredSupplier} if this can be done
+   *  successfully without throwing an exception, otherwise the return value is sourced from the
+   *  {@code fallbackSupplier}. <p>
+   *  
+   *  The preferred supplier may throw a checked exception (which will be silently discarded). The
+   *  fallback supplier, on the other hand, is not permitted to throw a checked exception.
+   *  
+   *  @param <T> Value type.
+   *  @param preferredSupplier The supplier to attempt first.
+   *  @param fallbackSupplier The fallback supplier, if the preferred one fails.
+   *  @return The resulting value, sourced from either the preferred or the fallback supplier.
+   */
+  public static <T> T ifThrew(CheckedSupplier<? extends T, ? extends Throwable> preferredSupplier, 
+                              Supplier<? extends T> fallbackSupplier) {
     try {
-      return supplier.get();
+      return preferredSupplier.get();
     } catch (Throwable e) {
-      return supplierIfThrew.get();
+      return fallbackSupplier.get();
     }
   }
 
+  /**
+   *  Obtains a supplier of {@code null}.
+   *  
+   *  @param <T> Value type.
+   *  @return A {@link CheckedSupplier} of {@code null}.
+   */
   public static <T> CheckedSupplier<T, RuntimeException> giveNull() {
     return () -> null;
   }
-
+  
+  /**
+   *  Obtains a supplier of the given value.
+   *  
+   *  @param <T> Value type.
+   *  @param value The value to supply.
+   *  @return A {@link CheckedSupplier} of the given {@code value}.
+   */
   public static <T> CheckedSupplier<T, RuntimeException> give(T value) {
     return () -> value;
   }
 
+  /**
+   *  Obtains the identity function.
+   *  
+   *  @param <T> Value type.
+   *  @return The identity {@link CheckedFunction}.
+   */
   public static <T> CheckedFunction<T, T, RuntimeException> identity() {
     return value -> value;
+  }
+  
+  /**
+   *  Curries a {@link ExceptionHandler} with a specific error {@code summary}, so that it can be used
+   *  as a simpler {@link Throwable} {@link Consumer}.
+   *  
+   *  @param summary The error summary to feed to the {@code exceptionHandler}.
+   *  @param exceptionHandler Handles errors.
+   *  @return A curried {@link Throwable} {@link Consumer}.
+   */
+  public static Consumer<Throwable> withSummary(String summary, ExceptionHandler exceptionHandler) {
+    return cause -> exceptionHandler.onException(summary, cause);
+  }
+  
+  /**
+   *  Functional variant of the try-catch statement.
+   *  
+   *  @param errorProneRunnable A {@link CheckedRunnable} to try.
+   *  @param onError The {@link Throwable} {@link Consumer} that will handle any exceptions.
+   */
+  public static void tryCatch(CheckedRunnable<?> errorProneRunnable, Consumer<Throwable> onError) {
+    try {
+      errorProneRunnable.run();
+    } catch (Throwable e) {
+      onError.accept(e);
+    }
+  }
+  
+  /**
+   *  Functional variant of the try-catch statement that can return a value.
+   *  
+   *  @param <T> Return type.
+   *  @param errorProneSupplier A {@link CheckedSupplier} to try.
+   *  @param defaultValueSupplier If the supplier fails, the default supplier is used to return a value.
+   *  @param onError The {@link Throwable} {@link Consumer} that will handle any exceptions.
+   *  @return The resulting value.
+   */
+  public static <T> T tryCatch(CheckedSupplier<? extends T, ?> errorProneSupplier, 
+                               Supplier<? extends T> defaultValueSupplier, 
+                               Consumer<Throwable> onError) {
+    try {
+      return errorProneSupplier.get();
+    } catch (Throwable e) {
+      onError.accept(e);
+      return defaultValueSupplier.get();
+    }
+  }
+  
+  /**
+   *  Ignores exceptions. For use with {@link #tryCatch(CheckedRunnable, Consumer)} and
+   *  {@link #tryCatch(CheckedSupplier, Supplier, Consumer)}.
+   *  
+   *  @return A no-op {@link Consumer} of {@link Throwable}.
+   */
+  public static Consumer<Throwable> ignoreException() {
+    return __ -> {};
+  }
+  
+  /**
+   *  Creates a {@link Comparator} that works by extracting an field from the encompassing class using the
+   *  given {@code fieldExtractor} and then comparing the extracted fields using the given 
+   *  {@code fieldComparator}. <p>
+   *  
+   *  Some examples:<p>
+   *  
+   *  Sort strings by their length:<br>
+   *  <pre>
+   *  final var strings = asList("dddd", "a", "ccc", "bb");
+   *  Collections.sort(strings, byField(String::length, Comparator.naturalOrder()));
+   *  </pre>
+   *  
+   *  Sort points using a {@link ChainedComparator} with priority given to the X-coordinate, followed by
+   *  the Y-coordinate: <br>
+   *  <pre>
+   *  {@code
+   *  final var points = asList(new Point(2, 2), new Point(0, 0), new Point(1, 2), new Point(1, 0));
+   *  Collections.sort(points, 
+   *                   new ChainedComparator<Point>()
+   *                   .chain(byField(Point::getX, Comparator.naturalOrder()))
+   *                   .chain(byField(Point::getY, Comparator.naturalOrder())));
+   *  }
+   *  </pre>
+   *  
+   *  @param <T> Encompassing type.
+   *  @param <U> Field type.
+   *  @param fieldExtractor A way of extracting the field from the encompassing type (typically a method 
+   *                        reference to an existing getter).
+   *  @param fieldComparator A way of comparing the extracted fields.
+   *  @return The resulting {@link Comparator} instance.
+   */
+  public static <T, U> Comparator<T> byField(Function<T, U> fieldExtractor, Comparator<? super U> fieldComparator) {
+    return (t0, t1) -> {
+      final U field0 = fieldExtractor.apply(t0);
+      final U field1 = fieldExtractor.apply(t1);
+      return fieldComparator.compare(field0, field1);
+    };
+  }
+  
+  /**
+   *  Returns the cause of the given {@code throwable} if the latter is an instance of the 
+   *  {@code containerExceptionType}; otherwise the {@code throwable} is returned as-is. <p>
+   *  
+   *  An example of where this method is useful is for stripping away an {@link ExecutionException} when
+   *  waiting for the result of a {@link Future}.
+   *  
+   *  @param containerExceptionType The container exception type to strip away, unwrapping the cause.
+   *  @param throwable The exception to consider.
+   *  @return The stripped exception.
+   */
+  public static Throwable unwrapException(Class<? extends Throwable> containerExceptionType, Throwable throwable) {
+    if (containerExceptionType.isInstance(throwable)) {
+      return throwable.getCause();
+    } else {
+      return throwable;
+    }
+  }
+  
+  /**
+   *  Used to capture an exception thrown within a {@link Callable} submitted to an {@link ExecutorService}. <p>
+   *  
+   *  Some executors, such as a {@link ForkJoinPool}, will wrap checked exceptions thrown from a {@link Callable}
+   *  inside a {@link RuntimeException}, making it impossible to reliably determine the true exception thrown
+   *  by walking the cause chain. (We can't tell whether an observed {@link RuntimeException} was thrown from
+   *  the application code or was introduced by a {@link ForkJoinTask}.) Using a private exception wrapper
+   *  lets us discard any exceptions introduced by an {@link ExecutorService}.
+   */
+  static final class CapturedException extends Exception {
+    private static final long serialVersionUID = 1L;
+    
+    CapturedException(Throwable cause) { super(cause); }
+    
+    static Throwable unwind(Throwable throwable) {
+      for (Throwable cause = throwable; cause != null; cause = cause.getCause()) {
+        if (cause instanceof CapturedException) {
+          return cause.getCause();
+        }
+      }
+      throw new IllegalStateException("Could not unwind the correct cause", throwable);
+    }
+  }
+
+  public static <U, V, X extends Exception> ArrayList<V>
+      collectParallel(Stream<? extends U> source, 
+                      CheckedFunction<? super U, ? extends V, X> converter,
+                      ExecutorService executor) throws X, InterruptedException {
+    return collectParallel(source, converter, ArrayList::new, executor);
+  }
+
+  public static <U, V, C extends Collection<V>, X extends Throwable> C
+      collectParallel(Stream<? extends U> source, 
+                      CheckedFunction<? super U, ? extends V, X> converter,
+                      Supplier<C> collectionMaker,
+                      ExecutorService executor) throws X, InterruptedException {
+    final List<Future<V>> submissions = new ArrayList<>();
+    source.forEach(item -> {
+      submissions.add(executor.submit(() -> Exceptions.wrap(() -> converter.apply(item), CapturedException::new)));
+    });
+    
+    final C mapped = collectionMaker.get();
+    for (Future<V> future : submissions) {
+      try {
+        mapped.add(future.get());
+      } catch (ExecutionException e) {
+        final Throwable cause = CapturedException.unwind(e.getCause());
+        throw Classes.<X>cast(cause);
+      }
+    }
+    return mapped;
+  }
+  
+  /**
+   *  Coalesces a given {@link CheckedConsumer} into an equivalent {@link CheckedFunction} returning {@link Void}, 
+   *  allowing the consumer to be used where a function is expected, and where the return value is irrelevant.
+   *  
+   *  @param <U> The input type.
+   *  @param <X> The exception type.
+   *  @param consumer The consumer.
+   *  @return The {@link Void}-returning {@link Function}.
+   */
+  public static <U, X extends Throwable> CheckedFunction<U, Void, X> voidFunction(CheckedConsumer<? super U, ? extends X> consumer) {
+    return u -> {
+      consumer.accept(u);
+      return null;
+    };
+  }
+
+  public static <T> Supplier<T> givePlainNull() {
+    return () -> null;
+  }
+
+  public static <T> Supplier<T> givePlain(T value) {
+    return () -> value;
   }
 }
