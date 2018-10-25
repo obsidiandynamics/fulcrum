@@ -1,17 +1,31 @@
 package com.obsidiandynamics.func;
 
+import static java.util.Arrays.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
+import java.awt.*;
+import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import org.junit.*;
 import org.junit.rules.*;
 
 import com.obsidiandynamics.assertion.*;
+import com.obsidiandynamics.func.Functions.*;
+import com.obsidiandynamics.junit.*;
 
 public final class FunctionsTest {
+  @ClassRule
+  public static final ExecutorProp executorProp = new ExecutorProp(Executors::newWorkStealingPool);
+  
   @Rule
   public final ExpectedException expectedException = ExpectedException.none();
 
@@ -204,5 +218,145 @@ public final class FunctionsTest {
   public void testIdentity() {
     final Object obj = new Object();
     assertSame(obj, Functions.identity().apply(obj));
+  }
+  
+  @Test
+  public void testWithSummary() {
+    final Exception cause = new Exception("Simulated");
+    final ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
+    final Consumer<Throwable> exceptionConsumer = Functions.withSummary("summary", exceptionHandler);
+    exceptionConsumer.accept(cause);
+    verify(exceptionHandler).onException(eq("summary"), eq(cause));
+  }
+
+  @Test
+  public void testTryCatchRunnablePass() {
+    final ThrowingRunnable errorProneRunnable = (ThrowingRunnable) () -> {};
+    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    Functions.tryCatch(errorProneRunnable, onError);
+    verifyNoMoreInteractions(onError);
+  }
+
+  @Test
+  public void testTryCatchRunnableFail() {
+    final Exception cause = new Exception("Simulated");
+    final ThrowingRunnable errorProneRunnable = (ThrowingRunnable) () -> { throw cause; };
+    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    Functions.tryCatch(errorProneRunnable, onError);
+    verify(onError).accept(eq(cause));
+  }
+
+  @Test
+  public void testTryCatchSupplierPass() {
+    final ThrowingSupplier<String> errorProneSupplier = (ThrowingSupplier<String>) () -> "value";
+    final Supplier<String> defaultValueSupplier = Classes.<Supplier<String>>cast(mock(Supplier.class));
+    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    assertEquals("value", Functions.tryCatch(errorProneSupplier, defaultValueSupplier, onError));
+    verifyNoMoreInteractions(defaultValueSupplier);
+    verifyNoMoreInteractions(onError);
+  }
+
+  @Test
+  public void testTryCatchSupplierFail() {
+    final Exception cause = new Exception("Simulated");
+    final ThrowingSupplier<String> errorProneSupplier = (ThrowingSupplier<String>) () -> { throw cause; };
+    final Supplier<String> defaultValueSupplier = (Supplier<String>) () -> "default";
+    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    assertEquals("default", Functions.tryCatch(errorProneSupplier, defaultValueSupplier, onError));
+    verify(onError).accept(eq(cause));
+  }
+
+  @Test
+  public void testIgnoreException() {
+    Functions.ignoreException().accept(null);
+  }
+
+  @Test
+  public void testByFieldSimple() {
+    final List<String> strings = asList("dddd", "a", "ccc", "bb");
+    Collections.sort(strings, Functions.byField(String::length, Comparator.naturalOrder()));
+    assertEquals(asList("a", "bb", "ccc", "dddd"), strings);
+    Collections.sort(strings, Functions.byField(String::length, Comparator.naturalOrder()).reversed());
+    assertEquals(asList("dddd", "ccc", "bb", "a"), strings);
+  }
+
+  @Test
+  public void testByFieldComposite() {
+    final List<Point> points = asList(new Point(2, 2), new Point(0, 0), new Point(1, 2), new Point(1, 0));
+    Collections.sort(points, 
+                     new ChainedComparator<Point>()
+                     .chain(Functions.byField(Point::getX, Comparator.naturalOrder()))
+                     .chain(Functions.byField(Point::getY, Comparator.naturalOrder())));
+    assertEquals(asList(new Point(0, 0), new Point(1, 0), new Point(1, 2), new Point(2, 2)), points);
+  }
+
+  @Test
+  public void testUnwrapException() {
+    assertNull(Functions.unwrapException(ExecutionException.class, null));
+
+    assertNull(Functions.unwrapException(ExecutionException.class, new ExecutionException("No cause", null)));
+
+    final Exception plainException = new Exception("Simulated");
+    assertSame(plainException, Functions.unwrapException(ExecutionException.class, plainException));
+
+    final ExecutionException executionException = new ExecutionException(plainException);
+    assertSame(plainException, Functions.unwrapException(ExecutionException.class, executionException));
+
+    final IOException ioException = new IOException(new ExecutionException(plainException));
+    assertSame(plainException, Functions.unwrapException(ExecutionException.class, 
+                                                         Functions.unwrapException(IOException.class, 
+                                                                                   ioException)));
+  }
+
+  @Test
+  public void testGivePlainNull() {
+    assertNull(Functions.givePlainNull().get());
+  }
+
+  @Test
+  public void testGivePlainValue() {
+    assertEquals("test", Functions.givePlain("test").get());
+  }
+
+  @Test
+  public void testParallelMapStreamWithNonNull() throws InterruptedException {
+    final ArrayList<Object> doubled = Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> n * 2, executorProp.getExecutor());
+    assertEquals(Arrays.asList(0, 2, 4, 6), doubled);
+  }
+
+  @Test(expected=RuntimeException.class)
+  public void testParallelMapStreamRuntimeException() throws InterruptedException {
+    Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
+      throw new RuntimeException("Simulated failure");
+    }, executorProp.getExecutor());
+  }
+
+  @Test(expected=IOException.class)
+  public void testParallelMapStreamCheckedException() throws InterruptedException, IOException {
+    Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
+      throw new IOException("Simulated failure");
+    }, executorProp.getExecutor());
+  }
+
+  @Test
+  public void testCapturedExceptionUnwind() {
+    final Throwable actualCause = new IOException();
+    final Throwable exception = new Exception(new RuntimeException(new CapturedException(actualCause)));
+    final Throwable unwound = CapturedException.unwind(exception);
+    assertSame(actualCause, unwound);
+  }
+
+  @Test(expected=IllegalStateException.class)
+  public void testCapturedExceptionUnwindNotCaptured() {
+    final Throwable exception = new Exception(new RuntimeException());
+    CapturedException.unwind(exception);
+  }
+
+  @Test
+  public void testVoidFunction() {
+    final CheckedConsumer<String, RuntimeException> consumer = Classes.cast(mock(CheckedConsumer.class));
+    final CheckedFunction<String, Void, RuntimeException> function = Functions.voidFunction(consumer);
+    function.apply("someString");
+    verify(consumer).accept(eq("someString"));
   }
 }

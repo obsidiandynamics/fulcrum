@@ -67,7 +67,7 @@ public final class Functions {
 
   /**
    *  Maps values from the {@code source} map to a new {@link LinkedHashMap} instance, 
-   *  using the given {@code converter} mapping function. The mapping function only 
+   *  using the given mapping function. The mapping function only 
    *  operates on the values; the keys are copied as-is.
    *  
    *  @param <K> Key type.
@@ -75,19 +75,19 @@ public final class Functions {
    *  @param <V> Target value type.
    *  @param <X> Exception type.
    *  @param source The source map.
-   *  @param converter The mapping function applied to values.
+   *  @param mapper The mapping function applied to values.
    *  @return The target {@link LinkedHashMap}.
-   *  @throws X If an error occurs.
+   *  @throws X If an error occurs within the mapping function.
    */
   public static <K, U, V, X extends Throwable> LinkedHashMap<K, V> 
       mapValues(Map<K, ? extends U> source, 
-                CheckedFunction<? super U, ? extends V, X> converter) throws X {
-    return mapValues(source, converter, LinkedHashMap::new);
+                CheckedFunction<? super U, ? extends V, X> mapper) throws X {
+    return mapValues(source, mapper, LinkedHashMap::new);
   }
 
   /**
    *  Maps values from the {@code source} map to a new map instance, using the given
-   *  {@code converter} mapping function. The mapping function only works on the values;
+   *  mapping function. The mapping function only works on the values;
    *  the keys are copied as-is.
    *  
    *  @param <K> Key type.
@@ -96,19 +96,19 @@ public final class Functions {
    *  @param <M> Target map type.
    *  @param <X> Exception type.
    *  @param source The source map.
-   *  @param converter The mapping function applied to values.
+   *  @param mapper The mapping function applied to values.
    *  @param mapMaker A way of creating a new map instance to store the mapped entries.
    *  @return The target map.
-   *  @throws X If an error occurs.
+   *  @throws X If an error occurs within the mapping function.
    */
   public static <K, U, V, M extends Map<K, V>, X extends Throwable> M 
       mapValues(Map<K, ? extends U> source, 
-                CheckedFunction<? super U, ? extends V, X> converter,
+                CheckedFunction<? super U, ? extends V, X> mapper,
                 Supplier<M> mapMaker) throws X {
     if (source != null) {
       final M mapped = mapMaker.get();
       for (Entry<K, ? extends U> entry : source.entrySet()) {
-        mapped.put(entry.getKey(), converter.apply(entry.getValue()));
+        mapped.put(entry.getKey(), mapper.apply(entry.getValue()));
       }
       return mapped;
     } else {
@@ -118,49 +118,126 @@ public final class Functions {
 
   /**
    *  Maps elements from the {@code source} collection to a new {@link ArrayList} instance,
-   *  using the given {@code converter} mapping function.
+   *  using the given mapping function.
    *  
    *  @param <U> Source element type.
    *  @param <V> Target element type.
    *  @param <X> Exception type.
    *  @param source The source collection.
-   *  @param converter The mapping function applied to elements.
+   *  @param mapper The mapping function applied to elements.
    *  @return The target {@link ArrayList}.
-   *  @throws X If an error occurs.
+   *  @throws X If an error occurs within the mapping function.
    */
   public static <U, V, X extends Throwable> ArrayList<V> 
       mapCollection(Collection<? extends U> source, 
-                    CheckedFunction<? super U, ? extends V, X> converter) throws X {
-    return mapCollection(source, converter, ArrayList::new);
+                    CheckedFunction<? super U, ? extends V, X> mapper) throws X {
+    return mapCollection(source, mapper, ArrayList::new);
   }
 
   /**
    *  Maps elements from the {@code source} collection to a new collection instance,
-   *  using the given {@code converter} mapping function.
+   *  using the given mapping function.
    *  
    *  @param <U> Source element type.
    *  @param <V> Target element type.
    *  @param <C> Target collection type.
    *  @param <X> Exception type.
    *  @param source The source collection.
-   *  @param converter The mapping function applied to elements.
+   *  @param mapper The mapping function applied to elements.
    *  @param collectionMaker A way of creating a new collection to store the mapped elements.
    *  @return The target collection.
-   *  @throws X If an error occurs.
+   *  @throws X If an error occurs within the mapping function.
    */
   public static <U, V, C extends Collection<V>, X extends Throwable> C
       mapCollection(Collection<? extends U> source, 
-                    CheckedFunction<? super U, ? extends V, X> converter,
+                    CheckedFunction<? super U, ? extends V, X> mapper,
                     Supplier<C> collectionMaker) throws X {
     if (source != null) {
       final C mapped = collectionMaker.get();
       for (U item : source) {
-        mapped.add(converter.apply(item));
+        mapped.add(mapper.apply(item));
       }
       return mapped;
     } else {
       return null;
     }
+  }
+
+  /**
+   *  Collects elements from the {@code source} stream in parallel, having applied a mapping function,
+   *  storing the result in a new {@link ArrayList}. <p>
+   *  
+   *  This method is semantically analogous to the chaining of {@link Stream#map(Function)} with
+   *  {@link Stream#collect(Collector)}, having first invoked {@link Stream#parallel()},
+   *  with two notable differences: <br>
+   *  - This method accepts a {@link CheckedFunction} to perform the mapping, which permits
+   *    checked exceptions; and <br>
+   *  - This method allows the caller to nominate a custom {@link ExecutorService}, which is used
+   *    to drive the mapping in parallel.
+   *  
+   *  @param <U> Source element type.
+   *  @param <V> Target element type.
+   *  @param <X> Exception type.
+   *  @param source The source stream.
+   *  @param mapper The mapping function applied to the elements.
+   *  @param executor The executor to use.
+   *  @return The mapped {@link ArrayList}.
+   *  @throws X If an error occurs within the mapping function.
+   *  @throws InterruptedException If the calling thread was interrupted while waiting for the result
+   *                               of the parallel jobs.
+   */
+  public static <U, V, X extends Exception> ArrayList<V>
+      parallelMapStream(Stream<? extends U> source, 
+                        CheckedFunction<? super U, ? extends V, X> mapper,
+                        ExecutorService executor) throws X, InterruptedException {
+    return parallelMapStream(source, mapper, ArrayList::new, executor);
+  }
+
+  /**
+   *  Collects elements from the {@code source} stream in parallel, having applied a mapping function,
+   *  to a new collection constructed by the given {@code collectionMaker}. <p>
+   *  
+   *  This method is semantically analogous to the chaining of {@link Stream#map(Function)} with
+   *  {@link Stream#collect(Collector)}, having first invoked {@link Stream#parallel()},
+   *  with two notable differences: <br>
+   *  - This method accepts a {@link CheckedFunction} to perform the mapping, which permits
+   *    checked exceptions; and <br>
+   *  - This method allows the caller to nominate a custom {@link ExecutorService}, which is used
+   *    to drive the mapping in parallel.
+   *  
+   *  @param <U> Source element type.
+   *  @param <V> Target element type.
+   *  @param <C> Target collection type.
+   *  @param <X> Exception type.
+   *  @param source The source stream.
+   *  @param mapper The mapping function applied to the elements.
+   *  @param collectionMaker A way of creating the target collection.
+   *  @param executor The executor to use.
+   *  @return The mapped collection.
+   *  @throws X If an error occurs within the mapping function.
+   *  @throws InterruptedException If the calling thread was interrupted while waiting for the result
+   *                               of the parallel jobs.
+   */
+  public static <U, V, C extends Collection<V>, X extends Throwable> C
+      parallelMapStream(Stream<? extends U> source, 
+                        CheckedFunction<? super U, ? extends V, X> mapper,
+                        Supplier<C> collectionMaker,
+                        ExecutorService executor) throws X, InterruptedException {
+    final List<Future<V>> submissions = new ArrayList<>();
+    source.forEach(item -> {
+      submissions.add(executor.submit(() -> Exceptions.wrap(() -> mapper.apply(item), CapturedException::new)));
+    });
+    
+    final C mapped = collectionMaker.get();
+    for (Future<V> future : submissions) {
+      try {
+        mapped.add(future.get());
+      } catch (ExecutionException e) {
+        final Throwable cause = CapturedException.unwind(e.getCause());
+        throw Classes.<X>cast(cause);
+      }
+    }
+    return mapped;
   }
 
   /**
@@ -472,7 +549,11 @@ public final class Functions {
   }
 
   /**
-   *  Obtains a supplier of {@code null}.
+   *  Obtains a checked supplier of {@code null}. <p>
+   *  
+   *  The supplier's type parameter indicates that it may throw a {@link RuntimeException},
+   *  making it compatible with statements that don't throw checked exceptions. In actual fact
+   *  no exception will ever be thrown from this supplier.
    *  
    *  @param <T> Value type.
    *  @return A {@link CheckedSupplier} of {@code null}.
@@ -480,15 +561,40 @@ public final class Functions {
   public static <T> CheckedSupplier<T, RuntimeException> giveNull() {
     return () -> null;
   }
+
+  /**
+   *  Obtains a conventional supplier of {@code null}.
+   *  
+   *  @param <T> Value type.
+   *  @return A {@link Supplier} of {@code null}.
+   */
+  public static <T> Supplier<T> givePlainNull() {
+    return () -> null;
+  }
   
   /**
-   *  Obtains a supplier of the given value.
+   *  Obtains a checked supplier of the given value. <p>
+   *  
+   *  The supplier's type parameter indicates that it may throw a {@link RuntimeException},
+   *  making it compatible with statements that don't throw checked exceptions. In actual fact
+   *  no exception will ever be thrown from this supplier.
    *  
    *  @param <T> Value type.
    *  @param value The value to supply.
    *  @return A {@link CheckedSupplier} of the given {@code value}.
    */
   public static <T> CheckedSupplier<T, RuntimeException> give(T value) {
+    return () -> value;
+  }
+
+  /**
+   *  Obtains a conventional supplier of the given value.
+   *  
+   *  @param <T> Value type.
+   *  @param value The value to supply.
+   *  @return A {@link Supplier} of the given {@code value}.
+   */
+  public static <T> Supplier<T> givePlain(T value) {
     return () -> value;
   }
 
@@ -640,35 +746,6 @@ public final class Functions {
       throw new IllegalStateException("Could not unwind the correct cause", throwable);
     }
   }
-
-  public static <U, V, X extends Exception> ArrayList<V>
-      collectParallel(Stream<? extends U> source, 
-                      CheckedFunction<? super U, ? extends V, X> converter,
-                      ExecutorService executor) throws X, InterruptedException {
-    return collectParallel(source, converter, ArrayList::new, executor);
-  }
-
-  public static <U, V, C extends Collection<V>, X extends Throwable> C
-      collectParallel(Stream<? extends U> source, 
-                      CheckedFunction<? super U, ? extends V, X> converter,
-                      Supplier<C> collectionMaker,
-                      ExecutorService executor) throws X, InterruptedException {
-    final List<Future<V>> submissions = new ArrayList<>();
-    source.forEach(item -> {
-      submissions.add(executor.submit(() -> Exceptions.wrap(() -> converter.apply(item), CapturedException::new)));
-    });
-    
-    final C mapped = collectionMaker.get();
-    for (Future<V> future : submissions) {
-      try {
-        mapped.add(future.get());
-      } catch (ExecutionException e) {
-        final Throwable cause = CapturedException.unwind(e.getCause());
-        throw Classes.<X>cast(cause);
-      }
-    }
-    return mapped;
-  }
   
   /**
    *  Coerces a given {@link CheckedConsumer} into an equivalent {@link CheckedFunction} returning {@link Void}, 
@@ -684,13 +761,5 @@ public final class Functions {
       consumer.accept(u);
       return null;
     };
-  }
-
-  public static <T> Supplier<T> givePlainNull() {
-    return () -> null;
-  }
-
-  public static <T> Supplier<T> givePlain(T value) {
-    return () -> value;
   }
 }
