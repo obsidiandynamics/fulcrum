@@ -671,7 +671,7 @@ public final class Functions {
   }
   
   /**
-   *  Coalesces a given {@link CheckedConsumer} into an equivalent {@link CheckedFunction} returning {@link Void}, 
+   *  Coerces a given {@link CheckedConsumer} into an equivalent {@link CheckedFunction} returning {@link Void}, 
    *  allowing the consumer to be used where a function is expected, and where the return value is irrelevant.
    *  
    *  @param <U> The input type.
