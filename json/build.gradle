@@ -1,9 +1,9 @@
-def packageName = "fulcrum-format"
+def packageName = "fulcrum-json"
 version = project(":").version
 
 dependencies {
-  compile project (":fulcrum-func")
   testCompile project (":fulcrum-assert")
+  testCompile project (":fulcrum-junit")
 }
 
 jar {
@@ -48,7 +48,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Formatting utilities"
+def packageDesc = "JSON parsing and formatting using Jackson APIs"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

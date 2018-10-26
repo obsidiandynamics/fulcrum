@@ -38,7 +38,10 @@ allprojects {
   }
   
   ext {
+    assertjVersion = "3.11.1"
     equalsverifierVersion = "3.0"
+    hamcrestVersion = "1.3"
+    junitVersion = "4.12"
     log4jVersion = "1.2.17"
     mockitoVersion = "2.22.0"
     pojotesterVersion = "0.7.6"
@@ -46,10 +49,12 @@ allprojects {
   }
   
   dependencies {
-    testCompile "junit:junit:4.12"
+    testCompile "junit:junit:${junitVersion}"
     testCompile "pl.pojo:pojo-tester:${pojotesterVersion}"
     testCompile "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
     testCompile "org.mockito:mockito-core:${mockitoVersion}"
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
+    testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
   }
 
   test {

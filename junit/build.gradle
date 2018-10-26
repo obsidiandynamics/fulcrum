@@ -2,11 +2,10 @@ def packageName = "fulcrum-junit"
 version = project(":").version
 
 dependencies {
-  compileOnly "org.hamcrest:hamcrest-core:1.3"
-  compileOnly "junit:junit:4.12"
+  compileOnly "org.hamcrest:hamcrest-core:${hamcrestVersion}"
+  compileOnly "junit:junit:${junitVersion}"
   
   testCompile project(":fulcrum-assert")
-  testCompile "org.hamcrest:hamcrest-library:1.3"
 }
 
 jar {

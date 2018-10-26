@@ -1,9 +1,9 @@
-def packageName = "fulcrum-format"
+def packageName = "fulcrum-httpclient"
 version = project(":").version
 
 dependencies {
-  compile project (":fulcrum-func")
   testCompile project (":fulcrum-assert")
+  testCompile project (":fulcrum-junit")
 }
 
 jar {
@@ -48,7 +48,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Formatting utilities"
+def packageDesc = "Utilities for working with Apache HttpClient"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

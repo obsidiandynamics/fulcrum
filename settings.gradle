@@ -19,9 +19,6 @@ project(":fulcrum-docker-compose").projectDir = new File(settingsDir, "docker-co
 include "fulcrum-dyno"
 project(":fulcrum-dyno").projectDir = new File(settingsDir, "dyno")
 
-include "fulcrum-junit"
-project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
-
 include "fulcrum-flow"
 project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
 
@@ -31,11 +28,20 @@ project(":fulcrum-format").projectDir = new File(settingsDir, "format")
 include "fulcrum-func"
 project(":fulcrum-func").projectDir = new File(settingsDir, "func")
 
+include "fulcrum-httpclient"
+project(":fulcrum-httpclient").projectDir = new File(settingsDir, "httpclient")
+
 include "fulcrum-io"
 project(":fulcrum-io").projectDir = new File(settingsDir, "io")
 
 include "fulcrum-jgroups"
 project(":fulcrum-jgroups").projectDir = new File(settingsDir, "jgroups")
+
+include "fulcrum-json"
+project(":fulcrum-json").projectDir = new File(settingsDir, "json")
+
+include "fulcrum-junit"
+project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
 
 include "fulcrum-launcher"
 project(":fulcrum-launcher").projectDir = new File(settingsDir, "launcher")
