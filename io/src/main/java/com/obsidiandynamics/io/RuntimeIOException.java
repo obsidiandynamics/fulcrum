@@ -8,5 +8,5 @@ import java.io.*;
 public final class RuntimeIOException extends RuntimeException {
   private static final long serialVersionUID = 1L;
   
-  public RuntimeIOException(Throwable cause) { super(cause); }
+  public RuntimeIOException(IOException cause) { super(cause); }
 }

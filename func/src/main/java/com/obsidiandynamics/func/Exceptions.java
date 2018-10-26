@@ -55,10 +55,45 @@ public final class Exceptions {
    */
   public static <T, X extends Throwable> T wrap(CheckedSupplier<? extends T, ?> supplier, 
                                                 Function<Throwable, X> wrapper) throws X {
+    return wrapStrict(supplier, wrapper);
+  }
+
+  /**
+   *  A strict form of {@link #wrap(CheckedRunnable, Function)} that requires that the exception
+   *  wrapper takes a subtype of the exception thrown by the runnable block.
+   *  
+   *  @param <W> Exception type thrown by the runnable, and input to the wrapper.
+   *  @param <X> Exception type thrown by the wrapper.
+   *  @param runnable The runnable whose exception to trap.
+   *  @param wrapper The handler for trapped exceptions, returning a wrapped exception of type {@code X}.
+   *  @throws X If an exception occurs.
+   */
+  public static <W extends Throwable, X extends Throwable> void wrapStrict(CheckedRunnable<W> runnable, 
+                                                                           Function<? super W, X> wrapper) throws X {
+    wrapStrict(() -> {
+      runnable.run();
+      return null;
+    }, wrapper);
+  }
+
+  /**
+   *  A strict form of {@link #wrap(CheckedSupplier, Function)} that requires that the exception
+   *  wrapper takes a subtype of the exception thrown by the supplier.
+   *  
+   *  @param <T> Return type.
+   *  @param <W> Exception type thrown by the runnable, and input to the wrapper.
+   *  @param <X> Exception type thrown by the wrapper.
+   *  @param supplier The supplier whose exception to trap.
+   *  @param wrapper The handler for trapped exceptions, returning a wrapped exception of type {@code X}.
+   *  @return The result of evaluating the supplier.
+   *  @throws X If an exception occurs.
+   */
+  public static <T, W extends Throwable, X extends Throwable> T wrapStrict(CheckedSupplier<? extends T, W> supplier, 
+                                                                           Function<? super W, X> wrapper) throws X {
     try {
       return supplier.get();
     } catch (Throwable e) {
-      throw wrapper.apply(e);
+      throw wrapper.apply(Classes.cast(e));
     }
   }
   

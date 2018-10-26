@@ -48,7 +48,7 @@ public final class HttpClientTest {
   @After
   public void after() {
     if (client != null) {
-      HttpClient.closeUnchecked(client);
+      IO.closeUnchecked(client);
     }
   }
   
@@ -65,7 +65,7 @@ public final class HttpClientTest {
         throw new IOException("Simulated fault");
       }
     };
-    HttpClient.closeUnchecked(closeable);
+    IO.closeUnchecked(closeable);
   }
   
   @Test

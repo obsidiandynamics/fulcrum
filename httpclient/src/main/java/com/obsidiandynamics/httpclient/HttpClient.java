@@ -1,6 +1,5 @@
 package com.obsidiandynamics.httpclient;
 
-import java.io.*;
 import java.security.*;
 import java.util.function.*;
 
@@ -17,7 +16,6 @@ import org.apache.http.nio.reactor.*;
 import org.apache.http.ssl.SSLContexts;
 
 import com.obsidiandynamics.func.*;
-import com.obsidiandynamics.io.*;
 
 /**
  *  A builder for a {@link CloseableHttpAsyncClient} with configurable connection
@@ -34,16 +32,6 @@ public final class HttpClient {
   
   public static Builder builder() {
     return new Builder();
-  }
-  
-  /**
-   *  Closes a given {@link Closeable} instance, wrapping any potential {@link IOException}
-   *  in an unchecked {@link RuntimeIOException}.
-   *  
-   *  @param closeable The {@link Closeable} to close.
-   */
-  public static void closeUnchecked(Closeable closeable) {
-    Exceptions.wrap(closeable::close, RuntimeIOException::new);
   }
   
   /**
