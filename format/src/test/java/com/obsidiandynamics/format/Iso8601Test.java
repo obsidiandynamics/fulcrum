@@ -21,7 +21,7 @@ public final class Iso8601Test {
 
   private static final String TEST_DATE_GMT_PLUS1030 = "2047-01-02T13:34:05.678+10:30";
 
-  private static final String TEST_DATE_GMT_MINUS02 = "2047-01-02T01:04:05.678-02:00";
+  private static final String TEST_DATE_GMT_MINUS0200 = "2047-01-02T01:04:05.678-02:00";
   
   private static final LegacyDateTimeFormatter LEGACY_MILLIS = new LegacyDateTimeFormatter(Iso8601.DATE_TIME_MILLIS_FORMAT);
   
@@ -126,19 +126,19 @@ public final class Iso8601Test {
 
   @Test
   public void testParseNewGmtMinus02() throws Iso8601ParseException {
-    final Date date = Iso8601.parse(TEST_DATE_GMT_MINUS02);
+    final Date date = Iso8601.parse(TEST_DATE_GMT_MINUS0200);
     assertEquals(getTestDateGmtMinus2(), date);
   }
 
   @Test
   public void testParseUncheckedGmtMinus02() {
-    final Date date = Iso8601.parseUnchecked(TEST_DATE_GMT_MINUS02);
+    final Date date = Iso8601.parseUnchecked(TEST_DATE_GMT_MINUS0200);
     assertEquals(getTestDateGmtMinus2(), date);
   }
 
   @Test
   public void testParseNewUncheckedGmtMinus02WithExplicitFormatter() {
-    final Date date = Iso8601.parseUnchecked(Iso8601.DEFAULT_FORMATTER, TEST_DATE_GMT_MINUS02);
+    final Date date = Iso8601.parseUnchecked(Iso8601.DEFAULT_FORMATTER, TEST_DATE_GMT_MINUS0200);
     assertEquals(getTestDateGmtMinus2(), date);
   }
 
