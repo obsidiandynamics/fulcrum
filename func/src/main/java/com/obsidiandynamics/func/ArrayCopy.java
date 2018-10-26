@@ -3,7 +3,7 @@ package com.obsidiandynamics.func;
 import java.lang.reflect.*;
 
 /**
- *  Operations on immutable arrays.<p>
+ *  Operations on immutable arrays. <p>
  *  
  *  Allows for the growth and slicing of arrays by allocating new ones, without modifying 
  *  the originals.
@@ -15,7 +15,7 @@ public final class ArrayCopy {
    *  Creates a new array that is a copy of the given {@code source} array, with new elements
    *  added, with contents of the source array being optionally shifted in the new array.
    *  
-   *  @param <T> The array type.
+   *  @param <T> Array type.
    *  @param source The source array.
    *  @param addElements The number of elements to grow the new array by.
    *  @param shiftOrigin The number of elements to shift the contents in the new array.
@@ -36,7 +36,7 @@ public final class ArrayCopy {
    *  Creates a new array by taking a slice of the given {@code source} array, between the bounds given
    *  by {@code fromInclusive} and {@code toExclusive}.
    *  
-   *  @param <T> The array type.
+   *  @param <T> Array type.
    *  @param source The source array.
    *  @param fromInclusive Where to start the slice (inclusive).
    *  @param toExclusive Where to end the slice (exclusive).
@@ -63,7 +63,7 @@ public final class ArrayCopy {
   /**
    *  Creates a new array initialised with default values to a desired length.
    *  
-   *  @param <T> The array type.
+   *  @param <T> Array type.
    *  @param array The original array to mimic.
    *  @param newLength The length of the new array.
    *  @return The new array instance.
@@ -75,7 +75,7 @@ public final class ArrayCopy {
   /**
    *  Allocates a new array of the give type and length.
    *  
-   *  @param <T> The array type.
+   *  @param <T> Array type.
    *  @param arrayType The array class type.
    *  @param length The length of the new array.
    *  @return The new array instance.

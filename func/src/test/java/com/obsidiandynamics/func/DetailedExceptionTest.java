@@ -18,7 +18,6 @@ public final class DetailedExceptionTest {
     public Object describeException() {
       return detail;
     }
-    
   }
   
   @Test

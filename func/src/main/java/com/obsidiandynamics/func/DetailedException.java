@@ -4,7 +4,7 @@ package com.obsidiandynamics.func;
  *  Used for decorating a {@link Throwable}, indicating that the latter carries a 'detailed'
  *  error object within.
  *
- *  @param <D> The detail type.
+ *  @param <D> Detail type.
  */
 @FunctionalInterface
 public interface DetailedException<D> {
