@@ -20,8 +20,9 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-io`](https://github.com/obsidiandynamics/fulcrum/tree/master/io) — File and socket I/O
 * [`fulcrum-jgroups`](https://github.com/obsidiandynamics/fulcrum/tree/master/jgroups) — Synchronous messaging overlay for JGroups
 * [`fulcrum-json`](https://github.com/obsidiandynamics/fulcrum/tree/master/json) — JSON parsing and formatting using Jackson APIs
-* [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) — JUnit utilities
+* [`fulcrum-junit`](https://github.com/obsidiandynamics/fulcrum/tree/master/junit) — JUnit 4.x utilities
 * [`fulcrum-launcher`](https://github.com/obsidiandynamics/fulcrum/tree/master/launcher) — Launch applications from Gradle
+* [`fulcrum-mockito`](https://github.com/obsidiandynamics/fulcrum/tree/master/mockito) — Mockito 2.x utilities
 * [`fulcrum-nanoclock`](https://github.com/obsidiandynamics/fulcrum/tree/master/nanoclock) — Wall clock with nanosecond resolution
 * [`fulcrum-node-queue`](https://github.com/obsidiandynamics/fulcrum/tree/master/node-queue) — Lock-free multi-producer/multi-consumer queue
 * [`fulcrum-props`](https://github.com/obsidiandynamics/fulcrum/tree/master/props) — Utilities for working with `Properties`

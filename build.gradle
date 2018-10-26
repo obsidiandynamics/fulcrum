@@ -46,7 +46,7 @@ allprojects {
     jacksonVersion = "2.9.7"
     junitVersion = "4.12"
     log4jVersion = "1.2.17"
-    mockitoVersion = "2.22.0"
+    mockitoVersion = "2.23.0"
     pojotesterVersion = "0.7.6"
     slf4jVersion = "1.7.25"
     wiremockVersion = "2.19.0"

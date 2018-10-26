@@ -1,11 +1,12 @@
-def packageName = "fulcrum-junit"
+def packageName = "fulcrum-mockito"
 version = project(":").version
 
 dependencies {
-  compileOnly "org.hamcrest:hamcrest-core:${hamcrestVersion}"
-  compileOnly "junit:junit:${junitVersion}"
-  
-  testCompile project(":fulcrum-assert")
+  compile project (":fulcrum-func")
+  compileOnly "org.mockito:mockito-core:${mockitoVersion}"
+
+  testCompile project (":fulcrum-verifier")
+  testCompile "org.mockito:mockito-core:${mockitoVersion}"
 }
 
 jar {
@@ -50,7 +51,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "JUnit 4.x utilities"
+def packageDesc = "Mockito 2.x utilities"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

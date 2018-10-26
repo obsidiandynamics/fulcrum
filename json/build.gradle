@@ -6,7 +6,6 @@ dependencies {
   compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   
   testCompile project (":fulcrum-assert")
-  testCompile project (":fulcrum-junit")
   testCompile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 

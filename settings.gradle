@@ -46,6 +46,9 @@ project(":fulcrum-junit").projectDir = new File(settingsDir, "junit")
 include "fulcrum-launcher"
 project(":fulcrum-launcher").projectDir = new File(settingsDir, "launcher")
 
+include "fulcrum-mockito"
+project(":fulcrum-mockito").projectDir = new File(settingsDir, "mockito")
+
 include "fulcrum-nanoclock"
 project(":fulcrum-nanoclock").projectDir = new File(settingsDir, "nanoclock")
 
