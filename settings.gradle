@@ -13,6 +13,9 @@ project(":fulcrum-combinations").projectDir = new File(settingsDir, "combination
 include "fulcrum-concat"
 project(":fulcrum-concat").projectDir = new File(settingsDir, "concat")
 
+include "fulcrum-constraints"
+project(":fulcrum-constraints").projectDir = new File(settingsDir, "constraints")
+
 include "fulcrum-docker-compose"
 project(":fulcrum-docker-compose").projectDir = new File(settingsDir, "docker-compose")
 

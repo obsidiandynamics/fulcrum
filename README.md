@@ -11,6 +11,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-await`](https://github.com/obsidiandynamics/fulcrum/tree/master/await) — Utility for awaiting asynchronous actions
 * [`fulcrum-combinations`](https://github.com/obsidiandynamics/fulcrum/tree/master/combinations) — Generates combinations of elements in a 2D array
 * [`fulcrum-concat`](https://github.com/obsidiandynamics/fulcrum/tree/master/concat) — Fluid API for selective concatenation of strings
+* [`fulcrum-constraints`](https://github.com/obsidiandynamics/fulcrum/tree/master/constraints) — Helper for working with `javax.validation`
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
 * [`fulcrum-dyno`](https://github.com/obsidiandynamics/fulcrum/tree/master/dyno) — Micro-benchmarking harness
 * [`fulcrum-flow`](https://github.com/obsidiandynamics/fulcrum/tree/master/flow) — Strictly ordered joining of parallel tasks
