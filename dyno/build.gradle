@@ -12,15 +12,13 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.18'
+    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.19'
   }
 }
 
 apply plugin: 'net.ltgt.apt'
 
 dependencies {
-  def jmhVersion = "1.21"
-
   compile project(":fulcrum-func")
   compileOnly "org.openjdk.jmh:jmh-core:${jmhVersion}"
   
