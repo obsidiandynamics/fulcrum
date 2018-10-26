@@ -2,8 +2,6 @@ def packageName = "fulcrum-jgroups"
 version = project(":").version
 
 dependencies {
-  def jgroupsVersion = "4.0.15.Final"
-
   compile project(":fulcrum-func")
   compileOnly "org.jgroups:jgroups:${jgroupsVersion}"
   

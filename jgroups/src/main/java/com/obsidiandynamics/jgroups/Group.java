@@ -1,15 +1,11 @@
 package com.obsidiandynamics.jgroups;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 import org.jgroups.*;
 import org.jgroups.Message.*;
-import org.jgroups.protocols.*;
-import org.jgroups.protocols.pbcast.*;
-import org.jgroups.util.Util.*;
 
 import com.obsidiandynamics.func.*;
 
@@ -28,7 +24,8 @@ public final class Group implements AutoCloseable {
     this.channel = channel;
     channel.setDiscardOwnMessages(true);
     channel.setReceiver(new ReceiverAdapter() {
-      @Override public void receive(Message msg) {
+      @Override 
+      public void receive(Message msg) {
         debug.printf("Received %s", msg);
         try {
           for (HostMessageHandler onMessage : generalHandlers) {
@@ -111,7 +108,8 @@ public final class Group implements AutoCloseable {
   public ResponseSync request(Address address, SyncPacket syncMessage, HostMessageHandler handler, Flag... flags) throws Exception {
     final Serializable id = syncMessage.getId();
     final HostMessageHandler idHandler = new HostMessageHandler() {
-      @Override public void handle(JChannel channel, Message resp) throws Exception {
+      @Override 
+      public void handle(JChannel channel, Message resp) throws Exception {
         removeMessageHandler(id, this);
         handler.handle(channel, resp);
       }
@@ -146,7 +144,8 @@ public final class Group implements AutoCloseable {
     final Map<Address, Message> responses = new ConcurrentHashMap<>();
     final Serializable id = syncMessage.getId();
     final HostMessageHandler idHandler = new HostMessageHandler() {
-      @Override public void handle(JChannel channel, Message resp) throws Exception {
+      @Override 
+      public void handle(JChannel channel, Message resp) throws Exception {
         responses.put(resp.getSrc(), resp);
         if (responses.size() == respondents) {
           removeMessageHandler(id, this);
@@ -189,66 +188,5 @@ public final class Group implements AutoCloseable {
   @Override
   public void close() {
     channel.close();
-  }
-  
-  /**
-   *  Creates a new UDP-based {@link JChannel}.
-   *  
-   *  @param bindAddress The address to bind to, or {@code null} to bind to the default external interface
-   *                     (which is also equivalent to {@link AddressScope#NON_LOOPBACK}).
-   *                     Note: you may need to set {@code -Djava.net.preferIPv4Stack=true} if binding
-   *                     to an external interface with an IP v4 address.
-   *  @return A new channel.
-   *  @throws Exception If an error occurs.
-   *  
-   *  @see org.jgroups.util.Util#getAddress(AddressScope) for specifying one of the predefined
-   *  address scopes {@code [GLOBAL, SITE_LOCAL, LINK_LOCAL, NON_LOOPBACK, LOOPBACK]}.
-   */
-  public static JChannel newUdpChannel(InetAddress bindAddress) throws Exception {
-    return new JChannel(new UDP().setValue("bind_addr", bindAddress),
-                        new PING(),
-                        new MERGE3(),
-                        new FD_SOCK(),
-                        new FD_ALL(),
-                        new VERIFY_SUSPECT(),
-                        new BARRIER(),
-                        new NAKACK2(),
-                        new UNICAST3(),
-                        new STABLE(),
-                        createGMS(),
-                        new UFC(),
-                        new MFC(),
-                        new FRAG2(),
-                        new RSVP(),
-                        new STATE_TRANSFER());
-  }
-  
-  /**
-   *  Creates a new VM-local loopback channel.
-   *  
-   *  @return A new channel.
-   *  @throws Exception Exception If an error occurs.
-   */
-  public static JChannel newLoopbackChannel() throws Exception {
-    return new JChannel(new SHARED_LOOPBACK(),
-                        new SHARED_LOOPBACK_PING(),
-                        new MERGE3(),
-                        new FD_ALL(),
-                        new VERIFY_SUSPECT(),
-                        new BARRIER(),
-                        new NAKACK2(),
-                        new UNICAST3(),
-                        new STABLE(),
-                        createGMS(),
-                        new UFC(),
-                        new MFC(),
-                        new FRAG2(),
-                        new STATE_TRANSFER());
-  }
-  
-  private static GMS createGMS() {
-    final GMS gms = new GMS();
-    gms.setPrintLocalAddr(false);
-    return gms;
   }
 }
