@@ -9,7 +9,6 @@ import org.apache.http.nio.client.*;
 import org.apache.http.util.*;
 
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.type.*;
 import com.obsidiandynamics.json.*;
 
 /**
@@ -115,7 +114,7 @@ public final class HttpCall {
                                     Class<?> errorType, 
                                     Class<T> responseType) 
       throws JsonInputException, IOException, ResponseStatusException {
-    return parseResponse(json, response, errorType, TypeFactory.defaultInstance().constructType(responseType));
+    return parseResponse(json, response, errorType, Json.typeOf(responseType));
   }
 
   public static <T> T parseResponse(Json json,
