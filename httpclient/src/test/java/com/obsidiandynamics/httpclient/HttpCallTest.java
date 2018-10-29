@@ -59,7 +59,7 @@ public final class HttpCallTest {
   }
   
   private static String toJson(Object obj) {
-    return Exceptions.wrap(() -> Json.getInstance().stringify(obj), RuntimeException::new);
+    return Json.getInstance().stringifyUnchecked(obj);
   }
   
   @Test
