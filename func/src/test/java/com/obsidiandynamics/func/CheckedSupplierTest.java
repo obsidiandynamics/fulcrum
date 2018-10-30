@@ -2,6 +2,8 @@ package com.obsidiandynamics.func;
 
 import static org.junit.Assert.*;
 
+import java.util.function.*;
+
 import org.junit.*;
 
 public final class CheckedSupplierTest {
@@ -10,10 +12,16 @@ public final class CheckedSupplierTest {
     final ThrowingSupplier<String> s = () -> "test";
     assertEquals("test", s.get());
   }
-  
+
   @Test
-  public void testWrap() {
-    final CheckedSupplier<String, RuntimeException> s = CheckedSupplier.wrap(() -> "test");
+  public void testToChecked() {
+    final CheckedSupplier<String, RuntimeException> s = CheckedSupplier.toChecked(() -> "test");
+    assertEquals("test", s.get());
+  }
+
+  @Test
+  public void testToUnchecked() {
+    final Supplier<String> s = CheckedSupplier.toUnchecked(() -> "test");
     assertEquals("test", s.get());
   }
 }

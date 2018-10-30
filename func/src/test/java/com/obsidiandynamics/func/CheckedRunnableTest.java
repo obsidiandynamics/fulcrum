@@ -12,11 +12,19 @@ public final class CheckedRunnableTest {
     final CheckedRunnable<Exception> r = CheckedRunnable::nop;
     r.run();
   }
-  
+
   @Test
-  public void testWrap() {
+  public void testToChecked() {
     final AtomicBoolean ran = new AtomicBoolean();
-    final CheckedRunnable<RuntimeException> r = CheckedRunnable.wrap(() -> ran.set(true));
+    final CheckedRunnable<RuntimeException> r = CheckedRunnable.toChecked(() -> ran.set(true));
+    r.run();
+    assertTrue(ran.get());
+  }
+
+  @Test
+  public void testToUnchecked() {
+    final AtomicBoolean ran = new AtomicBoolean();
+    final Runnable r = CheckedRunnable.toUnchecked(() -> ran.set(true));
     r.run();
     assertTrue(ran.get());
   }

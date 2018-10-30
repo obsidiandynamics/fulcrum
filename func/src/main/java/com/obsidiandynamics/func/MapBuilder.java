@@ -2,6 +2,12 @@ package com.obsidiandynamics.func;
 
 import java.util.*;
 
+/**
+ *  Fluent builder of a {@link Map}.
+ *  
+ *  @param <K> Key type.
+ *  @param <V> Value type.
+ */
 public final class MapBuilder<K, V> {
   private final Map<K, V> map;
   
