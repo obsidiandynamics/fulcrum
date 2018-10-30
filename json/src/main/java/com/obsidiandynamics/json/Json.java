@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.*;
 import com.obsidiandynamics.format.*;
+import com.obsidiandynamics.func.*;
 
 /**
  *  Wrapper around {@code com.fasterxml.jackson} APIs for working with (parsing and 
@@ -83,18 +84,6 @@ public final class Json {
   }
   
   /**
-   *  An unchecked variant of {@link #parse(String, Class)}.
-   *  
-   *  @param <T> Object type.
-   *  @param json The JSON document.
-   *  @param objectType The target object type.
-   *  @return The parsed object.
-   */
-  public <T> T parseUnchecked(String json, Class<T> objectType) {
-    return parse(json, typeOf(objectType), RuntimeJsonException::new);
-  }
-  
-  /**
    *  Parses a given JSON document of an expected {@link JavaType} complex type token. <p>
    *  
    *  Use {@link #typeOf(Class)} and {@link #typeOf(Class, Class...)} to construct
@@ -108,21 +97,6 @@ public final class Json {
    */
   public <T> T parse(String json, JavaType objectType) throws JsonInputException {
     return parse(json, objectType, JsonInputException::new);
-  }
-  
-  /**
-   *  An unchecked variant of {@link #parse(String, JavaType)}. <p>
-   *  
-   *  Use {@link #typeOf(Class)} and {@link #typeOf(Class, Class...)} to construct
-   *  {@link JavaType} tokens from simple and parametrised types.
-   *  
-   *  @param <T> Object type.
-   *  @param json The JSON document.
-   *  @param objectType The target object type.
-   *  @return The parsed object.
-   */
-  public <T> T parseUnchecked(String json, JavaType objectType) {
-    return parse(json, objectType, RuntimeJsonException::new);
   }
   
   /**
@@ -147,28 +121,103 @@ public final class Json {
   }
   
   /**
+   *  An unchecked variant of {@link #parse(String, Class)}.
+   *  
+   *  @param <T> Object type.
+   *  @param json The JSON document.
+   *  @param objectType The target object type.
+   *  @return The parsed object.
+   */
+  public <T> T parseUnchecked(String json, Class<T> objectType) {
+    return parse(json, typeOf(objectType), RuntimeJsonException::new);
+  }
+  
+  /**
+   *  An unchecked variant of {@link #parse(String, JavaType)}. <p>
+   *  
+   *  Use {@link #typeOf(Class)} and {@link #typeOf(Class, Class...)} to construct
+   *  {@link JavaType} tokens from simple and parametrised types.
+   *  
+   *  @param <T> Object type.
+   *  @param json The JSON document.
+   *  @param objectType The target object type.
+   *  @return The parsed object.
+   */
+  public <T> T parseUnchecked(String json, JavaType objectType) {
+    return parse(json, objectType, RuntimeJsonException::new);
+  }
+  
+  /**
+   *  Obtains a parser for the given {@link Class} type, being a 
+   *  checked function that delegates to {@link #parse(String, Class)} when invoked.
+   *  
+   *  @param <T> Object type.
+   *  @param objectType The target object type.
+   *  @return The parser {@link CheckedFunction}.
+   */
+  public <T> CheckedFunction<String, T, JsonInputException> parser(Class<T> objectType) {
+    return json -> parse(json, objectType);
+  }
+  
+  /**
+   *  Obtains a parser for the given {@link JavaType} complex type token, being a 
+   *  checked function that delegates to {@link #parse(String, JavaType)} when invoked.
+   *  
+   *  @param <T> Object type.
+   *  @param objectType The target object type.
+   *  @return The parser {@link CheckedFunction}.
+   */
+  public <T> CheckedFunction<String, T, JsonInputException> parser(JavaType objectType) {
+    return json -> parse(json, objectType);
+  }
+  
+  /**
+   *  Obtains a parser for the given {@link Class} type, being a 
+   *  checked function that delegates to {@link #parseUnchecked(String, Class)} when invoked.
+   *  
+   *  @param <T> Object type.
+   *  @param objectType The target object type.
+   *  @return The parser {@link Function}.
+   */
+  public <T> Function<String, T> uncheckedParser(Class<T> objectType) {
+    return json -> parseUnchecked(json, objectType);
+  }
+  
+  /**
+   *  Obtains a parser for the given {@link JavaType} complex type token, being a 
+   *  checked function that delegates to {@link #parseUnchecked(String, JavaType)} when invoked.
+   *  
+   *  @param <T> Object type.
+   *  @param objectType The target object type.
+   *  @return The parser {@link Function}.
+   */
+  public <T> Function<String, T> uncheckedParser(JavaType objectType) {
+    return json -> parseUnchecked(json, objectType);
+  }
+  
+  /**
    *  Outputs a given object to JSON form.
    *  
    *  @param object The object to output.
    *  @return The JSON {@link String} representation of the object.
    *  @throws JsonOutputException If an error occurs while formatting the object.
    */
-  public String stringify(Object object) throws JsonOutputException {
-    return stringify(object, JsonOutputException::new);
+  public String format(Object object) throws JsonOutputException {
+    return format(object, JsonOutputException::new);
   }
   
   /**
-   *  An unchecked variant of {@link #stringify(Object)}.
+   *  An unchecked variant of {@link #format(Object)}.
    *  
    *  @param object The object to output.
    *  @return The JSON {@link String} representation of the object.
    */
-  public String stringifyUnchecked(Object object) {
-    return stringify(object, RuntimeJsonException::new);
+  public String formatUnchecked(Object object) {
+    return format(object, RuntimeJsonException::new);
   }
   
   /**
-   *  A variant of {@link #stringify(Object)} that throws a custom exception type upon
+   *  A variant of {@link #format(Object)} that throws a custom exception type upon
    *  encountering a formatting error.
    *  
    *  @param <X> Custom exception type.
@@ -177,8 +226,8 @@ public final class Json {
    *  @return The JSON {@link String} representation of the object.
    *  @throws X If an error occurs while formatting the object.
    */
-  public <X extends Throwable> String stringify(Object object, 
-                                                Function<? super JsonProcessingException, X> exceptionWrapper) throws X {
+  public <X extends Throwable> String format(Object object, 
+                                             Function<? super JsonProcessingException, X> exceptionWrapper) throws X {
     try {
       return mapper.writeValueAsString(object);
     } catch (JsonProcessingException e) {
