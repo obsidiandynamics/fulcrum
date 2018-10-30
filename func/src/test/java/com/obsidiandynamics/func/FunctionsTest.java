@@ -291,24 +291,6 @@ public final class FunctionsTest {
   }
 
   @Test
-  public void testUnwrapException() {
-    assertNull(Functions.unwrapException(ExecutionException.class, null));
-
-    assertNull(Functions.unwrapException(ExecutionException.class, new ExecutionException("No cause", null)));
-
-    final Exception plainException = new Exception("Simulated");
-    assertSame(plainException, Functions.unwrapException(ExecutionException.class, plainException));
-
-    final ExecutionException executionException = new ExecutionException(plainException);
-    assertSame(plainException, Functions.unwrapException(ExecutionException.class, executionException));
-
-    final IOException ioException = new IOException(new ExecutionException(plainException));
-    assertSame(plainException, Functions.unwrapException(ExecutionException.class, 
-                                                         Functions.unwrapException(IOException.class, 
-                                                                                   ioException)));
-  }
-
-  @Test
   public void testGivePlainNull() {
     assertNull(Functions.givePlainNull().get());
   }

@@ -239,6 +239,30 @@ public final class Functions {
     }
     return mapped;
   }
+  
+  /**
+   *  Used to capture an exception thrown within a {@link Callable} submitted to an {@link ExecutorService}. <p>
+   *  
+   *  Some executors, such as a {@link ForkJoinPool}, will wrap checked exceptions thrown from a {@link Callable}
+   *  inside a {@link RuntimeException}, making it impossible to reliably determine the true exception thrown
+   *  by walking the cause chain. (We can't tell whether an observed {@link RuntimeException} was thrown from
+   *  the application code or was introduced by a {@link ForkJoinTask}.) Using a private exception wrapper
+   *  lets us discard any exceptions introduced by an {@link ExecutorService}.
+   */
+  static final class CapturedException extends Exception {
+    private static final long serialVersionUID = 1L;
+    
+    CapturedException(Throwable cause) { super(cause); }
+    
+    static Throwable unwind(Throwable throwable) {
+      for (Throwable cause = throwable; cause != null; cause = cause.getCause()) {
+        if (cause instanceof CapturedException) {
+          return cause.getCause();
+        }
+      }
+      throw new IllegalStateException("Could not unwind the correct cause", throwable);
+    }
+  }
 
   /**
    *  Creates a supplier of a custom {@link Throwable} that is constructed using a given {@code message}.
@@ -702,49 +726,6 @@ public final class Functions {
       final U field1 = fieldExtractor.apply(t1);
       return fieldComparator.compare(field0, field1);
     };
-  }
-  
-  /**
-   *  Returns the cause of the given {@code throwable} if the latter is an instance of the 
-   *  {@code containerExceptionType}; otherwise the {@code throwable} is returned as-is. <p>
-   *  
-   *  An example of where this method is useful is for stripping away an {@link ExecutionException} when
-   *  waiting for the result of a {@link Future}.
-   *  
-   *  @param containerExceptionType The container exception type to strip away, unwrapping the cause.
-   *  @param throwable The exception to consider.
-   *  @return The stripped exception.
-   */
-  public static Throwable unwrapException(Class<? extends Throwable> containerExceptionType, Throwable throwable) {
-    if (containerExceptionType.isInstance(throwable)) {
-      return throwable.getCause();
-    } else {
-      return throwable;
-    }
-  }
-  
-  /**
-   *  Used to capture an exception thrown within a {@link Callable} submitted to an {@link ExecutorService}. <p>
-   *  
-   *  Some executors, such as a {@link ForkJoinPool}, will wrap checked exceptions thrown from a {@link Callable}
-   *  inside a {@link RuntimeException}, making it impossible to reliably determine the true exception thrown
-   *  by walking the cause chain. (We can't tell whether an observed {@link RuntimeException} was thrown from
-   *  the application code or was introduced by a {@link ForkJoinTask}.) Using a private exception wrapper
-   *  lets us discard any exceptions introduced by an {@link ExecutorService}.
-   */
-  static final class CapturedException extends Exception {
-    private static final long serialVersionUID = 1L;
-    
-    CapturedException(Throwable cause) { super(cause); }
-    
-    static Throwable unwind(Throwable throwable) {
-      for (Throwable cause = throwable; cause != null; cause = cause.getCause()) {
-        if (cause instanceof CapturedException) {
-          return cause.getCause();
-        }
-      }
-      throw new IllegalStateException("Could not unwind the correct cause", throwable);
-    }
   }
   
   /**

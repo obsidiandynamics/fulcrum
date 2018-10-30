@@ -1,5 +1,6 @@
 package com.obsidiandynamics.func;
 
+import java.util.concurrent.*;
 import java.util.function.*;
 
 /**
@@ -126,5 +127,24 @@ public final class Exceptions {
    */
   public static <X extends Throwable> CheckedRunnable<X> doThrow(Supplier<X> exceptionMaker) {
     return () -> { throw exceptionMaker.get(); };
+  }
+  
+  /**
+   *  Returns the cause of the given {@code throwable} if the latter is an instance of the 
+   *  {@code containerExceptionType}; otherwise the given {@code throwable} is returned as-is. <p>
+   *  
+   *  An example of where this method is useful is for stripping away an {@link ExecutionException} when
+   *  waiting for the result of a {@link Future}.
+   *  
+   *  @param containerExceptionType The container exception type to strip away, unwrapping the cause.
+   *  @param throwable The exception to consider.
+   *  @return The stripped exception.
+   */
+  public static Throwable unwrap(Class<? extends Throwable> containerExceptionType, Throwable throwable) {
+    if (containerExceptionType.isInstance(throwable)) {
+      return throwable.getCause();
+    } else {
+      return throwable;
+    }
   }
 }

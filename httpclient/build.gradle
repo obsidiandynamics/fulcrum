@@ -4,15 +4,12 @@ version = project(":").version
 dependencies {
   compile project (":fulcrum-func")
   compile project (":fulcrum-io")
-  compile project (":fulcrum-json")
-  compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   compileOnly "org.apache.httpcomponents:httpclient:${httpclientVersion}"
   compileOnly "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
   
   testCompile project (":fulcrum-assert")
   testCompile project (":fulcrum-junit")
   testCompile "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
-  testCompile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   testCompile "org.apache.httpcomponents:httpclient:${httpclientVersion}"
   testCompile "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
 }
