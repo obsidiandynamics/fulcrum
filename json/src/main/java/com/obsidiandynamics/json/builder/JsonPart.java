@@ -35,13 +35,13 @@ public interface JsonPart {
    *  serialized using {@link Json#format(Object)} and then parsed with {@link Json#parse(String, Class)}.
    *  
    *  @param <T> Object type.
-   *  @param json The JSON formatter to use.
+   *  @param json The JSON parser/formatter to use.
    *  @param objectType The target object type.
    *  @return The parsed object.
-   *  @throws JsonInputException If an error occurred in the deserialization step.
    *  @throws JsonOutputException If an error occurred in the serialization step.
+   *  @throws JsonInputException If an error occurred in the deserialization step.
    */
-  default <T> T map(Json json, Class<T> objectType) throws JsonInputException, JsonOutputException {
+  default <T> T map(Json json, Class<T> objectType) throws JsonOutputException, JsonInputException {
     return json.parse(format(json), objectType);
   }
   
@@ -50,13 +50,13 @@ public interface JsonPart {
    *  serialized using {@link Json#format(Object)} and then parsed with {@link Json#parse(String, JavaType)}.
    *  
    *  @param <T> Object type.
-   *  @param json The JSON formatter to use.
+   *  @param json The JSON parser/formatter to use.
    *  @param objectType The target object type.
    *  @return The parsed object.
-   *  @throws JsonInputException If an error occurred in the deserialization step.
    *  @throws JsonOutputException If an error occurred in the serialization step.
+   *  @throws JsonInputException If an error occurred in the deserialization step.
    */
-  default <T> T map(Json json, JavaType objectType) throws JsonInputException, JsonOutputException {
+  default <T> T map(Json json, JavaType objectType) throws JsonOutputException, JsonInputException {
     return json.parse(format(json), objectType);
   }
   
@@ -64,7 +64,7 @@ public interface JsonPart {
    *  An unchecked variant of {@link #map(Json, Class)}.
    *  
    *  @param <T> Object type.
-   *  @param json The JSON formatter to use.
+   *  @param json The JSON parser/formatter to use.
    *  @param objectType The target object type.
    *  @return The parsed object.
    */
@@ -76,7 +76,7 @@ public interface JsonPart {
    *  An unchecked variant of {@link #map(Json, JavaType)}.
    *  
    *  @param <T> Object type.
-   *  @param json The JSON formatter to use.
+   *  @param json The JSON parser/formatter to use.
    *  @param objectType The target object type.
    *  @return The parsed object.
    */
