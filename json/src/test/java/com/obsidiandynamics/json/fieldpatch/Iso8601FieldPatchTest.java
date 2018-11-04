@@ -37,6 +37,15 @@ public final class Iso8601FieldPatchTest {
     assertEquals(epoch, decoded.patch.get());
     Assertions.assertToStringOverride(decoded.patch);
   }
+
+  @Test
+  public void testDeserializeWithEmptyJsonObject() throws IOException {
+    final ObjectMapper mapper = createMapper();
+    final String json = "{\"patch\":{}}";
+    final TestRoot decoded = mapper.readValue(json, TestRoot.class);
+    assertNotNull(decoded.patch);
+    assertNull(decoded.patch.get());
+  }
   
   @Test
   public void testEqualsHashCode() {

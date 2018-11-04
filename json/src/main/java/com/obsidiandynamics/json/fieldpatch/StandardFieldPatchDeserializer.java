@@ -41,7 +41,7 @@ public final class StandardFieldPatchDeserializer extends StdDeserializer<Standa
     public FieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
       final TreeNode node = p.readValueAsTree();
       final TreeNode setNode = node.get("value");
-      final Object value = p.getCodec().treeToValue(setNode, valueType);
+      final Object value = setNode != null ? p.getCodec().treeToValue(setNode, valueType) : null;
       return FieldPatch.nullableOf(value);
     }
   }

@@ -80,6 +80,16 @@ public final class FieldPatchSerializationTest {
     assertNull(decoded.patch);
   }
 
+  @Test
+  public void testDeserializeWithEmptyJsonObject() throws IOException {
+    final ObjectMapper mapper = createMapper();
+
+    final String json = "{\"patch\":{}}";
+
+    final AttributeRoot decoded = mapper.readValue(json, AttributeRoot.class);
+    assertNull(decoded.patch.get());
+  }
+
   static final class AttributeRootWithMissingType {
     @JsonProperty
     private FieldPatch<TestValue> patch;
