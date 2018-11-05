@@ -75,7 +75,7 @@ public final class HamcrestMatchers {
    *  @param predicate The predicate for the matcher to pass.
    *  @return The resulting {@link Matcher}.
    */
-  public static <T> Matcher<T> fulfils(Predicate<T> predicate) {
+  public static <T> Matcher<T> fulfils(Predicate<? super T> predicate) {
     return new BaseMatcher<T>() {
       @Override
       public boolean matches(Object item) {
@@ -101,7 +101,7 @@ public final class HamcrestMatchers {
    *                   without throwing an {@link AssertionError} for the matcher to pass.
    *  @return The created {@link Matcher}.
    */
-  public static <T> Matcher<T> assertedBy(Consumer<T> assertion) {
+  public static <T> Matcher<T> assertedBy(Consumer<? super T> assertion) {
     return assertedBy(assertion, forPrintStream(System.err));
   }
   
@@ -127,7 +127,7 @@ public final class HamcrestMatchers {
    *  @param exceptionHandler Invoked if the assertion fails.
    *  @return The created {@link Matcher}.
    */
-  public static <T> Matcher<T> assertedBy(Consumer<T> assertion, Consumer<AssertionError> exceptionHandler) {
+  public static <T> Matcher<T> assertedBy(Consumer<? super T> assertion, Consumer<? super AssertionError> exceptionHandler) {
     return new BaseMatcher<T>() {
       @Override
       public boolean matches(Object item) {
