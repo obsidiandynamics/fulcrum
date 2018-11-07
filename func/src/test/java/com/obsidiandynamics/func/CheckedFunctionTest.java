@@ -30,4 +30,11 @@ public final class CheckedFunctionTest {
     final Function<String, Integer> f = CheckedFunction.toUnchecked(Integer::parseInt);
     assertEquals(10, (int) f.apply("10"));
   }
+  
+  @Test
+  public void testIdentity() {
+    final CheckedFunction<String, String, RuntimeException> identity = CheckedFunction.identity();
+    final String arg = "foo";
+    assertSame(arg, identity.apply(arg));
+  }
 }

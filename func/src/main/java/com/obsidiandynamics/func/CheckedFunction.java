@@ -50,4 +50,17 @@ public interface CheckedFunction<T, R, X extends Throwable> {
   static <T, R> Function<T, R> toUnchecked(CheckedFunction<? super T, ? extends R, ? extends RuntimeException> function) {
     return function::apply;
   }
+  
+  /**
+   *  Produces a {@link CheckedFunction} that always returns its input argument. <p>
+   *  
+   *  The function's exception type is {@link RuntimeException}; however, no exception will
+   *  ever be thrown.
+   *
+   *  @param <T> Input type and result type.
+   *  @return The identity function.
+   */
+  static <T> CheckedFunction<T, T, RuntimeException> identity() {
+    return t -> t;
+  }
 }

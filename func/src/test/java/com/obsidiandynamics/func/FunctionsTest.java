@@ -42,7 +42,7 @@ public final class FunctionsTest {
   
   @Test
   public void testChainFunctionToFunction() {
-    final CheckedFunction<String, String, RuntimeException> chained = Functions.chain(Functions.identity(), "hello_"::concat);
+    final CheckedFunction<String, String, RuntimeException> chained = Functions.chain(CheckedFunction.identity(), "hello_"::concat);
     assertEquals("hello_world", chained.apply("world"));
   }
   
@@ -215,12 +215,6 @@ public final class FunctionsTest {
   }
   
   @Test
-  public void testIdentity() {
-    final Object obj = new Object();
-    assertSame(obj, Functions.identity().apply(obj));
-  }
-  
-  @Test
   public void testWithSummary() {
     final Exception cause = new Exception("Simulated");
     final ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
@@ -332,6 +326,14 @@ public final class FunctionsTest {
   public void testCapturedExceptionUnwindNotCaptured() {
     final Throwable exception = new Exception(new RuntimeException());
     CapturedException.unwind(exception);
+  }
+  
+  @Test
+  public void testForEach() {
+    final List<Integer> source = Arrays.asList(1, 2, 3);
+    final List<Integer> target = new ArrayList<>(source.size());
+    Functions.forEach(source, target::add);
+    assertEquals(source, target);
   }
 
   @Test

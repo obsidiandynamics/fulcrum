@@ -241,6 +241,23 @@ public final class Functions {
   }
   
   /**
+   *  Submits each element of the given collection to a checked consumer. An exception (if any)
+   *  thrown within the consumer is propagated to the caller.
+   *  
+   *  @param <T> Element type.
+   *  @param <X> Exception type.
+   *  @param collection The collection to traverse.
+   *  @param consumer The consumer.
+   *  @throws X If an exception occurs.
+   */
+  public static <T, X extends Throwable> void forEach(Collection<? extends T> collection, 
+                                                      CheckedConsumer<? super T, ? extends X> consumer) throws X {
+    for (T element : collection) {
+      consumer.accept(element);
+    }
+  }
+  
+  /**
    *  Used to capture an exception thrown within a {@link Callable} submitted to an {@link ExecutorService}. <p>
    *  
    *  Some executors, such as a {@link ForkJoinPool}, will wrap checked exceptions thrown from a {@link Callable}
@@ -622,16 +639,6 @@ public final class Functions {
     return () -> value;
   }
 
-  /**
-   *  Obtains the identity function.
-   *  
-   *  @param <T> Value type.
-   *  @return The identity {@link CheckedFunction}.
-   */
-  public static <T> CheckedFunction<T, T, RuntimeException> identity() {
-    return value -> value;
-  }
-  
   /**
    *  Curries a {@link ExceptionHandler} with a specific error {@code summary}, so that it can be used
    *  as a simpler {@link Throwable} {@link Consumer}.
