@@ -204,7 +204,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureResponseStatusIsOkWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)));
@@ -214,7 +214,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureResponseStatusIsOkWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -233,7 +233,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureResponseStatusIsOkOrCreatedWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkOrCreatedWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)));
@@ -243,7 +243,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureResponseStatusIsOkOrCreatedWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkOrCreatedWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -259,6 +259,26 @@ public final class HttpCallTest {
       assertEquals("", exception.getEntity());
     }));
     HttpCall.withClient(client).invoke(get).ensureIsOkOrCreated();
+  }
+
+  @Test
+  public void testEnsureIsCreatedWithCreatedResponse() throws IOException, ResponseStatusException, InterruptedException {
+    wireMock.stubFor(get(urlEqualTo("/test"))
+                     .willReturn(aResponse()
+                                 .withStatus(201)));
+
+    final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
+    HttpCall.withClient(client).invoke(get).ensureIsCreated();
+  }
+
+  @Test
+  public void testEnsureIsNoContentWithNoContentResponse() throws IOException, ResponseStatusException, InterruptedException {
+    wireMock.stubFor(get(urlEqualTo("/test"))
+                     .willReturn(aResponse()
+                                 .withStatus(204)));
+
+    final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
+    HttpCall.withClient(client).invoke(get).ensureIsNoContent();
   }
 
   @Test

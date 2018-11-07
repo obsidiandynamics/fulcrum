@@ -165,6 +165,28 @@ public final class HttpCall {
     }
     
     /**
+     *  A convenience method for ensuring that the response status is {@code 201 Created}.
+     *  
+     *  @return This {@link HttpCallResponse} instance for chaining.
+     *  @throws ResponseStatusException If the status code doesn't match the expected code.
+     *  @throws IOException If an I/O error occurs.
+     */
+    public HttpCallResponse ensureIsCreated() throws ResponseStatusException, IOException {
+      return ensureStatusIs(HttpStatus.SC_CREATED);
+    }
+    
+    /**
+     *  A convenience method for ensuring that the response status is {@code 204 No Content}.
+     *  
+     *  @return This {@link HttpCallResponse} instance for chaining.
+     *  @throws ResponseStatusException If the status code doesn't match the expected code.
+     *  @throws IOException If an I/O error occurs.
+     */
+    public HttpCallResponse ensureIsNoContent() throws ResponseStatusException, IOException {
+      return ensureStatusIs(HttpStatus.SC_NO_CONTENT);
+    }
+    
+    /**
      *  A convenience method for ensuring that the response status is either {@code 200 OK}
      *  or {@code 201 Created}.
      *  
