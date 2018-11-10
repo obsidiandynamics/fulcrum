@@ -104,6 +104,11 @@ public final class FunctionsTest {
   public void testMustBeSubtypeWithIncorrectType() throws Exception {
     Functions.mustBeSubtype("string", Integer.class, Exception::new);
   }
+
+  @Test(expected=Exception.class)
+  public void testMustBeSubtypeWithNull() throws Exception {
+    Functions.mustBeSubtype(null, String.class, Exception::new);
+  }
   
   @Test
   public void testMustExistWithNotNull() throws Exception {

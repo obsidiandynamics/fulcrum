@@ -548,14 +548,47 @@ public final class Functions {
     if (value > comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is greater than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> int mustBeGreaterOrEqual(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value >= comparand) return value; else throw exceptionMaker.get();
   }
-  
+
+  /**
+   *  Ensures that {@code value} is less than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> int mustBeLess(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value < comparand) return value; else throw exceptionMaker.get();
   }
-  
+
+  /**
+   *  Ensures that {@code value} is less than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> int mustBeLessOrEqual(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value <= comparand) return value; else throw exceptionMaker.get();
   }
@@ -575,14 +608,47 @@ public final class Functions {
     if (value > comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is greater than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> double mustBeGreaterOrEqual(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value >= comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> double mustBeLess(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value < comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> double mustBeLessOrEqual(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value <= comparand) return value; else throw exceptionMaker.get();
   }
@@ -602,14 +668,47 @@ public final class Functions {
     if (value > comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is greater than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> float mustBeGreaterOrEqual(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value >= comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> float mustBeLess(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value < comparand) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <X extends Throwable> float mustBeLessOrEqual(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
     if (value <= comparand) return value; else throw exceptionMaker.get();
   }
@@ -627,18 +726,62 @@ public final class Functions {
    *  @throws X If the comparison failed.
    */
   public static <T extends Comparable<T>, X extends Throwable> T mustBeGreater(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    mustExist(value);
+    mustExist(comparand);
     if (value.compareTo(comparand) > 0) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is greater than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <T extends Comparable<T>, X extends Throwable> T mustBeGreaterOrEqual(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    mustExist(value);
+    mustExist(comparand);
     if (value.compareTo(comparand) >= 0) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <T extends Comparable<T>, X extends Throwable> T mustBeLess(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    mustExist(value);
+    mustExist(comparand);
     if (value.compareTo(comparand) < 0) return value; else throw exceptionMaker.get();
   }
   
+  /**
+   *  Ensures that {@code value} is less than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
   public static <T extends Comparable<T>, X extends Throwable> T mustBeLessOrEqual(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    mustExist(value);
+    mustExist(comparand);
     if (value.compareTo(comparand) <= 0) return value; else throw exceptionMaker.get();
   }
 
