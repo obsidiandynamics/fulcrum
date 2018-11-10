@@ -19,7 +19,7 @@ public final class Exceptions {
    *  @throws X If an exception occurs.
    */
   public static <X extends Throwable> void wrap(CheckedRunnable<?> runnable, 
-                                                Function<Throwable, X> wrapper) throws X {
+                                                Function<Throwable, ? extends X> wrapper) throws X {
     wrap(() -> {
       runnable.run();
       return null;
@@ -39,7 +39,7 @@ public final class Exceptions {
    *  @throws X If an exception occurs.
    */
   public static <X extends Throwable> void wrapRunnable(CheckedRunnable<?> runnable, 
-                                                        Function<Throwable, X> wrapper) throws X {
+                                                        Function<Throwable, ? extends X> wrapper) throws X {
     wrap(runnable, wrapper);
   }
   
@@ -55,7 +55,7 @@ public final class Exceptions {
    *  @throws X If an exception occurs.
    */
   public static <T, X extends Throwable> T wrap(CheckedSupplier<? extends T, ?> supplier, 
-                                                Function<Throwable, X> wrapper) throws X {
+                                                Function<Throwable, ? extends X> wrapper) throws X {
     return wrapStrict(supplier, wrapper);
   }
 
@@ -69,8 +69,8 @@ public final class Exceptions {
    *  @param wrapper The handler for trapped exceptions, returning a wrapped exception of type {@code X}.
    *  @throws X If an exception occurs.
    */
-  public static <W extends Throwable, X extends Throwable> void wrapStrict(CheckedRunnable<W> runnable, 
-                                                                           Function<? super W, X> wrapper) throws X {
+  public static <W extends Throwable, X extends Throwable> void wrapStrict(CheckedRunnable<? extends W> runnable, 
+                                                                           Function<? super W, ? extends X> wrapper) throws X {
     wrapStrict(() -> {
       runnable.run();
       return null;
@@ -90,7 +90,7 @@ public final class Exceptions {
    *  @throws X If an exception occurs.
    */
   public static <T, W extends Throwable, X extends Throwable> T wrapStrict(CheckedSupplier<? extends T, W> supplier, 
-                                                                           Function<? super W, X> wrapper) throws X {
+                                                                           Function<? super W, ? extends X> wrapper) throws X {
     try {
       return supplier.get();
     } catch (Throwable e) {
@@ -113,7 +113,7 @@ public final class Exceptions {
    *  @throws X If an exception occurs.
    */
   public static <T, X extends Throwable> T wrapSupplier(CheckedSupplier<? extends T, ?> supplier, 
-                                                        Function<Throwable, X> wrapper) throws X {
+                                                        Function<Throwable, ? extends X> wrapper) throws X {
     return wrap(supplier, wrapper);
   }
   
@@ -125,7 +125,7 @@ public final class Exceptions {
    *  @param exceptionMaker The exception generator.
    *  @return A {@link CheckedRunnable} instance that throws the generated exception.
    */
-  public static <X extends Throwable> CheckedRunnable<X> doThrow(Supplier<X> exceptionMaker) {
+  public static <X extends Throwable> CheckedRunnable<X> doThrow(Supplier<? extends X> exceptionMaker) {
     return () -> { throw exceptionMaker.get(); };
   }
   

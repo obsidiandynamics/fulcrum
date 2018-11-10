@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+import org.hamcrest.core.*;
 import org.junit.*;
 import org.junit.rules.*;
 
@@ -106,12 +107,36 @@ public final class FunctionsTest {
   
   @Test
   public void testMustExistWithNotNull() throws Exception {
-    assertNotNull(Functions.mustExist("foo", Exception::new));
+    assertEquals("foo", Functions.mustExist("foo", Exception::new));
   }
 
   @Test(expected=Exception.class)
   public void testMustExistWithNull() throws Exception {
     Functions.mustExist(null, Exception::new);
+  }
+
+  @Test
+  public void testMustExistWithNotNullUsingNullArgumentExceptionWithMessageVariant() throws Exception {
+    assertEquals("foo", Functions.mustExist("foo", "Something cannot be null"));
+  }
+
+  @Test
+  public void testMustExistWithNullUsingNullArgumentExceptionWithMessageVariant() throws Exception {
+    expectedException.expect(NullArgumentException.class);
+    expectedException.expectMessage("Something cannot be null");
+    Functions.mustExist(null, "Something cannot be null");
+  }
+
+  @Test
+  public void testMustExistWithNotNullUsingNullArgumentExceptionWithoutMessageVariant() throws Exception {
+    assertEquals("foo", Functions.mustExist("foo"));
+  }
+
+  @Test
+  public void testMustExistWithNullUsingNullArgumentExceptionWithoutMessageVariant() throws Exception {
+    expectedException.expect(NullArgumentException.class);
+    expectedException.expectMessage(IsNull.nullValue(String.class));
+    Functions.mustExist(null);
   }
 
   @Test
@@ -136,12 +161,222 @@ public final class FunctionsTest {
 
   @Test
   public void testMustNotBeEqualWithNonEqualValues() throws Exception {
-    Functions.mustNotBeEqual(43, 42, Exception::new);
+    assertEquals(42, Functions.mustNotBeEqual(43, 42, Exception::new).intValue());
   }
 
   @Test(expected=Exception.class)
   public void testMustNotBeEqualWithEqualValues() throws Exception {
     Functions.mustNotBeEqual(42, 42, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterWithLong() throws Exception {
+    Functions.mustBeGreater(4L, 3L, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterWithLongFail() throws Exception {
+    Functions.mustBeGreater(3L, 3L, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterOrEqualWithLong() throws Exception {
+    Functions.mustBeGreaterOrEqual(4L, 3L, Exception::new);
+    Functions.mustBeGreaterOrEqual(3L, 3L, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterOrEqualWithLongFail() throws Exception {
+    Functions.mustBeGreaterOrEqual(2L, 3L, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessWithLong() throws Exception {
+    Functions.mustBeLess(2L, 3L, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessWithLongFail() throws Exception {
+    Functions.mustBeLess(3L, 3L, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessOrEqualWithLong() throws Exception {
+    Functions.mustBeLessOrEqual(3L, 3L, Exception::new);
+    Functions.mustBeLessOrEqual(2L, 3L, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessOrEqualWithLongFail() throws Exception {
+    Functions.mustBeLessOrEqual(4L, 3L, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterWithInt() throws Exception {
+    Functions.mustBeGreater(4, 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterWithIntFail() throws Exception {
+    Functions.mustBeGreater(3, 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterOrEqualWithInt() throws Exception {
+    Functions.mustBeGreaterOrEqual(4, 3, Exception::new);
+    Functions.mustBeGreaterOrEqual(3, 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterOrEqualWithIntFail() throws Exception {
+    Functions.mustBeGreaterOrEqual(2, 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessWithInt() throws Exception {
+    Functions.mustBeLess(2, 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessWithIntFail() throws Exception {
+    Functions.mustBeLess(3, 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessOrEqualWithInt() throws Exception {
+    Functions.mustBeLessOrEqual(3, 3, Exception::new);
+    Functions.mustBeLessOrEqual(2, 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessOrEqualWithIntFail() throws Exception {
+    Functions.mustBeLessOrEqual(4, 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterWithDouble() throws Exception {
+    Functions.mustBeGreater(4.0, 3.0, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterWithDoubleFail() throws Exception {
+    Functions.mustBeGreater(3.0, 3.0, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterOrEqualWithDouble() throws Exception {
+    Functions.mustBeGreaterOrEqual(4.0, 3.0, Exception::new);
+    Functions.mustBeGreaterOrEqual(3.0, 3.0, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterOrEqualWithDoubleFail() throws Exception {
+    Functions.mustBeGreaterOrEqual(2.0, 3.0, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessWithDouble() throws Exception {
+    Functions.mustBeLess(2.0, 3.0, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessWithDoubleFail() throws Exception {
+    Functions.mustBeLess(3.0, 3.0, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessOrEqualWithDouble() throws Exception {
+    Functions.mustBeLessOrEqual(3.0, 3.0, Exception::new);
+    Functions.mustBeLessOrEqual(2.0, 3.0, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessOrEqualWithDoubleFail() throws Exception {
+    Functions.mustBeLessOrEqual(4.0, 3.0, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterWithFloat() throws Exception {
+    Functions.mustBeGreater(4.0f, 3.0f, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterWithFloatFail() throws Exception {
+    Functions.mustBeGreater(3.0f, 3.0f, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterOrEqualWithFloat() throws Exception {
+    Functions.mustBeGreaterOrEqual(4.0f, 3.0f, Exception::new);
+    Functions.mustBeGreaterOrEqual(3.0f, 3.0f, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterOrEqualWithFloatFail() throws Exception {
+    Functions.mustBeGreaterOrEqual(2.0f, 3.0f, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessWithFloat() throws Exception {
+    Functions.mustBeLess(2.0f, 3.0f, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessWithFloatFail() throws Exception {
+    Functions.mustBeLess(3.0f, 3.0f, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessOrEqualWithFloat() throws Exception {
+    Functions.mustBeLessOrEqual(3.0f, 3.0f, Exception::new);
+    Functions.mustBeLessOrEqual(2.0f, 3.0f, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessOrEqualWithFloatFail() throws Exception {
+    Functions.mustBeLessOrEqual(4.0f, 3.0f, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterWithComparable() throws Exception {
+    Functions.mustBeGreater((Integer) 4, (Integer) 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterWithComparableFail() throws Exception {
+    Functions.mustBeGreater((Integer) 3, (Integer) 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeGreaterOrEqualWithComparable() throws Exception {
+    Functions.mustBeGreaterOrEqual((Integer) 4, (Integer) 3, Exception::new);
+    Functions.mustBeGreaterOrEqual((Integer) 3, (Integer) 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeGreaterOrEqualWithComparableFail() throws Exception {
+    Functions.mustBeGreaterOrEqual((Integer) 2, (Integer) 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessWithComparable() throws Exception {
+    Functions.mustBeLess((Integer) 2, (Integer) 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessWithComparableFail() throws Exception {
+    Functions.mustBeLess((Integer) 3, (Integer) 3, Exception::new);
+  }
+  
+  @Test
+  public void testMustBeLessOrEqualWithComparable() throws Exception {
+    Functions.mustBeLessOrEqual((Integer) 3, (Integer) 3, Exception::new);
+    Functions.mustBeLessOrEqual((Integer) 2, (Integer) 3, Exception::new);
+  }
+  
+  @Test(expected=Exception.class)
+  public void testMustBeLessOrEqualWithComparableFail() throws Exception {
+    Functions.mustBeLessOrEqual((Integer) 4, (Integer) 3, Exception::new);
   }
 
   @Test

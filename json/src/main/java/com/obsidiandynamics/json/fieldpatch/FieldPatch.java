@@ -32,7 +32,7 @@ public interface FieldPatch<T> {
   }
   
   static <T> FieldPatch<T> of(T value) {
-    return new StandardFieldPatch<>(mustExist(value, NullArgumentException::new));
+    return new StandardFieldPatch<>(mustExist(value, "Value cannot be null"));
   }
   
   static <T> FieldPatch<T> nullableOf(T value) {

@@ -15,8 +15,8 @@ public final class Transition<S> {
   private final S to;
 
   public Transition(S from, S to) {
-    this.from = mustExist(from, withMessage("Missing 'from' state", IllegalArgumentException::new));
-    this.to = mustExist(to, withMessage("Missing 'to' state", IllegalArgumentException::new));
+    this.from = mustExist(from, "Missing 'from' state");
+    this.to = mustExist(to, "Missing 'to' state");
   }
 
   public S getFrom() {

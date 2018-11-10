@@ -19,6 +19,8 @@ public final class PojoVerifier {
   
   private final Set<String> excludedToStringFields = new HashSet<>();
   
+  private ConstructorArgs constructorArgs;
+  
   private boolean allAccessorsExcluded;
   
   private boolean allMutatorsExcluded;
@@ -33,6 +35,11 @@ public final class PojoVerifier {
 
   public static PojoVerifier forClass(Class<?> classUnderTest) {
     return new PojoVerifier(classUnderTest);
+  }
+  
+  public PojoVerifier constructorArgs(ConstructorArgs constructorArgs) {
+    this.constructorArgs = constructorArgs;
+    return this;
   }
   
   public PojoVerifier excludeAccessor(String fieldName) {
@@ -108,27 +115,38 @@ public final class PojoVerifier {
     autoExcludeFinalFields();
     
     if (! allAccessorsExcluded) {
-      Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedAccessors)))
+      final AbstractAssertion a = Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedAccessors)));
+      prepareAssertion(a)
       .testing(Method.GETTER)
       .areWellImplemented();
     }
     
     if (! allMutatorsExcluded) {
-      Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedMutators)))
+      final AbstractAssertion a = Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedMutators)));
+      prepareAssertion(a)
       .testing(Method.SETTER)
       .areWellImplemented(); 
     }
     
     if (! allToStringFieldsExcluded) {
-      Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedToStringFields)))
+      final AbstractAssertion a = Assertions.assertPojoMethodsFor(classUnderTest, FieldPredicate.exclude(new ArrayList<>(excludedToStringFields)));
+      prepareAssertion(a)
       .testing(Method.TO_STRING)
       .areWellImplemented(); 
     }
     
     if (! constructorExcluded) {
-      Assertions.assertPojoMethodsFor(classUnderTest)
+      final AbstractAssertion a = Assertions.assertPojoMethodsFor(classUnderTest);
+      prepareAssertion(a)
       .testing(Method.CONSTRUCTOR)
       .areWellImplemented();
     }
+  }
+  
+  private AbstractAssertion prepareAssertion(AbstractAssertion a) {
+    if (constructorArgs != null) {
+      a.create(classUnderTest, constructorArgs.toConstructorParameters());
+    }
+    return a;
   }
 }

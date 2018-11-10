@@ -25,14 +25,16 @@ public final class Functions {
    *  @return A composite {@link CheckedSupplier}.
    *  @throws X If an error occurs.
    */
-  public static <U, V, X extends Throwable> CheckedSupplier<V, X> chain(CheckedSupplier<U, X> before, 
-                                                                        CheckedFunction<U, V, X> after) throws X {
+  public static <U, V, X extends Throwable> CheckedSupplier<V, X> chain(CheckedSupplier<U, ? extends X> before, 
+                                                                        CheckedFunction<U, V, ? extends X> after) throws X {
     return () -> after.apply(before.get());
   }
 
   /**
    *  Chains the output of one function into the input of another, thereby creating a new
    *  function.
+   *  
+   *  @see CheckedFunction#andThen(CheckedFunction)
    *  
    *  @param <U> Initial input type of the {@code before} function.
    *  @param <V> Output type of the {@code before} function and the input of {@code after}.
@@ -45,7 +47,7 @@ public final class Functions {
    */
   public static <U, V, W, X extends Throwable> CheckedFunction<U, W, X> chain(CheckedFunction<U, V, X> before, 
                                                                               CheckedFunction<V, W, X> after) throws X {
-    return u -> after.apply(before.apply(u));
+    return before.andThen(after);
   }
 
   /**
@@ -81,7 +83,7 @@ public final class Functions {
    */
   public static <K, U, V, X extends Throwable> LinkedHashMap<K, V> 
       mapValues(Map<K, ? extends U> source, 
-                CheckedFunction<? super U, ? extends V, X> mapper) throws X {
+                CheckedFunction<? super U, ? extends V, ? extends X> mapper) throws X {
     return mapValues(source, mapper, LinkedHashMap::new);
   }
 
@@ -103,7 +105,7 @@ public final class Functions {
    */
   public static <K, U, V, M extends Map<K, V>, X extends Throwable> M 
       mapValues(Map<K, ? extends U> source, 
-                CheckedFunction<? super U, ? extends V, X> mapper,
+                CheckedFunction<? super U, ? extends V, ? extends X> mapper,
                 Supplier<M> mapMaker) throws X {
     if (source != null) {
       final M mapped = mapMaker.get();
@@ -130,7 +132,7 @@ public final class Functions {
    */
   public static <U, V, X extends Throwable> ArrayList<V> 
       mapCollection(Collection<? extends U> source, 
-                    CheckedFunction<? super U, ? extends V, X> mapper) throws X {
+                    CheckedFunction<? super U, ? extends V, ? extends X> mapper) throws X {
     return mapCollection(source, mapper, ArrayList::new);
   }
 
@@ -150,7 +152,7 @@ public final class Functions {
    */
   public static <U, V, C extends Collection<V>, X extends Throwable> C
       mapCollection(Collection<? extends U> source, 
-                    CheckedFunction<? super U, ? extends V, X> mapper,
+                    CheckedFunction<? super U, ? extends V, ? extends X> mapper,
                     Supplier<C> collectionMaker) throws X {
     if (source != null) {
       final C mapped = collectionMaker.get();
@@ -188,7 +190,7 @@ public final class Functions {
    */
   public static <U, V, X extends Exception> ArrayList<V>
       parallelMapStream(Stream<? extends U> source, 
-                        CheckedFunction<? super U, ? extends V, X> mapper,
+                        CheckedFunction<? super U, ? extends V, ? extends X> mapper,
                         ExecutorService executor) throws X, InterruptedException {
     return parallelMapStream(source, mapper, ArrayList::new, executor);
   }
@@ -220,7 +222,7 @@ public final class Functions {
    */
   public static <U, V, C extends Collection<V>, X extends Throwable> C
       parallelMapStream(Stream<? extends U> source, 
-                        CheckedFunction<? super U, ? extends V, X> mapper,
+                        CheckedFunction<? super U, ? extends V, ? extends X> mapper,
                         Supplier<C> collectionMaker,
                         ExecutorService executor) throws X, InterruptedException {
     final List<Future<V>> submissions = new ArrayList<>();
@@ -290,7 +292,7 @@ public final class Functions {
    *  @return The exception {@code Supplier}.
    */
   public static <X extends Throwable> Supplier<X> withMessage(String message,
-                                                              Function<String, X> exceptionMaker) {
+                                                              Function<String, ? extends X> exceptionMaker) {
     return () -> exceptionMaker.apply(message);
   }
 
@@ -304,7 +306,7 @@ public final class Functions {
    *  @return The exception {@code Supplier}.
    */
   public static <X extends Throwable> Supplier<X> withMessage(Supplier<String> messageSupplier,
-                                                              Function<String, X> exceptionMaker) {
+                                                              Function<String, ? extends X> exceptionMaker) {
     return () -> exceptionMaker.apply(messageSupplier.get());
   }
 
@@ -327,8 +329,35 @@ public final class Functions {
   public static <K, V, X extends Throwable> V mustExist(Map<K, V> map, 
                                                         K key, 
                                                         String errorTemplate, 
-                                                        Function<String, X> exceptionMaker) throws X {
+                                                        Function<String, ? extends X> exceptionMaker) throws X {
     return mustExist(map.get(key), withMessage(() -> String.format(errorTemplate, key), exceptionMaker));
+  }
+
+  /**
+   *  A convenient variant of {@link #mustExist(Object, Supplier)} that throws a
+   *  {@link NullArgumentException} with no message.
+   *  
+   *  @param <T> Value type.
+   *  @param value The value to check.
+   *  @return The verified value.
+   *  @throws NullArgumentException If the given value is {@code null}.
+   */
+  public static <T> T mustExist(T value) throws NullArgumentException {
+    return mustExist(value, NullArgumentException::new);
+  }
+
+  /**
+   *  A convenient variant of {@link #mustExist(Object, Supplier)} that throws a
+   *  {@link NullArgumentException} with the supplied {@code message}.
+   *  
+   *  @param <T> Value type.
+   *  @param value The value to check.
+   *  @param message The message to the {@link NullArgumentException}.
+   *  @return The verified value.
+   *  @throws NullArgumentException If the given value is {@code null}.
+   */
+  public static <T> T mustExist(T value, String message) throws NullArgumentException {
+    return mustExist(value, withMessage(message, NullArgumentException::new));
   }
 
   /**
@@ -339,10 +368,10 @@ public final class Functions {
    *  @param <X> Exception type.
    *  @param value The value to check.
    *  @param exceptionMaker A way of creating the exception for a {@code null} value.
-   *  @return The verified value, as supplied to this method.
+   *  @return The verified value.
    *  @throws X If the given value is {@code null}.
    */
-  public static <T, X extends Throwable> T mustExist(T value, Supplier<X> exceptionMaker) throws X {
+  public static <T, X extends Throwable> T mustExist(T value, Supplier<? extends X> exceptionMaker) throws X {
     if (value != null) {
       return value;
     } else {
@@ -359,7 +388,7 @@ public final class Functions {
    *  @param exceptionMaker A way of creating the exception for a non-{@code null} value.
    *  @throws X If the value is not {@code null}.
    */
-  public static <X extends Throwable> void mustBeNull(Object value, Supplier<X> exceptionMaker) throws X {
+  public static <X extends Throwable> void mustBeNull(Object value, Supplier<? extends X> exceptionMaker) throws X {
     mustBeTrue(value == null, exceptionMaker);
   }
 
@@ -372,10 +401,10 @@ public final class Functions {
    *  @param value The object to verify.
    *  @param type The class type that the object must be a type of.
    *  @param exceptionMaker A way of creating the exception for a non-matching object.
-   *  @return The verified object, as supplied to this method.
+   *  @return The verified value.
    *  @throws X If the given object is not of a matching type.
    */
-  public static <T, X extends Throwable> T mustBeSubtype(Object value, Class<T> type, Supplier<X> exceptionMaker) throws X {
+  public static <T, X extends Throwable> T mustBeSubtype(Object value, Class<T> type, Supplier<? extends X> exceptionMaker) throws X {
     if (type.isInstance(value)) {
       return type.cast(value);
     } else {
@@ -393,7 +422,7 @@ public final class Functions {
    *  @param exceptionMaker A way of creating the exception for non-equal objects.
    *  @throws X If the two objects are not equal.
    */
-  public static <X extends Throwable> void mustBeEqual(Object expected, Object actual, Supplier<X> exceptionMaker) throws X {
+  public static <X extends Throwable> void mustBeEqual(Object expected, Object actual, Supplier<? extends X> exceptionMaker) throws X {
     mustBeTrue(Objects.equals(expected, actual), exceptionMaker);
   }
 
@@ -401,14 +430,17 @@ public final class Functions {
    *  Ensures that the given {@code unexpected} and {@code actual} values are not equal. Otherwise, an
    *  exception specified by the given {@code exceptionMaker} is thrown.
    *  
+   *  @param <T> Value type.
    *  @param <X> Exception type.
    *  @param unexpected The unexpected value.
    *  @param actual The actual value.
    *  @param exceptionMaker A way of creating the exception for equal objects.
+   *  @return The verified value.
    *  @throws X If the two objects are equal.
    */
-  public static <X extends Throwable> void mustNotBeEqual(Object unexpected, Object actual, Supplier<X> exceptionMaker) throws X {
+  public static <T, X extends Throwable> T mustNotBeEqual(Object unexpected, T actual, Supplier<? extends X> exceptionMaker) throws X {
     mustBeFalse(Objects.equals(unexpected, actual), exceptionMaker);
+    return actual;
   }
 
   /**
@@ -420,7 +452,7 @@ public final class Functions {
    *  @param exceptionMaker A way of creating the exception for a {@code false} value.
    *  @throws X If the value is {@code false}.
    */
-  public static <X extends Throwable> void mustBeTrue(boolean test, Supplier<X> exceptionMaker) throws X {
+  public static <X extends Throwable> void mustBeTrue(boolean test, Supplier<? extends X> exceptionMaker) throws X {
     if (! test) {
       throw exceptionMaker.get();
     }
@@ -435,10 +467,179 @@ public final class Functions {
    *  @param exceptionMaker A way of creating the exception for a {@code true} value.
    *  @throws X If the value is {@code true}.
    */
-  public static <X extends Throwable> void mustBeFalse(boolean test, Supplier<X> exceptionMaker) throws X {
+  public static <X extends Throwable> void mustBeFalse(boolean test, Supplier<? extends X> exceptionMaker) throws X {
     if (test) {
       throw exceptionMaker.get();
     }
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> long mustBeGreater(long value, long comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value > comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> long mustBeGreaterOrEqual(long value, long comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value >= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is less than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> long mustBeLess(long value, long comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value < comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is less than or equal to {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> long mustBeLessOrEqual(long value, long comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value <= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> int mustBeGreater(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value > comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> int mustBeGreaterOrEqual(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value >= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> int mustBeLess(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value < comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> int mustBeLessOrEqual(int value, int comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value <= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> double mustBeGreater(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value > comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> double mustBeGreaterOrEqual(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value >= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> double mustBeLess(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value < comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> double mustBeLessOrEqual(double value, double comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value <= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <X extends Throwable> float mustBeGreater(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value > comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> float mustBeGreaterOrEqual(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value >= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> float mustBeLess(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value < comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <X extends Throwable> float mustBeLessOrEqual(float value, float comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value <= comparand) return value; else throw exceptionMaker.get();
+  }
+  
+  /**
+   *  Ensures that {@code value} is greater than {@code comparand}, returning the verified value if 
+   *  true or throwing an exception otherwise.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to compare.
+   *  @param comparand The comparand.
+   *  @param exceptionMaker A way of creating the exception for a failed comparison.
+   *  @return The verified value, as supplied to this method.
+   *  @throws X If the comparison failed.
+   */
+  public static <T extends Comparable<T>, X extends Throwable> T mustBeGreater(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value.compareTo(comparand) > 0) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <T extends Comparable<T>, X extends Throwable> T mustBeGreaterOrEqual(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value.compareTo(comparand) >= 0) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <T extends Comparable<T>, X extends Throwable> T mustBeLess(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value.compareTo(comparand) < 0) return value; else throw exceptionMaker.get();
+  }
+  
+  public static <T extends Comparable<T>, X extends Throwable> T mustBeLessOrEqual(T value, T comparand, Supplier<? extends X> exceptionMaker) throws X {
+    if (value.compareTo(comparand) <= 0) return value; else throw exceptionMaker.get();
   }
 
   /**

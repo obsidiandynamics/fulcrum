@@ -311,7 +311,7 @@ public final class HttpCall {
    *  @throws IOException If an I/O error occurs.
    */
   public static String toString(HttpEntity entity) throws IOException {
-    mustExist(entity, NullArgumentException::new);
+    mustExist(entity);
     try {
       return EntityUtils.toString(entity);
     } catch (ParseException e) {

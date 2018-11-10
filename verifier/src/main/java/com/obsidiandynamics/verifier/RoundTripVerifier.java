@@ -38,7 +38,7 @@ public final class RoundTripVerifier<T> {
   }
   
   public void verify() {
-    final Codec codec = mustExist(this.codec, withMessage("Codec not set", NullArgumentException::new));
+    final Codec codec = mustExist(this.codec, "Codec not set");
     
     final Object decoded = Exceptions.wrap(() -> {
       final byte[] bytes = codec.toBytes(object);

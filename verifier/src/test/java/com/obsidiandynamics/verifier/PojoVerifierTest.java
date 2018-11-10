@@ -1,5 +1,6 @@
 package com.obsidiandynamics.verifier;
 
+import static com.obsidiandynamics.func.Functions.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
@@ -119,5 +120,39 @@ public final class PojoVerifierTest {
     .excludeMutators()
     .excludeToStringFields()
     .excludeConstructor().verify();
+  }
+  
+  public static final class TestCustomConstructor {
+    final String a;
+    final int b;
+    
+    TestCustomConstructor(String a, int b) {
+      mustBeTrue(a.length() > 2, IllegalArgumentException::new);
+      mustBeGreater(b, 0, IllegalArgumentException::new);
+      this.a = a;
+      this.b = b;
+    }
+    
+    public String getA() {
+      return a;
+    }
+
+    public int getB() {
+      return b;
+    }
+
+    @Override
+    public String toString() {
+      return TestPojoPartialToString.class.getSimpleName() + " [a=" + a + ", b=" + b + "]";
+    }
+  }
+  
+  @Test
+  public void tesCustomConstructorAndOthers() {
+    PojoVerifier.forClass(TestCustomConstructor.class)
+    .constructorArgs(new ConstructorArgs()
+                         .with(String.class, "foo")
+                         .with(int.class, 1))
+    .verify();
   }
 }

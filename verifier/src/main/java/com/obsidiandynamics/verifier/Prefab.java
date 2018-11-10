@@ -4,8 +4,6 @@ import static com.obsidiandynamics.func.Functions.*;
 
 import java.util.*;
 
-import com.obsidiandynamics.func.*;
-
 import nl.jqno.equalsverifier.internal.prefabvalues.*;
 import nl.jqno.equalsverifier.internal.prefabvalues.factories.*;
 import nl.jqno.equalsverifier.internal.reflection.*;
@@ -94,7 +92,7 @@ public final class Prefab {
    *  @return Its copy.
    */
   public static <T> T shallowCopy(T value) {
-    mustExist(value, NullArgumentException::new);
+    mustExist(value);
     
     if (value.getClass().isArray()) {
       return value;
@@ -112,9 +110,9 @@ public final class Prefab {
    *  @param black The black instance.
    */
   public <T> void register(Class<T> type, T red, T black) {
-    mustExist(type, NullArgumentException::new);
-    mustExist(red, NullArgumentException::new);
-    mustExist(black, NullArgumentException::new);
+    mustExist(type);
+    mustExist(red);
+    mustExist(black);
     
     final T redCopy = shallowCopy(red);
     synchronized (lock) {
@@ -135,7 +133,7 @@ public final class Prefab {
    *  @return The 'red' instance.
    */
   public <T> T red(Class<T> type) {
-    mustExist(type, NullArgumentException::new);
+    mustExist(type);
     synchronized (lock) {
       return prefabValues.giveRed(new TypeTag(type));
     }
@@ -149,7 +147,7 @@ public final class Prefab {
    *  @return The 'black' instance.
    */
   public <T> T black(Class<T> type) {
-    mustExist(type, NullArgumentException::new);
+    mustExist(type);
     synchronized (lock) {
       return prefabValues.giveBlack(new TypeTag(type));
     }

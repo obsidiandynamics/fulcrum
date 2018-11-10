@@ -56,9 +56,9 @@ public final class FluentVerifier {
   }
 
   public <T> FluentVerifier withPrefabValues(Class<? super T> type, T red, T black) {
-    Functions.mustExist(type, Functions.withMessage("Class type cannot be null", NullArgumentException::new));
-    Functions.mustExist(red, Functions.withMessage("Value 'red' cannot be null", NullArgumentException::new));
-    Functions.mustExist(black, Functions.withMessage("Value 'black' cannot be null", NullArgumentException::new));
+    Functions.mustExist(type, "Class type cannot be null");
+    Functions.mustExist(red, "Value 'red' cannot be null");
+    Functions.mustExist(black, "Value 'black' cannot be null");
 
     if (red.equals(black)) {
       throw new IllegalArgumentException("Both 'red' and 'black' values are equal");
