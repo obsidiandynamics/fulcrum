@@ -59,7 +59,6 @@ public final class Protocols {
     return new JChannel(new SHARED_LOOPBACK(),
                         new SHARED_LOOPBACK_PING(),
                         new MERGE3(),
-                        new FD_ALL(),
                         new VERIFY_SUSPECT(),
                         new BARRIER(),
                         new NAKACK2(),
