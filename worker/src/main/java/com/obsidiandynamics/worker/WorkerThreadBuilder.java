@@ -1,7 +1,5 @@
 package com.obsidiandynamics.worker;
 
-import java.io.*;
-
 public final class WorkerThreadBuilder {
   private WorkerOptions options = new WorkerOptions();
   
@@ -13,11 +11,7 @@ public final class WorkerThreadBuilder {
   
   private WorkerExceptionHandler onUncaughtException = SYS_ERR_UNCAUGHT_EXCEPTION_HANDLER;
   
-  public static final WorkerExceptionHandler SYS_ERR_UNCAUGHT_EXCEPTION_HANDLER = createPrintStreamUncaughtExceptionHandler(System.err);
-  
-  public static WorkerExceptionHandler createPrintStreamUncaughtExceptionHandler(PrintStream printStream) {
-    return (t, x) -> x.printStackTrace(printStream);
-  }
+  public static final WorkerExceptionHandler SYS_ERR_UNCAUGHT_EXCEPTION_HANDLER = WorkerExceptionHandler.forPrintStream(System.err);
   
   WorkerThreadBuilder() {}
 

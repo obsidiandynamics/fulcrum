@@ -312,7 +312,7 @@ public final class WorkerThreadTest {
         .onCycle(t -> {
           throw new RuntimeException("boom");
         })
-        .onUncaughtException(WorkerThreadBuilder.createPrintStreamUncaughtExceptionHandler(p))
+        .onUncaughtException(WorkerExceptionHandler.forPrintStream(p))
         .build();
 
     thread.start();
