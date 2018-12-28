@@ -103,10 +103,10 @@ public final class WorkerThread implements Terminable, Joinable {
         handleUncaughtException(exception);
       } finally {
         if (shutdown.compareAndSet(false, true)) {
-          // indicate that we've finished cycling - this way we won't get interrupted and 
+          // indicate that we've finished cycling — this way we won't get interrupted and 
           // can call the shutdown hook safely
         } else {
-          // we will imminently get interrupted  wait before proceeding with the shutdown hook
+          // we will imminently get interrupted — wait before proceeding with the shutdown hook
           whileNotInterrupted(Thread::yield);
           Thread.interrupted(); // clear the interrupt before invoking the shutdown hook
         }
