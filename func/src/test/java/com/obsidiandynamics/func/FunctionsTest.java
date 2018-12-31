@@ -413,6 +413,17 @@ public final class FunctionsTest {
     assertEquals("with_existing", Functions.ifPresentOptional(Optional.of("existing"), "with_"::concat));
     assertNull(Functions.ifPresentOptional(Optional.empty(), "with_"::concat));
   }
+  
+  @Test
+  public void testIfPresentVoid() {
+    final CheckedConsumer<String, RuntimeException> consumer = Classes.cast(mock(CheckedConsumer.class));
+    
+    Functions.ifPresentVoid((String) null, consumer);
+    verify(consumer, never()).accept(any());
+    
+    Functions.ifPresentVoid("test", consumer);
+    verify(consumer).accept(eq("test"));
+  }
 
   @Test
   public void testIfAbsent() {

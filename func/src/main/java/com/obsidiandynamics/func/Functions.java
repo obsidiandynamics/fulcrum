@@ -830,6 +830,21 @@ public final class Functions {
   }
 
   /**
+   *  Invokes a given {@link CheckedConsumer}, passing it the given {@code value} if and only if the latter
+   *  is non-{@code null}.
+   *  
+   *  @param <T> Value type.
+   *  @param <X> Exception type.
+   *  @param value The value to consume, if it isn't {@code null}.
+   *  @param consumer The consumer to invoke.
+   *  @throws X If an error occurs inside the consumer.
+   */
+  public static <T, X extends Throwable> void ifPresentVoid(T value, 
+                                                            CheckedConsumer<? super T, X> consumer) throws X {
+    if (value != null) consumer.accept(value);
+  }
+
+  /**
    *  A variant of {@link #ifAbsent(Object, CheckedSupplier)} that operates on {@link Optional} values,
    *  returning the encapsulated value if set, or sourcing the value from the given {@code supplier}
    *  otherwise. <p>
