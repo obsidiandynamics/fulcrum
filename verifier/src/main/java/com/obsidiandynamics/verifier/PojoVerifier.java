@@ -1,5 +1,7 @@
 package com.obsidiandynamics.verifier;
 
+import static com.obsidiandynamics.func.Functions.*;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -19,7 +21,7 @@ public final class PojoVerifier {
   
   private final Set<String> excludedToStringFields = new HashSet<>();
   
-  private ConstructorArgs constructorArgs;
+  private final Map<Class<?>, ConstructorArgs> constructorArgsForType = new HashMap<>();
   
   private boolean allAccessorsExcluded;
   
@@ -34,15 +36,23 @@ public final class PojoVerifier {
   }
 
   public static PojoVerifier forClass(Class<?> classUnderTest) {
+    mustExist(classUnderTest, "Class under test cannot be null");
     return new PojoVerifier(classUnderTest);
   }
   
   public PojoVerifier constructorArgs(ConstructorArgs constructorArgs) {
-    this.constructorArgs = constructorArgs;
+    return constructorArgs(classUnderTest, constructorArgs);
+  }
+  
+  public PojoVerifier constructorArgs(Class<?> type, ConstructorArgs constructorArgs) {
+    mustExist(type, "Type cannot be null");
+    mustExist(constructorArgs, "Constructor args cannot be null");
+    constructorArgsForType.put(type, constructorArgs);
     return this;
   }
   
   public PojoVerifier excludeAccessor(String fieldName) {
+    mustExist(fieldName, "Field name cannot be null");
     ensureFieldExists(classUnderTest, fieldName);
     excludedAccessors.add(fieldName);
     return this;
@@ -58,6 +68,7 @@ public final class PojoVerifier {
   }
   
   public PojoVerifier excludeMutator(String fieldName) {
+    mustExist(fieldName, "Field name cannot be null");
     ensureFieldExists(classUnderTest, fieldName);
     excludedMutators.add(fieldName);
     return this;
@@ -81,6 +92,7 @@ public final class PojoVerifier {
   }
   
   public PojoVerifier excludeToStringField(String fieldName) {
+    mustExist(fieldName, "Field name cannot be null");
     ensureFieldExists(classUnderTest, fieldName);
     excludedToStringFields.add(fieldName);
     return this;
@@ -144,8 +156,8 @@ public final class PojoVerifier {
   }
   
   private AbstractAssertion prepareAssertion(AbstractAssertion a) {
-    if (constructorArgs != null) {
-      a.create(classUnderTest, constructorArgs.toConstructorParameters());
+    for (Map.Entry<Class<?>, ConstructorArgs> entry : constructorArgsForType.entrySet()) {
+      a.create(entry.getKey(), entry.getValue().toConstructorParameters());
     }
     return a;
   }

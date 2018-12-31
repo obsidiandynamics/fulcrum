@@ -122,15 +122,29 @@ public final class PojoVerifierTest {
     .excludeConstructor().verify();
   }
   
+  public static final class Restricted {
+    final int value;
+    
+    Restricted(int value) {
+      this.value = mustBeGreater(value, 10, IllegalArgumentException::new);
+    }
+  }
+  
   public static final class TestCustomConstructor {
     final String a;
     final int b;
+    final Restricted restricted;
     
-    TestCustomConstructor(String a, int b) {
+    TestCustomConstructor(Restricted restricted) {
+      this("foo", 1, restricted);
+    }
+    
+    TestCustomConstructor(String a, int b, Restricted restricted) {
       mustBeTrue(a.length() > 2, IllegalArgumentException::new);
       mustBeGreater(b, 0, IllegalArgumentException::new);
       this.a = a;
       this.b = b;
+      this.restricted = restricted;
     }
     
     public String getA() {
@@ -140,19 +154,27 @@ public final class PojoVerifierTest {
     public int getB() {
       return b;
     }
+    
+    public Restricted getRestricted() {
+      return restricted;
+    }
 
     @Override
     public String toString() {
-      return TestPojoPartialToString.class.getSimpleName() + " [a=" + a + ", b=" + b + "]";
+      return TestPojoPartialToString.class.getSimpleName() + " [a=" + a + ", b=" + b + ", restricted=" + restricted + "]";
     }
   }
   
   @Test
-  public void tesCustomConstructorAndOthers() {
+  public void testCustomConstructorAndOthers() {
     PojoVerifier.forClass(TestCustomConstructor.class)
     .constructorArgs(new ConstructorArgs()
-                         .with(String.class, "foo")
-                         .with(int.class, 1))
+                     .with(String.class, "foo")
+                     .with(int.class, 1)
+                     .with(Restricted.class, new Restricted(11)))
+    .constructorArgs(Restricted.class,
+                     new ConstructorArgs()
+                     .with(int.class, 11))
     .verify();
   }
 }
