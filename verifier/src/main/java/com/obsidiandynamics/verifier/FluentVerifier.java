@@ -1,5 +1,7 @@
 package com.obsidiandynamics.verifier;
 
+import static com.obsidiandynamics.func.Functions.*;
+
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.*;
@@ -30,11 +32,13 @@ public final class FluentVerifier {
   }
   
   public FluentVerifier withMethodNameFormat(MethodNameFormat methodNameFormat) {
+    mustExist(methodNameFormat, "Method name format cannot be null");
     this.methodNameFormat = methodNameFormat;
     return this;
   }
   
   public FluentVerifier excludeField(String fieldName) {
+    mustExist(fieldName, "Field name cannot be null");
     ensureFieldExists(classUnderTest, fieldName);
     excludedFields.add(fieldName);
     return this;
@@ -56,9 +60,9 @@ public final class FluentVerifier {
   }
 
   public <T> FluentVerifier withPrefabValues(Class<? super T> type, T red, T black) {
-    Functions.mustExist(type, "Class type cannot be null");
-    Functions.mustExist(red, "Value 'red' cannot be null");
-    Functions.mustExist(black, "Value 'black' cannot be null");
+    mustExist(type, "Class type cannot be null");
+    mustExist(red, "Value 'red' cannot be null");
+    mustExist(black, "Value 'black' cannot be null");
 
     if (red.equals(black)) {
       throw new IllegalArgumentException("Both 'red' and 'black' values are equal");
@@ -81,6 +85,7 @@ public final class FluentVerifier {
   }
 
   public static FluentVerifier forClass(Class<?> classUnderTest) {
+    mustExist(classUnderTest, "Class under test cannot be null");
     return new FluentVerifier(classUnderTest);
   }
 
