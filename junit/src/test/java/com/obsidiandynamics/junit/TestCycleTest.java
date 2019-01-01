@@ -20,20 +20,20 @@ public final class TestCycleTest {
   public void testOnce() {
     final List<Object[]> params = TestCycle.once();
     assertThat(params, IsCollectionWithSize.hasSize(1));
-    assertThat(params, IsCollectionContaining.hasItem(new Object[0]));
+    assertThat(params, IsIterableContaining.hasItem(new Object[0]));
   }
   
   @Test
   public void testTimesQuietly() {
     final List<Object[]> params = TestCycle.timesQuietly(1);
     assertThat(params, IsCollectionWithSize.hasSize(1));
-    assertThat(params, IsCollectionContaining.hasItem(new Object[0]));
+    assertThat(params, IsIterableContaining.hasItem(new Object[0]));
   }
   
   @Test
   public void testTimes() {
     final List<Object[]> params = TestCycle.times(1);
     assertThat(params, IsCollectionWithSize.hasSize(1));
-    assertThat(params, IsCollectionContaining.hasItem(new Object[] { 0 }));
+    assertThat(params, IsIterableContaining.hasItem(new Object[] { 0 }));
   }
 }
