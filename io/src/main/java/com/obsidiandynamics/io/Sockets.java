@@ -34,9 +34,9 @@ public final class Sockets {
    *  @throws PortRangeExhaustedException If the range was exhausted.
    */
   public static int getSparePort(int rangeFromIncl, int rangeToExcl) throws PortRangeExhaustedException {
-    mustBeTrue(rangeFromIncl >= 1024, withMessage(() -> "Lower port range must include 1024 or higher", IllegalArgumentException::new));
-    mustBeTrue(rangeFromIncl < rangeToExcl, withMessage(() -> "Port range cannot overlap", IllegalArgumentException::new));
-    mustBeTrue(rangeToExcl <= 65536, withMessage(() -> "Upper port range must exclude 65536 or lower", IllegalArgumentException::new));
+    mustBeTrue(rangeFromIncl >= 1024, illegalArgument("Lower port range must include 1024 or higher"));
+    mustBeTrue(rangeFromIncl < rangeToExcl, illegalArgument("Port range cannot overlap"));
+    mustBeTrue(rangeToExcl <= 65536, illegalArgument("Upper port range must exclude 65536 or lower"));
     final int randomPort = randomInRange(rangeFromIncl, rangeToExcl);
     
     for (int currentPort = randomPort;;) {

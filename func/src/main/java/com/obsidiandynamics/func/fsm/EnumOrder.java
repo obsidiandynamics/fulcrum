@@ -89,7 +89,7 @@ public final class EnumOrder<E extends Enum<E>> implements Iterable<E> {
   }
   
   private static void ensureNotEmpty(Collection<?> array) {
-    mustBeTrue(! array.isEmpty(), withMessage("No elements to search", IllegalArgumentException::new));
+    mustBeTrue(! array.isEmpty(), illegalArgument("No elements to search"));
   }
   
   @Override
@@ -159,8 +159,7 @@ public final class EnumOrder<E extends Enum<E>> implements Iterable<E> {
   @SuppressWarnings("unchecked")
   public static <E extends Enum<E>> EnumOrder<E> capture(Class<E> enumType, E... orderedEnums) {
     final E[] world = enumType.getEnumConstants();
-    mustBeEqual(world.length, orderedEnums.length,
-                withMessage("Order omits one or more required enums", IllegalArgumentException::new));
+    mustBeEqual(world.length, orderedEnums.length, illegalArgument("Order omits one or more required enums"));
     
     final int[] order = new int[world.length];
     for (int i = 0; i < world.length; i++) {

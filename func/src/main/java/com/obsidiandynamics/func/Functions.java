@@ -282,6 +282,28 @@ public final class Functions {
       throw new IllegalStateException("Could not unwind the correct cause", throwable);
     }
   }
+  
+  /**
+   *  A variant of {@link #withMessage(String, Function)} that produces an
+   *  {@link IllegalStateException}.
+   *  
+   *  @param message The exception message.
+   *  @return The exception {@code Supplier}.
+   */
+  public static Supplier<IllegalStateException> illegalState(String message) {
+    return withMessage(message, IllegalStateException::new);
+  }
+  
+  /**
+   *  A variant of {@link #withMessage(String, Function)} that produces an
+   *  {@link IllegalArgumentException}.
+   *  
+   *  @param message The exception message.
+   *  @return The exception {@code Supplier}.
+   */
+  public static Supplier<IllegalArgumentException> illegalArgument(String message) {
+    return withMessage(message, IllegalArgumentException::new);
+  }
 
   /**
    *  Creates a supplier of a custom {@link Throwable} that is constructed using a given {@code message}.
