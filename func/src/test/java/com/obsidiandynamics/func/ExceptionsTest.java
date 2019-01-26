@@ -18,16 +18,18 @@ public final class ExceptionsTest {
   private static class TestRuntimeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    TestRuntimeException() { super(); }
+
     TestRuntimeException(Throwable cause) { super(cause); }
   }
 
   @Test
-  public void testWrapNormal() {
+  public void testWrap_noExceptionThrown() {
     Exceptions.wrap(() -> {}, TestRuntimeException::new);
   }
 
   @Test
-  public void testWrapInRuntimeExceptionNormal() {
+  public void testWrap_inRuntimeExceptionNotThrown() {
     final int out = Exceptions.wrap(ExceptionsTest::get42, TestRuntimeException::new);
     assertEquals(42, out);
   }
@@ -43,7 +45,7 @@ public final class ExceptionsTest {
   }
 
   @Test
-  public void testWrapAmbiguous() {
+  public void testWrap_ambiguous() {
     final AmbiguousGetter dataSource = new AmbiguousGetter() {
       @Override
       public Object supply() {
@@ -69,7 +71,7 @@ public final class ExceptionsTest {
   }
 
   @Test(expected=TestRuntimeException.class)
-  public void testWrapInRuntimeExceptionThrown() {
+  public void testWrap_inRuntimeExceptionThrown() {
     Exceptions.wrap(Exceptions.doThrow(IOException::new), TestRuntimeException::new);
   }
 
@@ -94,5 +96,20 @@ public final class ExceptionsTest {
     assertSame(plainException, Exceptions.unwrap(ExecutionException.class, 
                                                  Exceptions.unwrap(IOException.class, 
                                                                    ioException)));
+  }
+  
+  @Test
+  public void testWrapStrict_noExceptionThrown() {
+    Exceptions.wrapStrict(() -> {}, TestRuntimeException::new);
+  }
+  
+  @Test(expected=TestRuntimeException.class)
+  public void testWrapStrict_inRuntimeExceptionThrownChecked() {
+    Exceptions.wrapStrict(Exceptions.doThrow(IOException::new), TestRuntimeException::new);
+  }
+  
+  @Test(expected=TestRuntimeException.class)
+  public void testWrapStrict_inCheckedExceptionThrownUnchecked() throws IOException {
+    Exceptions.wrapStrict(Exceptions.doThrow(TestRuntimeException::new), IOException::new);
   }
 }

@@ -56,12 +56,17 @@ public final class Exceptions {
    */
   public static <T, X extends Throwable> T wrap(CheckedSupplier<? extends T, ?> supplier, 
                                                 Function<Throwable, ? extends X> wrapper) throws X {
-    return wrapStrict(supplier, wrapper);
+    try {
+      return supplier.get();
+    } catch (Throwable e) {
+      throw wrapper.apply(Classes.cast(e));
+    }
   }
 
   /**
    *  A strict form of {@link #wrap(CheckedRunnable, Function)} that requires that the exception
-   *  wrapper takes a subtype of the exception thrown by the runnable block.
+   *  wrapper takes a subtype of the exception thrown by the runnable block, where the latter must be a checked
+   *  exception. (Unchecked exceptions are rethrown without wrapping.)
    *  
    *  @param <W> Exception type thrown by the runnable, and input to the wrapper.
    *  @param <X> Exception type thrown by the wrapper.
@@ -79,7 +84,8 @@ public final class Exceptions {
 
   /**
    *  A strict form of {@link #wrap(CheckedSupplier, Function)} that requires that the exception
-   *  wrapper takes a subtype of the exception thrown by the supplier.
+   *  wrapper takes a subtype of the exception thrown by the supplier, where the latter must be a checked
+   *  exception. (Unchecked exceptions are rethrown without wrapping.)
    *  
    *  @param <T> Return type.
    *  @param <W> Exception type thrown by the runnable, and input to the wrapper.
@@ -93,6 +99,8 @@ public final class Exceptions {
                                                                            Function<? super W, ? extends X> wrapper) throws X {
     try {
       return supplier.get();
+    } catch (RuntimeException e) {
+      throw e;
     } catch (Throwable e) {
       throw wrapper.apply(Classes.cast(e));
     }
