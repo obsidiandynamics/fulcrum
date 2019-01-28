@@ -33,6 +33,41 @@ public final class ArrayCopy {
   }
   
   /**
+   *  Creates a new array that is a copy of the given {@code source} array with an additional
+   *  slot at the tail, assigned to the given element.
+   *  
+   *  @param <T> Array type.
+   *  @param source The source array.
+   *  @param tailElement The element to add to the tail of the array.
+   *  @return The new array instance.
+   */
+  public static <T> T append(T source, Object tailElement) {
+    final T grown = grow(source, 1, 0);
+    final int initialLength = Array.getLength(source);
+    Array.set(grown, initialLength, tailElement);
+    return grown;
+  }
+  
+  /**
+   *  Creates a new array that is a copy of the given {@code source} array with additional
+   *  slots at the tail, assigned to the given elements.
+   *  
+   *  @param <T> Array type.
+   *  @param source The source array.
+   *  @param tailElements The elements to add to the tail of the array.
+   *  @return The new array instance.
+   */
+  public static <T> T append(T source, Object... tailElements) {
+    final int toAdd = tailElements.length;
+    final T grown = grow(source, toAdd, 0);
+    final int initialLength = Array.getLength(source);
+    for (int i = 0; i < toAdd; i++) {
+      Array.set(grown, initialLength + i, tailElements[i]);
+    }
+    return grown;
+  }
+  
+  /**
    *  Creates a new array by taking a slice of the given {@code source} array, between the bounds given
    *  by {@code fromInclusive} and {@code toExclusive}.
    *  

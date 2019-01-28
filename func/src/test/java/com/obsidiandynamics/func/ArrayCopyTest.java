@@ -23,7 +23,7 @@ public final class ArrayCopyTest {
   }
 
   @Test(expected=IllegalArgumentException.class)
-  public void testAllocateNullTypeError() {
+  public void testAllocate_nullTypeError() {
     ArrayCopy.allocate(null, 0);
   }
 
@@ -33,7 +33,7 @@ public final class ArrayCopyTest {
   }
 
   @Test
-  public void testGrowIntsFromTail() {
+  public void testGrow_intsFromTail() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.grow(ints, 2, 0);
     assertNotNull(newInts);
@@ -43,21 +43,21 @@ public final class ArrayCopyTest {
   }
 
   @Test
-  public void testGrowIntsFromHead() {
+  public void testGrow_intsFromHead() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.grow(ints, 2, 2);
     assertArrayEquals(new int[] { 0, 0, 4, 5, 6, 7 }, newInts);
   }
 
   @Test
-  public void testGrowIntsFromBothEnds() {
+  public void testGrow_intsFromBothEnds() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.grow(ints, 2, 1);
     assertArrayEquals(new int[] { 0, 4, 5, 6, 7, 0 }, newInts);
   }
   
   @Test
-  public void testGrowIntsNone() {
+  public void testGrow_intsNone() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.grow(ints, 0, 0);
     assertNotNull(newInts);
@@ -67,7 +67,7 @@ public final class ArrayCopyTest {
   }
 
   @Test
-  public void testGrowStrings() {
+  public void testGrow_strings() {
     final String[] strings = { "a", "b", "c" };
     final String[] newStrings = ArrayCopy.grow(strings, 2, 0);
     assertNotNull(newStrings);
@@ -77,7 +77,7 @@ public final class ArrayCopyTest {
   }
 
   @Test
-  public void testGrowArrays() {
+  public void testGrow_arrays() {
     final int[] i01 = { 0, 1 };
     final int[] i23 = { 2, 3 };
     final int[][] pairs = { i01, i23 };
@@ -89,7 +89,7 @@ public final class ArrayCopyTest {
   }
   
   @Test
-  public void testGrowGenerics() {
+  public void testGrow_generics() {
     final Optional<?>[] generics = { Optional.of(0), Optional.of(1) };
     final Optional<?>[] newGenerics = ArrayCopy.grow(generics, 1, 0);
     assertNotNull(newGenerics);
@@ -99,70 +99,84 @@ public final class ArrayCopyTest {
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testGrowAddNegativeError() {
+  public void testGrow_addNegativeError() {
     ArrayCopy.grow(new int[] { 4, 5, 6, 7 }, -1, 0);
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testGrowShiftNegativeError() {
+  public void testGrow_shiftNegativeError() {
     ArrayCopy.grow(new int[] { 4, 5, 6, 7 }, 0, -1);
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testGrowShiftMoreThanAddError() {
+  public void testGrow_shiftMoreThanAddError() {
     ArrayCopy.grow(new int[] { 4, 5, 6, 7 }, 1, 2);
   }
   
   @Test
-  public void testSliceIntsKeepingMiddle() {
+  public void testAppendSingle_ints() {
+    final int[] ints = { 4, 5, 6, 7 };
+    final int[] newInts = ArrayCopy.append(ints, 8);
+    assertArrayEquals(new int[] { 4, 5, 6, 7, 8 }, newInts);
+  }
+  
+  @Test
+  public void testAppendVargs_ints() {
+    final int[] ints = { 4, 5, 6, 7 };
+    final int[] newInts = ArrayCopy.append(ints, 8, 9);
+    assertArrayEquals(new int[] { 4, 5, 6, 7, 8, 9 }, newInts);
+  }
+  
+  @Test
+  public void testSlice_intsKeepingMiddle() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.slice(ints, 1, 3);
     assertArrayEquals(new int[] { 5, 6 }, newInts);
   }
   
   @Test
-  public void testSliceIntsKeepingHead() {
+  public void testSlice_intsKeepingHead() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.slice(ints, 0, 2);
     assertArrayEquals(new int[] { 4, 5 }, newInts);
   }
   
   @Test
-  public void testSliceIntsKeepingTail() {
+  public void testSlice_intsKeepingTail() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.slice(ints, 2, 4);
     assertArrayEquals(new int[] { 6, 7 }, newInts);
   }
   
   @Test
-  public void testSliceEmpty() {
+  public void testSlice_empty() {
     final int[] ints = { 4, 5, 6, 7 };
     final int[] newInts = ArrayCopy.slice(ints, 2, 2);
     assertArrayEquals(new int[0], newInts);
   }
   
   @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testSliceFromNegativeError() {
+  public void testSlice_fromNegativeError() {
     ArrayCopy.slice(new int[] { 4, 5, 6, 7 }, -1, 0);
   }
   
   @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testSliceToOverflowError() {
+  public void testSlice_toOverflowError() {
     ArrayCopy.slice(new int[] { 4, 5, 6, 7 }, 0, 5);
   }
   
   @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testSliceFromToCrossError() {
+  public void testSlice_fromToCrossError() {
     ArrayCopy.slice(new int[] { 4, 5, 6, 7 }, 1, 0);
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testSliceNullError() {
+  public void testSlice_nullError() {
     ArrayCopy.slice(null, 0, 0);
   }
   
   @Test(expected=IllegalArgumentException.class)
-  public void testSliceNonArrayError() {
+  public void testSlice_nonArrayError() {
     ArrayCopy.slice(42, 0, 0);
   }
 }
