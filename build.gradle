@@ -22,7 +22,6 @@ task bintrayCredentialsCheck {
 }
 
 def baseJvmArgs = [
-  "--illegal-access=warn",
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
