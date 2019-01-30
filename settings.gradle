@@ -1,5 +1,4 @@
 rootProject.name = "fulcrum"
-enableFeaturePreview('STABLE_PUBLISHING') // Gradle 5.0 forward compatibility testing
 
 include "fulcrum-assert"
 project(":fulcrum-assert").projectDir = new File(settingsDir, "assert")
