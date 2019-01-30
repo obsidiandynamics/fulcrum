@@ -21,6 +21,20 @@ task bintrayCredentialsCheck {
   }
 }
 
+def baseJvmArgs = [
+  "--illegal-access=warn",
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=java.base/java.util=ALL-UNNAMED",
+  "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "-XX:-MaxFDLimit"
+]
+project.ext.set("baseJvmArgs", baseJvmArgs)
+
 allprojects {
   apply plugin: "java"
   apply plugin: "jacoco"
@@ -66,19 +80,36 @@ allprojects {
     testCompile "org.assertj:assertj-core:${assertjVersion}"
     testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
     
-    testRuntime "org.apache.commons:commons-lang3:${commonsLangVersion}" // fixes PojoVerifier dependency
+    testRuntime "org.apache.commons:commons-lang3:${commonsLangVersion}" // fixes outdated PojoVerifier dependency
+  }
+  
+  compileJava {
+    options.compilerArgs += "-proc:none"
+    options.compilerArgs += "-Xlint:unchecked"
+  }
+
+  compileTestJava {
+    options.compilerArgs += "-proc:none"
+    options.compilerArgs += "-Xlint:unchecked"
+  }
+  
+  tasks.withType(JavaCompile) {
+    options.fork = true
+    options.incremental = true
   }
 
   test {
     exclude "**/*IT.class"
+    jvmArgs += baseJvmArgs
   }
   
   task integrationTest(type: Test, description: "Runs integration tests", group: "Verification") {
     include "**/*IT.class"
+    jvmArgs += baseJvmArgs
   }
 
   jacoco {
-    toolVersion = "0.8.2"
+    toolVersion = "0.8.3"
   }
 
   jacocoTestReport {
