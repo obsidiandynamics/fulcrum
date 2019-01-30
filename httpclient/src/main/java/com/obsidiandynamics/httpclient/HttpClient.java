@@ -183,7 +183,7 @@ public final class HttpClient {
       customConfigurator.accept(reactorConfigBuilder);
       final DefaultConnectingIOReactor ioReactor = new DefaultConnectingIOReactor(reactorConfigBuilder.build());
       final PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(ioReactor, sessionStrategy);
-      connectionManager.setMaxTotal(poolSize);
+      connectionManager.setMaxTotal(Integer.MAX_VALUE);
       connectionManager.setDefaultMaxPerRoute(poolSize);
   
       return HttpAsyncClients.custom()
