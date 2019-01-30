@@ -610,4 +610,13 @@ public final class FunctionsTest {
     function.apply("someString");
     verify(consumer).accept(eq("someString"));
   }
+  
+  @Test
+  public void testFieldPredicate() {
+    final List<String> strings = Arrays.asList("hare", "cow", "boar", "ox");
+    final List<String> filtered = strings.stream()
+        .filter(Functions.fieldPredicate(String::length, length -> length > 3))
+        .collect(Collectors.toList());
+    org.assertj.core.api.Assertions.assertThat(filtered).containsExactly("hare", "boar");
+  }
 }

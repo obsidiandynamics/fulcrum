@@ -1131,4 +1131,19 @@ public final class Functions {
       return null;
     };
   }
+  
+  /**
+   *  Produces a refined predicate that is applied to a transformed value of a tested element. Typically, the
+   *  transformation is to extract a field from the object under test.
+   *  
+   *  @param <T> Encompassing type.
+   *  @param <U> Field type.
+   *  @param fieldExtractor A way of extracting the field from the encompassing type (typically a method 
+   *                        reference to an existing getter).
+   *  @param fieldPredicate The predicate applied to the extracted field.
+   *  @return The resulting {@link Predicate} instance.
+   */
+  public static <T, U> Predicate<T> fieldPredicate(Function<? super T, ? extends U> fieldExtractor, Predicate<? super U> fieldPredicate) {
+    return element -> fieldPredicate.test(fieldExtractor.apply(element));
+  }
 }
