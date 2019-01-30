@@ -133,6 +133,10 @@ allprojects {
   // invoke this task when ready to publish to Bintray
   bintrayUpload {
     dependsOn ":bintrayCredentialsCheck"
+    dependsOn "jar"
+    dependsOn "sourcesJar"
+    dependsOn "javadocJar"
+    dependsOn "generatePomFileForMavenJavaPublication"
   }
 }
 
