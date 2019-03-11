@@ -1,10 +1,25 @@
-def packageName = "fulcrum-io"
+def packageName = "fulcrum-flux-offheap"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
+  compile project(":fulcrum-flux")
+  compile project(":fulcrum-format")
+  compile project(":fulcrum-fslock")
+  compile project(":fulcrum-io")
+  compile project(":fulcrum-random")
+  
+  compileOnly "net.openhft:chronicle-queue:${chronicleQueueVersion}"
+  compileOnly "com.esotericsoftware:kryo:${kryoVersion}"
   
   testCompile project(":fulcrum-assert")
+  testCompile project(":fulcrum-await")
+  testCompile project(":fulcrum-junit")
+  testCompile project(":fulcrum-verifier")
+  testCompile project(":fulcrum-flux").sourceSets.test.output
+  testCompile "net.openhft:chronicle-queue:${chronicleQueueVersion}"
+  testCompile "com.esotericsoftware:kryo:${kryoVersion}"
+  
+  testRuntime "org.slf4j:slf4j-nop:${slf4jVersion}"
 }
 
 jar {
@@ -49,7 +64,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "File and socket I/O"
+def packageDesc = "Off-heap support for Flux"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

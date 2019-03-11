@@ -18,6 +18,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-flux`](https://github.com/obsidiandynamics/fulcrum/tree/master/flux) — Reactive, SEDA-style pipeline
 * [`fulcrum-format`](https://github.com/obsidiandynamics/fulcrum/tree/master/format) — Formatting functions and utilities
 * [`fulcrum-fslock`](https://github.com/obsidiandynamics/fulcrum/tree/master/fslock) — Reentrant, interprocess exclusive locking protocol
+* [`fulcrum-fslock-offheap`](https://github.com/obsidiandynamics/fulcrum/tree/master/fslock-offheap) — Off-heap support for Flux
 * [`fulcrum-func`](https://github.com/obsidiandynamics/fulcrum/tree/master/func) — Assists with functional programming
 * [`fulcrum-httpclient`](https://github.com/obsidiandynamics/fulcrum/tree/master/httpclient) — Utilities for working with Apache HttpClient
 * [`fulcrum-io`](https://github.com/obsidiandynamics/fulcrum/tree/master/io) — File and socket I/O

@@ -10,6 +10,8 @@ dependencies {
   testCompile project(":fulcrum-await")
   testCompile project(":fulcrum-junit")
   testCompile project(":fulcrum-verifier")
+  
+  testRuntime "org.slf4j:slf4j-nop:${slf4jVersion}"
 }
 
 jar {

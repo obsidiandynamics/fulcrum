@@ -27,6 +27,9 @@ project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
 include "fulcrum-flux"
 project(":fulcrum-flux").projectDir = new File(settingsDir, "flux")
 
+include "fulcrum-flux-offheap"
+project(":fulcrum-flux-offheap").projectDir = new File(settingsDir, "flux-offheap")
+
 include "fulcrum-format"
 project(":fulcrum-format").projectDir = new File(settingsDir, "format")
 

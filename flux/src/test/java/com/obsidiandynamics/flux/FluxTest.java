@@ -162,7 +162,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void test3Stage_complete_heap() {
+  public void test3Stage_complete() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -211,7 +211,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void test4Stage_complete_heap() {
+  public void test4Stage_complete() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Timestamped<String>> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -237,7 +237,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void testTerminateStage_emitterWithSlowEmission_heap() {
+  public void testTerminateStage_emitterWithSlowEmission() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -262,7 +262,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void testTerminateStage_emitterWithSlowSink_heap() {
+  public void testTerminateStage_emitterWithSlowSink() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -313,7 +313,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void testTerminateStage_sinkWithSlowEmitter_heap() {
+  public void testTerminateStage_sinkWithSlowEmitter() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -341,7 +341,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void testTerminateStage_mapperWithSlowSink_heap() {
+  public void testTerminateStage_mapperWithSlowSink() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
@@ -374,7 +374,7 @@ public final class FluxTest {
   }
   
   @Test
-  public void testTerminateStage_mapperWithVerySlowSink_heap() {
+  public void testTerminateStage_mapperWithVerySlowSink() {
     final List<Integer> ints = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     final List<Integer> collected = new ArrayList<>();
     final PipelineCompletionHandler completionHandler = mock(PipelineCompletionHandler.class);
