@@ -51,6 +51,7 @@ allprojects {
   }
   
   ext {
+    antVersion = "1.10.5"
     assertjVersion = "3.11.1"
     commonsLangVersion = "3.8.1"
     equalsverifierVersion = "3.1.4"
@@ -67,6 +68,7 @@ allprojects {
     mockitoVersion = "2.23.4"
     pojotesterVersion = "0.7.6"
     slf4jVersion = "1.7.25"
+    undertowVersion = "2.0.19.Final"
     validationApiVersion = "2.0.1.Final"
     wiremockVersion = "2.20.0"
   }
@@ -109,6 +111,11 @@ allprojects {
 
   jacoco {
     toolVersion = "0.8.3"
+  }
+  
+  task verify {  
+    dependsOn test
+    dependsOn integrationTest
   }
 
   jacocoTestReport {

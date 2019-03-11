@@ -1,12 +1,17 @@
-def packageName = "fulcrum-threads"
+def packageName = "fulcrum-fslock"
 version = project(":").version
 
 dependencies {
+  compile project(":fulcrum-format")
   compile project(":fulcrum-func")
   
-  testCompile project(":fulcrum-assert")
   testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-verifier")
+  testCompile project(":fulcrum-httpclient")
+  testCompile project(":fulcrum-threads")
+  testCompile "org.apache.ant:ant:${antVersion}"
+  testCompile "io.undertow:undertow-core:${undertowVersion}"
+  testCompile "org.apache.httpcomponents:httpclient:${httpclientVersion}"
+  testCompile "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
 }
 
 jar {
@@ -51,7 +56,7 @@ publishing {
 
 def envUser = "BINTRAY_USER"
 def envKey = "BINTRAY_KEY"
-def packageDesc = "Utilities for working with threads"
+def packageDesc = "Reentrant, interprocess exclusive locking protocol"
 def repoName = "fulcrum"
 bintray {
   user = System.getenv(envUser)

@@ -10,6 +10,6 @@ jdk:
 install:
   - travis_retry ./gradlew --info dependencies --refresh-dependencies
 script:
-  - ./gradlew build --stacktrace --info
+  - ./gradlew build verify --stacktrace --info
 after_success:
   - bash <(curl -s https://codecov.io/bash)

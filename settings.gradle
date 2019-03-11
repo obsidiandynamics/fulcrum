@@ -27,6 +27,9 @@ project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
 include "fulcrum-format"
 project(":fulcrum-format").projectDir = new File(settingsDir, "format")
 
+include "fulcrum-fslock"
+project(":fulcrum-fslock").projectDir = new File(settingsDir, "fslock")
+
 include "fulcrum-func"
 project(":fulcrum-func").projectDir = new File(settingsDir, "func")
 
