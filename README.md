@@ -28,7 +28,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-launcher`](https://github.com/obsidiandynamics/fulcrum/tree/master/launcher) — Launch applications from Gradle
 * [`fulcrum-mockito`](https://github.com/obsidiandynamics/fulcrum/tree/master/mockito) — Mockito 2.x utilities
 * [`fulcrum-nanoclock`](https://github.com/obsidiandynamics/fulcrum/tree/master/nanoclock) — Wall clock with nanosecond resolution
-* [`fulcrum-node-queue`](https://github.com/obsidiandynamics/fulcrum/tree/master/node-queue) — Lock-free multi-producer/multi-consumer queue
+* [`fulcrum-nodequeue`](https://github.com/obsidiandynamics/fulcrum/tree/master/nodequeue) — Lock-free multi-producer/multi-consumer queue
 * [`fulcrum-props`](https://github.com/obsidiandynamics/fulcrum/tree/master/props) — Utilities for working with `Properties`
 * [`fulcrum-random`](https://github.com/obsidiandynamics/fulcrum/tree/master/random) — Secure random number generation
 * [`fulcrum-resolver`](https://github.com/obsidiandynamics/fulcrum/tree/master/resolver) — A lightweight Contextual Service Locator pattern implementation

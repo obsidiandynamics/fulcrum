@@ -1,4 +1,4 @@
-def packageName = "fulcrum-node-queue"
+def packageName = "fulcrum-nodequeue"
 version = project(":").version
 
 dependencies {

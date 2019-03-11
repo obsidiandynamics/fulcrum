@@ -63,8 +63,8 @@ project(":fulcrum-mockito").projectDir = new File(settingsDir, "mockito")
 include "fulcrum-nanoclock"
 project(":fulcrum-nanoclock").projectDir = new File(settingsDir, "nanoclock")
 
-include "fulcrum-node-queue"
-project(":fulcrum-node-queue").projectDir = new File(settingsDir, "node-queue")
+include "fulcrum-nodequeue"
+project(":fulcrum-nodequeue").projectDir = new File(settingsDir, "nodequeue")
 
 include "fulcrum-props"
 project(":fulcrum-props").projectDir = new File(settingsDir, "props")
