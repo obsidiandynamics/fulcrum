@@ -24,6 +24,9 @@ project(":fulcrum-dyno").projectDir = new File(settingsDir, "dyno")
 include "fulcrum-flow"
 project(":fulcrum-flow").projectDir = new File(settingsDir, "flow")
 
+include "fulcrum-flux"
+project(":fulcrum-flux").projectDir = new File(settingsDir, "flux")
+
 include "fulcrum-format"
 project(":fulcrum-format").projectDir = new File(settingsDir, "format")
 

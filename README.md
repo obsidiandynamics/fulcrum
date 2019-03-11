@@ -15,8 +15,9 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 * [`fulcrum-docker-compose`](https://github.com/obsidiandynamics/fulcrum/tree/master/docker-compose) — Wrapper around the `docker-compose` CLI
 * [`fulcrum-dyno`](https://github.com/obsidiandynamics/fulcrum/tree/master/dyno) — Micro-benchmarking harness
 * [`fulcrum-flow`](https://github.com/obsidiandynamics/fulcrum/tree/master/flow) — Strictly ordered joining of parallel tasks
+* [`fulcrum-flux`](https://github.com/obsidiandynamics/fulcrum/tree/master/flux) — Reactive, SEDA-style pipeline
 * [`fulcrum-format`](https://github.com/obsidiandynamics/fulcrum/tree/master/format) — Formatting functions and utilities
-* [`fulcrum-func`](https://github.com/obsidiandynamics/fulcrum/tree/master/fslock) — Reentrant, interprocess exclusive locking protocol
+* [`fulcrum-fslock`](https://github.com/obsidiandynamics/fulcrum/tree/master/fslock) — Reentrant, interprocess exclusive locking protocol
 * [`fulcrum-func`](https://github.com/obsidiandynamics/fulcrum/tree/master/func) — Assists with functional programming
 * [`fulcrum-httpclient`](https://github.com/obsidiandynamics/fulcrum/tree/master/httpclient) — Utilities for working with Apache HttpClient
 * [`fulcrum-io`](https://github.com/obsidiandynamics/fulcrum/tree/master/io) — File and socket I/O
