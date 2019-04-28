@@ -2,6 +2,7 @@ package com.obsidiandynamics.httpclient;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -153,7 +154,8 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(ConnectionClosedException.class);
+    expectedException.expect(IOException.class);
+    expectedException.expectCause(instanceOf(ConnectionClosedException.class));
     HttpCall.withClient(client).invoke(get);
   }
 
@@ -164,7 +166,8 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(MalformedChunkCodingException.class);
+    expectedException.expect(IOException.class);
+    expectedException.expectCause(instanceOf(MalformedChunkCodingException.class));
     HttpCall.withClient(client).invoke(get);
   }
 

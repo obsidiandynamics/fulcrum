@@ -288,7 +288,7 @@ public final class HttpCall {
     try {
       return client.execute(request, null).get();
     } catch (ExecutionException e) {
-      throw Classes.coerce(e.getCause(), IOException.class, IOException::new);
+      throw new IOException(e.getCause());
     }
   }
   
