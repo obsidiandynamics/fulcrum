@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.module.*;
 import com.obsidiandynamics.func.*;
 
 public final class JacksonFieldPatch {
-  private static final SimpleModule module = new SimpleModule();
+  private static final SimpleModule MODULE = new SimpleModule();
   
   static {
-    registerSerializers(module);
+    registerSerializers(MODULE);
   }
   
   public static void registerSerializers(SimpleModule module) {
@@ -17,7 +17,7 @@ public final class JacksonFieldPatch {
   }
   
   public static com.fasterxml.jackson.databind.Module module() {
-    return module;
+    return MODULE;
   }
   
   private JacksonFieldPatch() {}
