@@ -70,7 +70,10 @@ public final class Functions {
   /**
    *  Maps values from the {@code source} map to a new {@link LinkedHashMap} instance, 
    *  using the given mapping function. The mapping function only 
-   *  operates on the values; the keys are copied as-is.
+   *  operates on the values; the keys are copied as-is. <p>
+   *  
+   *  This method is {@code null}-safe; if the {@code source} map is {@code null}, then
+   *  a {@code null} target is returned.
    *  
    *  @param <K> Key type.
    *  @param <U> Source value type.
@@ -78,7 +81,7 @@ public final class Functions {
    *  @param <X> Exception type.
    *  @param source The source map.
    *  @param mapper The mapping function applied to values.
-   *  @return The target {@link LinkedHashMap}.
+   *  @return The target {@link LinkedHashMap}, or {@code null} if the {@code source} is {@code null}.
    *  @throws X If an error occurs within the mapping function.
    */
   public static <K, U, V, X extends Throwable> LinkedHashMap<K, V> 
@@ -90,7 +93,10 @@ public final class Functions {
   /**
    *  Maps values from the {@code source} map to a new map instance, using the given
    *  mapping function. The mapping function only works on the values;
-   *  the keys are copied as-is.
+   *  the keys are copied as-is. <p>
+   *  
+   *  This method is {@code null}-safe; if the {@code source} map is {@code null}, then
+   *  a {@code null} target is returned.
    *  
    *  @param <K> Key type.
    *  @param <U> Source value type.
@@ -100,7 +106,7 @@ public final class Functions {
    *  @param source The source map.
    *  @param mapper The mapping function applied to values.
    *  @param mapMaker A way of creating a new map instance to store the mapped entries.
-   *  @return The target map.
+   *  @return The target map, or {@code null} if the {@code source} is {@code null}.
    *  @throws X If an error occurs within the mapping function.
    */
   public static <K, U, V, M extends Map<K, V>, X extends Throwable> M 
@@ -122,12 +128,15 @@ public final class Functions {
    *  Maps elements from the {@code source} collection to a new {@link ArrayList} instance,
    *  using the given mapping function.
    *  
+   *  This method is {@code null}-safe; if the {@code source} collection is {@code null}, then
+   *  a {@code null} target is returned.
+   *  
    *  @param <U> Source element type.
    *  @param <V> Target element type.
    *  @param <X> Exception type.
    *  @param source The source collection.
    *  @param mapper The mapping function applied to elements.
-   *  @return The target {@link ArrayList}.
+   *  @return The target {@link ArrayList}, or {@code null} if the {@code source} is {@code null}.
    *  @throws X If an error occurs within the mapping function.
    */
   public static <U, V, X extends Throwable> ArrayList<V> 
@@ -138,7 +147,10 @@ public final class Functions {
 
   /**
    *  Maps elements from the {@code source} collection to a new collection instance,
-   *  using the given mapping function.
+   *  using the given mapping function. <p>
+   *  
+   *  This method is {@code null}-safe; if the {@code source} collection is {@code null}, then
+   *  a {@code null} target is returned.
    *  
    *  @param <U> Source element type.
    *  @param <V> Target element type.
@@ -147,7 +159,7 @@ public final class Functions {
    *  @param source The source collection.
    *  @param mapper The mapping function applied to elements.
    *  @param collectionMaker A way of creating a new collection to store the mapped elements.
-   *  @return The target collection.
+   *  @return The target collection, or {@code null} if the {@code source} is {@code null}.
    *  @throws X If an error occurs within the mapping function.
    */
   public static <U, V, C extends Collection<V>, X extends Throwable> C
