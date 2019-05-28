@@ -27,7 +27,7 @@ public final class Protocols {
    *  @return A new channel.
    *  @throws Exception If an error occurs.
    *  
-   *  @see org.jgroups.util.Util#getAddress(AddressScope) for specifying one of the predefined
+   *  @see org.jgroups.util.Util#getAddress(AddressScope, StackType) for specifying one of the predefined
    *  address scopes {@code [GLOBAL, SITE_LOCAL, LINK_LOCAL, NON_LOOPBACK, LOOPBACK]}.
    */
   public static JChannel newUdpChannel(InetAddress bindAddress) throws Exception {

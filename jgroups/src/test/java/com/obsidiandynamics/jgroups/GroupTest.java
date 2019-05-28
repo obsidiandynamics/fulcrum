@@ -32,7 +32,7 @@ public final class GroupTest {
     return TestCycle.timesQuietly(1);
   }
   
-  private static final ChannelFactory UDP_FACTORY = () -> Protocols.newUdpChannel(Util.getLocalhost());
+  private static final ChannelFactory UDP_FACTORY = () -> Protocols.newUdpChannel(Util.getLoopback());
   private static final ChannelFactory MOCK_FACTORY = () -> Protocols.newLoopbackChannel();
   
   private static final boolean MOCK = true;

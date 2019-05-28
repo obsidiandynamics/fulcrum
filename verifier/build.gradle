@@ -3,7 +3,7 @@ version = project(":").version
 
 dependencies {
   compile project(":fulcrum-func")
-  compileOnly "pl.pojo:pojo-tester:${pojotesterVersion}"
+  compileOnly "com.obsidiandynamics.pojotester:pojotester:${pojotesterVersion}"
   compileOnly "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
   
   testCompile project(":fulcrum-assert")
