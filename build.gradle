@@ -54,7 +54,6 @@ allprojects {
     antVersion = "1.10.6"
     assertjVersion = "3.12.2"
     chronicleQueueVersion = "5.17.13"
-    commonsLangVersion = "3.9"
     equalsverifierVersion = "3.1.9"
     glassfishELVersion = "3.0.1-b11"
     hamcrestVersion = "2.1"
@@ -82,8 +81,6 @@ allprojects {
     testCompile "org.mockito:mockito-core:${mockitoVersion}"
     testCompile "org.assertj:assertj-core:${assertjVersion}"
     testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
-    
-    testRuntime "org.apache.commons:commons-lang3:${commonsLangVersion}" // fixes outdated PojoVerifier dependency
   }
   
   compileJava {
@@ -112,7 +109,7 @@ allprojects {
   }
 
   jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.4"
   }
   
   task verify {  
