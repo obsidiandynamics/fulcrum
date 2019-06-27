@@ -3,7 +3,6 @@ version = project(":").version
 
 dependencies {
   testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-threads")
 }
 
 jar {

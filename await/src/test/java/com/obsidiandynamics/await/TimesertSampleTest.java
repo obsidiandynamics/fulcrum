@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import com.obsidiandynamics.threads.*;
-
 /**
  *  Sample test case that shows how {@link Timesert} should be used.
  */
@@ -33,8 +31,13 @@ public final class TimesertSampleTest {
     
     @Override
     public void run() {
-      Threads.sleep((long) (Math.random() * 10));
-      done = true;
+      try {
+        Thread.sleep((long) (Math.random() * 10));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      } finally {
+        done = true;
+      }
     }
   }
 }
