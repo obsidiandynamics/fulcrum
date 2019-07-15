@@ -1,4 +1,4 @@
-package com.obsidiandynamics.func;
+package com.obsidiandynamics.threads;
 
 import static com.obsidiandynamics.func.Functions.*;
 import static org.junit.Assert.*;

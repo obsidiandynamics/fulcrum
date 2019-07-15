@@ -1,4 +1,6 @@
-package com.obsidiandynamics.func;
+package com.obsidiandynamics.threads;
+
+import com.obsidiandynamics.func.*;
 
 /**
  *  An efficient reference to a lazily instantiable object, using double-checked locking

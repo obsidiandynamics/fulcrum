@@ -3,7 +3,7 @@ package com.obsidiandynamics.format;
 import java.text.*;
 import java.util.*;
 
-import com.obsidiandynamics.func.*;
+import com.obsidiandynamics.threads.*;
 
 /**
  *  The {@link LegacyDateTimeFormatter} allows for parsing ISO 8601 timestamps using
