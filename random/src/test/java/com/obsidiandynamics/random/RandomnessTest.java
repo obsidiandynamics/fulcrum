@@ -58,7 +58,7 @@ public final class RandomnessTest {
   }
 
   private static boolean isWellDistributed(byte[] bytes) {
-    final Set<Byte> unique = new HashSet<>(bytes.length);
+    final Set<Byte> unique = new HashSet<>(bytes.length, 1f);
     for (int i = 0; i < bytes.length; i++) {
       unique.add(bytes[i]);
     }
