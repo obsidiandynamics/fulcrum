@@ -11,8 +11,8 @@ public final class ReentrantDirectoryLock implements Closeable {
   
   private boolean released;
   
-  ReentrantDirectoryLock(DirectoryLock nodeLock) {
-    this.directoryLock = nodeLock;
+  ReentrantDirectoryLock(DirectoryLock directoryLock) {
+    this.directoryLock = directoryLock;
   }
   
   /**
