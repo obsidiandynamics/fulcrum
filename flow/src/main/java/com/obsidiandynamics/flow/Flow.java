@@ -28,7 +28,7 @@ public final class Flow implements Terminable, Joinable {
   }
   
   public FlowConfirmation begin(Object id, Runnable task) {
-    final FlowConfirmation confirmation = confirmations.computeIfAbsent(id, __id -> {
+    final FlowConfirmation confirmation = confirmations.computeIfAbsent(id, __ -> {
       final FlowConfirmation newConfirmation = new FlowConfirmation(id, task);
       newConfirmation.appendTo(tail);
       return newConfirmation;
