@@ -25,7 +25,10 @@ public abstract class FluentOperatingSet<E, O extends FluentOperatingSet<E, O>> 
   
   @SuppressWarnings("unchecked") 
   public final O add(E... elements) {
-    return add(Arrays.asList(elements));
+    for (E e : elements) {
+      add(e);
+    }
+    return self();
   }
   
   public final O add(E element) {
@@ -44,7 +47,7 @@ public abstract class FluentOperatingSet<E, O extends FluentOperatingSet<E, O>> 
   }
   
   public final Collection<E> view() {
-    return Collections.unmodifiableCollection(new HashSet<>(elements));
+    return new HashSet<>(elements);
   }
   
   private O self() {
