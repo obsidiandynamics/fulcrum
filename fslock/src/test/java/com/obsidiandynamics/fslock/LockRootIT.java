@@ -156,7 +156,7 @@ public final class LockRootIT {
   }
 
   /**
-   *  Forks a pair of {@link ForkedProc} processes, providing the parent's HTTP port as a {@code -D} JVM argument. 
+   *  Forks a pair of {@link ForkedProc} processes, provided the parent's HTTP port as a {@code -D} JVM argument. 
    *  Processes start their own web servers and register back with the parent by invoking a POST endpoint on the parent's
    *  web server. At this point, the parent can communicate with the child forks, and will issue acquire/release
    *  commands (as HTTP POSTs to the child processes) and assert results.

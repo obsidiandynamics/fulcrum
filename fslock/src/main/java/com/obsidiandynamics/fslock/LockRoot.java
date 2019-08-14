@@ -186,7 +186,7 @@ public final class LockRoot {
   }
   
   /**
-   *  Attempts to vacuum a node directory, providing that no other threads or processes presently holds the node lock.
+   *  Attempts to vacuum a node directory, provided that no other threads or processes presently holds the node lock.
    *  
    *  @param nodeName The node name.
    *  @return True if the node was vacuumed, or false if the node lock was not vacant.

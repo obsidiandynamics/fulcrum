@@ -18,7 +18,7 @@ A **context** represents a token session that is notionally shared between a dep
 
 A **scope** comprises rules for binding a context to a dedicated registry. Needless to say, registries in CSL aren't singletons. There are as many distinct registries in any given scope as there are contexts under which that scope is accessed.
 
-When performing a dependency lookup or assignment, the caller selects an appropriate scope and passes its context. Providing that the counterparty passes the same context for that scope, the parties will share a common registry and will have access to each other's services.
+When performing a dependency lookup or assignment, the caller selects an appropriate scope and passes its context. Provided that the counterparty passes the same context for that scope, the parties will share a common registry and will have access to each other's services.
 
 # Getting started
 The following example illustrates the sharing of a hypothetical catalogue of books by way of thread scope.
