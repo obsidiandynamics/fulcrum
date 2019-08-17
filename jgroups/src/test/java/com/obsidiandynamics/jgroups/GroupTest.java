@@ -309,7 +309,7 @@ public final class GroupTest {
     
     final UUID packetId = UUID.randomUUID();
     final AtomicReference<Map<Address, Message>> callbackRef = new AtomicReference<>();
-    final ResponseSync responseSync = g0.gather(new TestPacket(packetId), (chan, messages) -> callbackRef.set(messages), DONT_BUNDLE);
+    final ResponseSync responseSync = g0.gather(new TestPacket(packetId), (__, messages) -> callbackRef.set(messages), DONT_BUNDLE);
     wait.untilTrue(() -> callbackRef.get() != null);
     responseSync.cancel();
     Assertions.assertToStringOverride(responseSync);

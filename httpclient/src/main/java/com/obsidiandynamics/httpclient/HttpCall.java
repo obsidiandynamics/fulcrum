@@ -53,7 +53,7 @@ public final class HttpCall {
   /**
    *  The result of a blocking HTTP call.
    */
-  public final class HttpCallResponse {
+  public static final class HttpCallResponse {
     public final class ParseConditionally {
       private final Predicate<HttpResponse> predicate;
 

@@ -115,7 +115,7 @@ public final class Group implements AutoCloseable {
       }
     };
     withMessageHandler(id, idHandler);
-    channel.send(new Message(null, syncMessage).setFlag(flags));
+    channel.send(new Message(address, syncMessage).setFlag(flags));
     return new ResponseSync(this, id, idHandler);
   }
   
@@ -125,7 +125,7 @@ public final class Group implements AutoCloseable {
   
   public CompletableFuture<Map<Address, Message>> gather(int respondents, SyncPacket syncMessage, Flag... flags) throws Exception {
     final CompletableFuture<Map<Address, Message>> f = new CompletableFuture<>();
-    final ResponseSync rs = gather(respondents, syncMessage, (channel, messages) -> {
+    final ResponseSync rs = gather(respondents, syncMessage, (__, messages) -> {
       f.complete(messages);
     }, flags);
     f.whenComplete((message, throwable) -> {
