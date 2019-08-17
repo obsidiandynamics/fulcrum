@@ -13,7 +13,7 @@ import com.obsidiandynamics.func.*;
  *  @param <C> Third element type.
  *  @param <D> Fourth element type.
  */
-public final class Quadruple<A, B, C, D> extends AbstractQuadruple<A, B, C, D> implements Comparable<Quadruple<A, B, C, D>> {
+public final class Quadruple<A, B, C, D> extends AbstractQuadruple<A, B, C, D> {
   private static final Quadruple<?, ?, ?, ?> EMPTY = new Quadruple<>(null, null, null, null);
   
   private Quadruple(A first, B second, C third, D fourth) {
@@ -34,11 +34,6 @@ public final class Quadruple<A, B, C, D> extends AbstractQuadruple<A, B, C, D> i
   
   public D getFourth() {
     return getFourthElement();
-  }
-
-  @Override
-  public int compareTo(Quadruple<A, B, C, D> other) {
-    return compare(other);
   }
   
   @Override

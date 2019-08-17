@@ -12,7 +12,7 @@ import com.obsidiandynamics.func.*;
  *  @param <B> Second element type.
  *  @param <C> Third element type.
  */
-public final class Triple<A, B, C> extends AbstractTriple<A, B, C> implements Comparable<Triple<A, B, C>> {
+public final class Triple<A, B, C> extends AbstractTriple<A, B, C> {
   private static final Triple<?, ?, ?> EMPTY = new Triple<>(null, null, null);
   
   private Triple(A first, B second, C third) {
@@ -29,11 +29,6 @@ public final class Triple<A, B, C> extends AbstractTriple<A, B, C> implements Co
   
   public C getThird() {
     return getThirdElement();
-  }
-
-  @Override
-  public int compareTo(Triple<A, B, C> other) {
-    return compare(other);
   }
   
   @Override

@@ -12,14 +12,9 @@ import org.junit.rules.*;
 import nl.jqno.equalsverifier.*;
 
 public final class AbstractTupleTest {
-  private static final class TestPair<X, Y> extends AbstractPair<X, Y> implements Comparable<TestPair<X, Y>> {
+  private static final class TestPair<X, Y> extends AbstractPair<X, Y> {
     TestPair(X first, Y second) {
       super(first, second);
-    }
-
-    @Override
-    public int compareTo(TestPair<X, Y> other) {
-      return compare(other);
     }
   }
   
@@ -76,29 +71,6 @@ public final class AbstractTupleTest {
     final List<TestPair<Integer, Integer>> pairs = Arrays.<TestPair<Integer, Integer>>asList(pair(2, 2), pair(null, 0), pair(1, null), pair(1, 2));
     Collections.sort(pairs);
     assertEquals(asList(pair(null, 0), pair(1, null), pair(1, 2), pair(2, 2)), pairs);
-  }
-  
-  @Test
-  public void testCustomComparator() {
-    class CustomPair extends AbstractPair<Integer, Integer> implements Comparable<CustomPair> {
-      CustomPair(Integer first, Integer second) {
-        super(first, second);
-      }
-      
-      @Override
-      protected Comparator<?> getComparator(int fieldIndex) {
-        return fieldIndex == 0 ? super.getComparator(fieldIndex).reversed() : super.getComparator(fieldIndex);
-      }
-
-      @Override
-      public int compareTo(CustomPair other) {
-        return compare(other);
-      }
-    };
-
-    final List<CustomPair> pairs = Arrays.asList(new CustomPair(2, 2), new CustomPair(0, 0), new CustomPair(1, 2), new CustomPair(1, 2), new CustomPair(1, 0));
-    Collections.sort(pairs);
-    assertEquals(asList(new CustomPair(2, 2), new CustomPair(1, 0), new CustomPair(1, 2), new CustomPair(1, 2), new CustomPair(0, 0)), pairs);
   }
   
   @Test

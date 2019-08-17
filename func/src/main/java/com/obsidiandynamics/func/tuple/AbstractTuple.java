@@ -9,14 +9,15 @@ import com.obsidiandynamics.func.*;
 
 /**
  *  Supports the construction of immutable tuples of arbitrary arity (N-tuples), providing
- *  baseline {@link #equals(Object)}, {@link #hashCode()} and {@link #toString()} implementations, 
- *  as well as a helper for implementing a {@link Comparator} and {@link Comparable}. <p>
+ *  baseline {@link #equals(Object)}, {@link #hashCode()}, {@link #toString()} 
+ *  and {@link Comparable} implementations, as well as a helper for implementing a 
+ *  {@link Comparator}. <p>
  *
  *  The {@link #toString()} and {@link Comparator} implementations of any given element
  *  can be customised by subclassing {@link #getFormatter(int)} and {@link #getComparator(int)}
  *  methods.
  */
-public abstract class AbstractTuple {
+public abstract class AbstractTuple implements Comparable<AbstractTuple> {
   private final Object[] elements;
   
   protected AbstractTuple(Object... elements) {
@@ -71,7 +72,8 @@ public abstract class AbstractTuple {
     return Comparator.nullsFirst(Comparator.naturalOrder());
   }
   
-  protected final int compare(AbstractTuple other) {
+  @Override
+  public final int compareTo(AbstractTuple other) {
     return compareElements(this, other);
   }
   

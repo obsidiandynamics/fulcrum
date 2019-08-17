@@ -11,7 +11,7 @@ import com.obsidiandynamics.func.*;
  *  @param <A> First element type.
  *  @param <B> Second element type.
  */
-public final class Pair<A, B> extends AbstractPair<A, B> implements Comparable<Pair<A, B>> {
+public final class Pair<A, B> extends AbstractPair<A, B> {
   private static final Pair<?, ?> EMPTY = new Pair<>(null, null);
   
   private Pair(A first, B second) {
@@ -24,11 +24,6 @@ public final class Pair<A, B> extends AbstractPair<A, B> implements Comparable<P
   
   public B getSecond() {
     return getSecondElement();
-  }
-
-  @Override
-  public int compareTo(Pair<A, B> other) {
-    return compare(other);
   }
   
   @Override
