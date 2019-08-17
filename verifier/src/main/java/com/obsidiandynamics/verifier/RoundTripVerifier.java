@@ -34,15 +34,16 @@ public final class RoundTripVerifier<T> {
   
   static final class CodecIOError extends AssertionError {
     private static final long serialVersionUID = 1L;
+    
     CodecIOError(Throwable cause) { super(cause); }
   }
   
   public void verify() {
-    final Codec codec = mustExist(this.codec, "Codec not set");
+    final Codec _codec = mustExist(this.codec, "Codec not set");
     
     final Object decoded = Exceptions.wrap(() -> {
-      final byte[] bytes = codec.toBytes(object);
-      return codec.toObject(bytes, type);
+      final byte[] bytes = _codec.toBytes(object);
+      return _codec.toObject(bytes, type);
     }, CodecIOError::new);
     
     if (! Objects.equals(object, decoded)) throw new AssertionError("Expected '" + object + "', got: '" + decoded + "'");
