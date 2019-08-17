@@ -170,15 +170,18 @@ final class OffHeapBackingQueue<E> implements BackingQueue<E> {
   }
 
   private void writeToQueue(E element) {
-    final ByteBufferOutput output = new ByteBufferOutput(MIN_KRYO_BUFFER_SIZE, MAX_KRYO_BUFFER_SIZE);
-    final Kryo kryo = pool.obtain();
-    try {
-      kryo.writeClassAndObject(output, element);
-    } finally {
-      pool.free(kryo);
+    final byte[] bytes;
+    try (ByteBufferOutput output = new ByteBufferOutput(MIN_KRYO_BUFFER_SIZE, MAX_KRYO_BUFFER_SIZE)) {
+      final Kryo kryo = pool.obtain();
+      try {
+        kryo.writeClassAndObject(output, element);
+      } finally {
+        pool.free(kryo);
+      }
+  
+      bytes = output.toBytes();
     }
-
-    final byte[] bytes = output.toBytes();
+    
     queueAccessLock.readLock().lock();
     try {
       if (! closed) {
