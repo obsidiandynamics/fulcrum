@@ -127,7 +127,7 @@ public final class Flux implements Terminable, Joinable {
   private ExceptionHandler errorHandler = ExceptionHandler.nop();
   
   public final class IntermediateStage<E> {
-    public <N> IntermediateStage<N> cascade(Channel<E, N> channel) {
+    public <N> IntermediateStage<N> cascade(Channel<E, N> channel) { // lgtm [java/confusing-method-signature]
       chain(channel);
       return new IntermediateStage<>();
     }

@@ -105,6 +105,7 @@ public final class TaskSchedulerTest {
     final CyclicBarrier barrier = new CyclicBarrier(2);
     scheduler.schedule(new AbstractTask<Long>(0, -1L) {
       @Override public void execute(TaskScheduler scheduler) {
+        assertNotNull(scheduler);
         Threads.await(barrier);
       }
     });
@@ -240,6 +241,7 @@ public final class TaskSchedulerTest {
   
         @Override
         public void execute(TaskScheduler scheduler) {
+          assertNotNull(scheduler);
           executed.incrementAndGet();
         }
       };

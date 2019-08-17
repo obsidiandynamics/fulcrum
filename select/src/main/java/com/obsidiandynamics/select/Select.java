@@ -154,7 +154,7 @@ public final class Select<V, R> implements SelectRoot<R> {
     return returning(null);
   }
   
-  public static <R> Returning<R> returning(Class<R> type) {
+  public static <R> Returning<R> returning(Class<R> type) { // lgtm [java/unused-parameter]
     return new Returning<>();
   }
   

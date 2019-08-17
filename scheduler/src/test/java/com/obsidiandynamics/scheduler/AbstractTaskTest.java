@@ -13,7 +13,9 @@ public final class AbstractTaskTest {
     }
 
     @Override
-    public void execute(TaskScheduler scheduler) {}
+    public void execute(TaskScheduler scheduler) {
+      assertNotNull(scheduler);
+    }
   }
   
   @Test
