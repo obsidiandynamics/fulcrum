@@ -96,7 +96,7 @@ public final class Timesert {
    *  @return A new {@link Timesert} instance.
    */
   public Timesert scale(int scale) {
-    return new Timesert(waitMillis).withIntervalMillis(intervalMillis);
+    return new Timesert(waitMillis * scale).withIntervalMillis(intervalMillis);
   }
   
   private static Runnable fromBoolean(BooleanSupplier test) {
