@@ -9,6 +9,7 @@ import java.util.function.*;
  *
  *  @param <T> Input type.
  *  @param <R> Result type.
+ *  @param <X> Throwable type.
  */
 @FunctionalInterface
 public interface CheckedFunction<T, R, X extends Throwable> {

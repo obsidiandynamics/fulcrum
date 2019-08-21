@@ -8,6 +8,7 @@ import java.util.function.*;
  *  is permitted to throw a checked exception.
  *
  *  @param <T> Result type.
+ *  @param <X> Throwable type.
  */
 @FunctionalInterface
 public interface CheckedSupplier<T, X extends Throwable> {
