@@ -69,6 +69,7 @@ public abstract class AbstractTuple implements Comparable<AbstractTuple> {
    *  @return The {@link Comparator} applicable for the given element index.
    */
   protected Comparator<?> getComparator(int elementIndex) {
+    mustBeGreaterOrEqual(elementIndex, 0, IndexOutOfBoundsException::new);
     return Comparator.nullsFirst(Comparator.naturalOrder());
   }
   

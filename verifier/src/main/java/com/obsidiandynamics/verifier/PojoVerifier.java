@@ -99,17 +99,8 @@ public final class PojoVerifier {
   }
   
   private static void ensureFieldExists(Class<?> cls, String fieldName) {
-    if (! Exceptions.wrap(() -> isFieldValid(cls, fieldName), ReflectionError::new)) {
+    if (! Exceptions.wrap(() -> Verifiers.isFieldValid(cls, fieldName), ReflectionError::new)) {
       throw new IllegalArgumentException("Invalid field " + fieldName);
-    }
-  }
-  
-  private static boolean isFieldValid(Class<?> cls, String fieldName) throws SecurityException {
-    try {
-      cls.getDeclaredField(fieldName);
-      return true;
-    } catch (NoSuchFieldException e) {
-      return false;
     }
   }
   
