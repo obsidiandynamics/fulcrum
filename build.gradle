@@ -1,6 +1,6 @@
 plugins {
   id "com.jfrog.bintray" version "1.8.4"
-  id "com.github.ben-manes.versions" version "0.21.0"
+  id "com.github.ben-manes.versions" version "0.22.0"
 }
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
@@ -27,6 +27,7 @@ def baseJvmArgs = [
   "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio.channels.spi=ALL-UNNAMED",
   "--add-opens=java.base/java.util=ALL-UNNAMED",
   "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
   "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
@@ -52,8 +53,8 @@ allprojects {
   
   ext {
     antVersion = "1.10.6"
-    assertjVersion = "3.12.2"
-    chronicleQueueVersion = "5.17.14"
+    assertjVersion = "3.13.2"
+    chronicleQueueVersion = "5.17.18"
     equalsverifierVersion = "3.1.9"
     glassfishELVersion = "3.0.1-b11"
     hamcrestVersion = "2.1"
@@ -61,7 +62,7 @@ allprojects {
     httpasyncclientVersion = "4.1.4"
     httpclientVersion = "4.5.9"
     jacksonVersion = "2.9.9"
-    jgroupsVersion = "4.1.1.Final"
+    jgroupsVersion = "4.1.2.Final"
     jmhVersion = "1.21"
     junitVersion = "4.12"
     kryoVersion = "5.0.0-RC4"
@@ -69,9 +70,9 @@ allprojects {
     mockitoVersion = "3.0.0"
     pojotesterVersion = "0.9.0"
     slf4jVersion = "1.7.25"
-    undertowVersion = "2.0.22.Final"
+    undertowVersion = "2.0.25.Final"
     validationApiVersion = "2.0.1.Final"
-    wiremockVersion = "2.23.2"
+    wiremockVersion = "2.24.1"
   }
   
   dependencies {
