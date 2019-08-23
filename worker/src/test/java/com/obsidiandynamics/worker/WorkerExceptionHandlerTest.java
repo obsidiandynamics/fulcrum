@@ -17,8 +17,8 @@ public final class WorkerExceptionHandlerTest {
         .withOptions(new WorkerOptions().withName("TestThread"))
         .onCycle(__ -> {})
         .build();
-    final Exception cause = new Exception("Simulated");
-    handler.handle(thread, cause);
+    final Exception exception = new Exception("Simulated");
+    handler.handle(thread, exception);
     verify(stream).println(eq("Exception in thread TestThread"));
     verify(stream, atLeastOnce()).print((String) isNotNull());
   }

@@ -4,12 +4,12 @@ import java.io.*;
 
 @FunctionalInterface
 public interface WorkerExceptionHandler {
-  void handle(WorkerThread thread, Throwable cause);
+  void handle(WorkerThread thread, Throwable exception);
 
   static WorkerExceptionHandler forPrintStream(PrintStream printStream) {
-    return (thread, cause) -> {
+    return (thread, exception) -> {
       printStream.println("Exception in thread " + thread.getName());
-      cause.printStackTrace(printStream);
+      exception.printStackTrace(printStream);
     };
   }
   
