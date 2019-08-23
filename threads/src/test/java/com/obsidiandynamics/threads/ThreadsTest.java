@@ -1,17 +1,28 @@
 package com.obsidiandynamics.threads;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
+import org.junit.runner.*;
+import org.junit.runners.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.*;
+import com.obsidiandynamics.junit.*;
 import com.obsidiandynamics.threads.Threads.*;
 
+@RunWith(Parameterized.class)
 public final class ThreadsTest {
+  @Parameterized.Parameters
+  public static List<Object[]> data() {
+    return TestCycle.timesQuietly(1);
+  }
+  
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Threads.class);
@@ -76,21 +87,30 @@ public final class ThreadsTest {
     Threads.await(barrier);
   }
 
-  @Test(expected=RuntimeBrokenBarrierException.class)
+  @Test
   public void testAwaitBarrierBroken() throws InterruptedException {
     final CyclicBarrier barrier = new CyclicBarrier(2);
     final AtomicBoolean threadWasInterrupted = new AtomicBoolean();
+    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
     final Thread thread = new Thread(() -> {
-      Threads.await(barrier);
-      assertTrue(Thread.interrupted());
-      threadWasInterrupted.set(true);;
+      try {
+        assertFalse(Threads.await(barrier));
+        assertTrue(Thread.interrupted());
+        threadWasInterrupted.set(true);
+      } catch (Throwable e) {
+        errorRef.set(e);
+      }
     });
     thread.start();
-    thread.interrupt(); // interrupting the thread breaks the barrier
-    Threads.await(barrier);
+    thread.interrupt(); // interrupting the thread breaks the barrier for the next thread trying to enter it
     
+    assertNull(errorRef.get());    
     thread.join();
     assertTrue(threadWasInterrupted.get());
+    
+    assertThatThrownBy(() -> {
+      Threads.await(barrier);
+    }).isExactlyInstanceOf(RuntimeBrokenBarrierException.class).hasCauseExactlyInstanceOf(BrokenBarrierException.class);
   }
 
   @Test
