@@ -49,7 +49,7 @@ public final class BufferedChannel<E> implements Channel<E, E> {
   }
 
   @Override
-  public void start(StageController controller) { // lgtm [java/duplicate-method]
+  public void start(StageController controller) {
     mustExist(controller);
     mustBeNull(this.controller, illegalArgument("Already started"));
     mustExist(downstream, illegalState("No downstream stage assigned"));
