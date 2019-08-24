@@ -69,7 +69,7 @@ public final class StatefulConfirmation implements Confirmation {
   @Override
   public String toString() {
     return StatefulConfirmation.class.getSimpleName() + " [id=" + id + ", task=" + task + ", requested=" + requested + 
-        ", completed=" + completed + ", next=" + next + "]";
+        ", completed=" + completed + "]";
   }
 
   static StatefulConfirmation anchor() {

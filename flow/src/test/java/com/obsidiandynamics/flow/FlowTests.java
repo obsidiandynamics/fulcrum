@@ -3,9 +3,14 @@ package com.obsidiandynamics.flow;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+import org.assertj.core.api.*;
+
+import com.obsidiandynamics.await.*;
+import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.threads.*;
 
 final class FlowTests {
@@ -41,7 +46,7 @@ final class FlowTests {
     assertion.run();
   }
 
-  static class ListQuery<T> {
+  static final class ListQuery<T> {
     private final List<T> list;
 
     private ListQuery(List<T> list) {
@@ -57,7 +62,7 @@ final class FlowTests {
     }
     
     Runnable contains(T element) {
-      return () -> assertTrue("element " + element + " missing from list " + list, list.contains(element));
+      return () -> assertTrue("Element " + element + " missing from list " + list, list.contains(element));
     }
     
     Runnable isOrderedBy(Comparator<T> comparator) {
@@ -79,7 +84,7 @@ final class FlowTests {
       return new DelayedLoop(delayMillis);
     }
     
-    class DelayedLoop {
+    final class DelayedLoop {
       private final int delayMillis;
 
       DelayedLoop(int delayMillis) {
@@ -93,5 +98,78 @@ final class FlowTests {
         });
       }
     }
+  }
+  
+  static boolean ASSERT_ALL = false;
+  static boolean ASSERT_LAST = true;
+  
+  static void testMultithreadedBeginAndConfirm(Flow flow, 
+                                               int tasks, 
+                                               ExecutorService executor, 
+                                               Timesert wait,
+                                               boolean assertOnlyLast) throws InterruptedException {
+    final List<Integer> completions = new CopyOnWriteArrayList<>();
+    final List<StatefulConfirmation> confirmations = 
+        Functions.parallelMapStream(IntStream.range(0, tasks).boxed(), 
+                                    taskId -> flow.begin(taskId, new TestTask(completions, taskId)),
+                                    executor);
+    
+    Collections.sort(confirmations, FlowTests::compareConfirmations);
+    final List<StatefulConfirmation> orderedConfirmations = new ArrayList<>(confirmations);
+    final List<Integer> orderedConfirmationIds = orderedConfirmations.stream()
+        .map(confirmation -> (Integer) confirmation.getId())
+        .collect(Collectors.toList());
+    
+    Collections.shuffle(confirmations);
+    Functions.parallelMapStream(confirmations.stream(), 
+                                confirmation -> {
+                                  confirmation.confirm();
+                                  return null;
+                                }, 
+                                executor);
+    
+    // wait for the confirmations to trickle through
+    final Runnable assertion = () -> {
+      if (assertOnlyLast) {
+        Assertions.assertThat(completions.size()).isGreaterThan(0);
+      } else {
+        assertEquals(tasks, completions.size());
+      }
+    };
+    
+    if (wait != null) {
+      wait.until(assertion);
+    } else {
+      assertThat(assertion);
+    }
+    
+    if (assertOnlyLast) {
+      assertThat(ListQuery.of(completions).isOrderedBy(relativeOrderOf(orderedConfirmationIds)));
+      assertEquals(lastOf(orderedConfirmationIds), lastOf(completions));
+    } else {
+      Assertions.assertThat(completions).hasSameElementsAs(orderedConfirmationIds);
+    }
+  }
+  
+  static <T> T lastOf(List<T> list) {
+    return list.get(list.size() - 1);
+  }
+  
+  static int compareConfirmations(StatefulConfirmation c0, StatefulConfirmation c1) {
+    if (c0 == c1) return 0;
+    
+    StatefulConfirmation current = c0;
+    while (current != null) {
+      if (current == c1) {
+        return -1;
+      } else {
+        current = current.next();
+      }
+    }
+    return 1;
+  }
+  
+  static <T> Comparator<T> relativeOrderOf(List<? extends T> items) {
+    return (t0, t1) -> Integer.compare(items.indexOf(t0), items.indexOf(t1));
   }
 }

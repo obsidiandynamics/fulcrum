@@ -20,10 +20,22 @@ public final class ThreadlessFlowTest {
     return TestCycle.timesQuietly(1);
   }
   
+  private static final int EXECUTOR_THREADS = Math.min(Math.max(8, Runtime.getRuntime().availableProcessors()), 32);
+  
+  @ClassRule
+  public static final ExecutorProp executorProp = new ExecutorProp(EXECUTOR_THREADS, Executors::newWorkStealingPool);
+  
   private ThreadlessFlow flow;
 
   private void createFlow(FiringStrategy.Factory firingStrategyFactory) {
     flow = new ThreadlessFlow(firingStrategyFactory);
+  }
+  
+  @Test
+  public void testStrict_multithreaded() throws InterruptedException {
+    createFlow(StrictFiringStrategy::new);
+    final int tasks = 100;
+    FlowTests.testMultithreadedBeginAndConfirm(flow, tasks, executorProp.getExecutor(), null, FlowTests.ASSERT_ALL);
   }
   
   @Test
@@ -122,6 +134,13 @@ public final class ThreadlessFlowTest {
     assertThat(ListQuery.of(completed).isSize(runs));
     assertEquals(expected, completed);
     assertEquals(0, flow.getPendingConfirmations().size());
+  }
+  
+  @Test
+  public void testLazy_multithreaded() throws InterruptedException {
+    createFlow(LazyFiringStrategy::new);
+    final int tasks = 100;
+    FlowTests.testMultithreadedBeginAndConfirm(flow, tasks, executorProp.getExecutor(), null, FlowTests.ASSERT_LAST);
   }
 
   @Test
