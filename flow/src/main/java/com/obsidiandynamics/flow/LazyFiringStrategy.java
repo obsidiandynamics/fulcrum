@@ -14,11 +14,11 @@ public final class LazyFiringStrategy extends FiringStrategy {
         if (current.isAnchor()) {
           // skip the anchor
         } else if (current.isConfirmed()) {
-          flow.removeWithoutCompleting(current.getId());
+          flow.removeWithoutDispatching(current.getId());
           toBeCompleted = current;
         } else {
           if (toBeCompleted != null) { 
-            flow.complete(toBeCompleted);
+            flow.dispatch(toBeCompleted);
           }
           return;
         }
@@ -29,7 +29,7 @@ public final class LazyFiringStrategy extends FiringStrategy {
         head = current;
       } else {
         if (toBeCompleted != null) { 
-          flow.complete(toBeCompleted);
+          flow.dispatch(toBeCompleted);
         }
         return;
       }

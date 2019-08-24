@@ -108,10 +108,10 @@ final class FlowTests {
                                                ExecutorService executor, 
                                                Timesert wait,
                                                boolean assertOnlyLast) throws InterruptedException {
-    final List<Integer> completions = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> confirmations = 
         Functions.parallelMapStream(IntStream.range(0, tasks).boxed(), 
-                                    taskId -> flow.begin(taskId, new TestTask(completions, taskId)),
+                                    taskId -> flow.begin(taskId, new TestTask(dispatched, taskId)),
                                     executor);
     
     Collections.sort(confirmations, FlowTests::compareConfirmations);
@@ -133,10 +133,10 @@ final class FlowTests {
     final Integer lastConfirmationId = lastOf(orderedConfirmationIds);
     final Runnable assertion = () -> {
       if (assertOnlyLast) {
-        Assertions.assertThat(completions.size()).isGreaterThan(0);
-        assertEquals(lastConfirmationId, lastOf(completions));
+        Assertions.assertThat(dispatched.size()).isGreaterThan(0);
+        assertEquals(lastConfirmationId, lastOf(dispatched));
       } else {
-        assertEquals(tasks, completions.size());
+        assertEquals(tasks, dispatched.size());
       }
     };
     
@@ -147,9 +147,9 @@ final class FlowTests {
     }
     
     if (assertOnlyLast) {
-      assertThat(ListQuery.of(completions).isOrderedBy(relativeOrderOf(orderedConfirmationIds)));
+      assertThat(ListQuery.of(dispatched).isOrderedBy(relativeOrderOf(orderedConfirmationIds)));
     } else {
-      Assertions.assertThat(completions).hasSameElementsAs(orderedConfirmationIds);
+      Assertions.assertThat(dispatched).hasSameElementsAs(orderedConfirmationIds);
     }
   }
   

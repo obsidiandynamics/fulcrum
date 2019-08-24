@@ -20,7 +20,7 @@ public final class StatefulConfirmationTest {
     toStringAssertions.contains("id", "testId");
     toStringAssertions.contains("requested", "2");
     toStringAssertions.contains("completed", "1");
-    toStringAssertions.contains("task", task);
+    toStringAssertions.contains("onComplete", task);
   }
   
   @Test

@@ -19,11 +19,11 @@ public abstract class AbstractFlow implements Flow {
   }
   
   @Override
-  public final StatefulConfirmation begin(Object id, Runnable task) {
+  public final StatefulConfirmation begin(Object id, Runnable onComplete) {
     mustExist(id, "ID cannot be null");
-    mustExist(task, "Task cannot be null");
+    mustExist(onComplete, "On-complete task cannot be null");
     final StatefulConfirmation confirmation = confirmations.computeIfAbsent(id, __ -> {
-      final StatefulConfirmation newConfirmation = new StatefulConfirmation(id, task, this::fire);
+      final StatefulConfirmation newConfirmation = new StatefulConfirmation(id, onComplete, this::fire);
       newConfirmation.appendTo(tail);
       return newConfirmation;
     });
@@ -33,11 +33,11 @@ public abstract class AbstractFlow implements Flow {
   
   abstract void fire();
   
-  final void removeWithoutCompleting(Object id) {
+  final void removeWithoutDispatching(Object id) {
     confirmations.remove(id);
   }
   
-  final void complete(StatefulConfirmation confirmation) {
+  final void dispatch(StatefulConfirmation confirmation) {
     confirmations.remove(confirmation.getId());
     confirmation.getTask().run();
   }

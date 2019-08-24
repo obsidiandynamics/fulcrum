@@ -12,7 +12,7 @@ public final class StrictFiringStrategy extends FiringStrategy {
         if (current.isAnchor()) {
           // skip the anchor
         } else if (current.isConfirmed()) {
-          flow.complete(current);
+          flow.dispatch(current);
         } else {
           return;
         }

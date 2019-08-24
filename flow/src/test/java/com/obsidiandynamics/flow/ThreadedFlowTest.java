@@ -50,15 +50,15 @@ public final class ThreadedFlowTest {
   public void testStrict_noComplete() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 10;
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
 
     for (int i = 0; i < runs; i++) {
-      flow.begin(i, new TestTask(completed, i));
-      flow.begin(i, new TestTask(completed, i));
+      flow.begin(i, new TestTask(dispatched, i));
+      flow.begin(i, new TestTask(dispatched, i));
     }
 
     Threads.sleep(10);
-    assertEquals(0, completed.size());
+    assertEquals(0, dispatched.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
 
@@ -67,15 +67,15 @@ public final class ThreadedFlowTest {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     
     cons.forEach(a -> a.confirm());
-    wait.until(ListQuery.of(completed).isSize(runs));
-    assertEquals(expected, completed);
+    wait.until(ListQuery.of(dispatched).isSize(runs));
+    assertEquals(expected, dispatched);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 
@@ -84,14 +84,14 @@ public final class ThreadedFlowTest {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     expected.forEach(i -> {
-      final StatefulConfirmation c0 = flow.begin(i, new TestTask(completed, i));
+      final StatefulConfirmation c0 = flow.begin(i, new TestTask(dispatched, i));
       cons.add(c0);
       assertEquals(1, c0.getPendingCount());
-      final StatefulConfirmation c1 = flow.begin(i, new TestTask(completed, i));
+      final StatefulConfirmation c1 = flow.begin(i, new TestTask(dispatched, i));
       assertSame(c0, c1);
       assertEquals(2, c0.getPendingCount());
     });
@@ -99,12 +99,12 @@ public final class ThreadedFlowTest {
     cons.forEach(a -> a.confirm());
     
     // single pass shouldn't lead to any completions
-    assertThat(ListQuery.of(completed).isSize(0));
+    assertThat(ListQuery.of(dispatched).isSize(0));
     
     cons.forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
-    assertEquals(expected, completed);
+    wait.until(ListQuery.of(dispatched).isSize(runs));
+    assertEquals(expected, dispatched);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 
@@ -113,14 +113,14 @@ public final class ThreadedFlowTest {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
-    assertEquals(expected, completed);
+    wait.until(ListQuery.of(dispatched).isSize(runs));
+    assertEquals(expected, dispatched);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 
@@ -129,14 +129,14 @@ public final class ThreadedFlowTest {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     ListQuery.of(cons).transform(Collections::shuffle).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
-    assertEquals(expected, completed);
+    wait.until(ListQuery.of(dispatched).isSize(runs));
+    assertEquals(expected, dispatched);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
   
@@ -151,14 +151,14 @@ public final class ThreadedFlowTest {
   public void testLazy_noComplete() {
     createFlow(LazyFiringStrategy::new);
     final int runs = 10;
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
 
     for (int i = 0; i < runs; i++) {
-      flow.begin(i, new TestTask(completed, i));
+      flow.begin(i, new TestTask(dispatched, i));
     }
 
     Threads.sleep(10);
-    assertEquals(0, completed.size());
+    assertEquals(0, dispatched.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
 
@@ -167,15 +167,15 @@ public final class ThreadedFlowTest {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     ListQuery.of(cons).delayedBy(1).forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
-    assertThat(ListQuery.of(completed).isOrderedBy(Integer::compare));
+    wait.until(ListQuery.of(dispatched).contains(runs - 1));
+    assertThat(ListQuery.of(dispatched).isOrderedBy(Integer::compare));
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 
@@ -184,14 +184,14 @@ public final class ThreadedFlowTest {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
-    assertEquals(1, completed.size());
+    wait.until(ListQuery.of(dispatched).contains(runs - 1));
+    assertEquals(1, dispatched.size());
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 
@@ -200,14 +200,14 @@ public final class ThreadedFlowTest {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
-    final List<Integer> completed = new CopyOnWriteArrayList<>();
+    final List<Integer> dispatched = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
+    expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     ListQuery.of(cons).transform(Collections::shuffle).delayedBy(1).forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
-    assertThat(ListQuery.of(completed).isOrderedBy(Integer::compare));
+    wait.until(ListQuery.of(dispatched).contains(runs - 1));
+    assertThat(ListQuery.of(dispatched).isOrderedBy(Integer::compare));
     assertEquals(0, flow.getPendingConfirmations().size());
   }
 }

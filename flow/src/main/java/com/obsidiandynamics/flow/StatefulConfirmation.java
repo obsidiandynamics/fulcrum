@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.*;
 public final class StatefulConfirmation implements Confirmation {
   private final AtomicReference<StatefulConfirmation> next = new AtomicReference<>();
   
-  private final Runnable task;
+  private final Runnable onComplete;
   
   private final AtomicInteger requested = new AtomicInteger();
   
@@ -15,9 +15,9 @@ public final class StatefulConfirmation implements Confirmation {
   
   private final FireController fireController;
   
-  StatefulConfirmation(Object id, Runnable task, FireController fireController) {
+  StatefulConfirmation(Object id, Runnable onComplete, FireController fireController) {
     this.id = id;
-    this.task = task;
+    this.onComplete = onComplete;
     this.fireController = fireController;
   }
   
@@ -32,12 +32,12 @@ public final class StatefulConfirmation implements Confirmation {
     fireController.fire();
   }
   
-  Object getId() {
+  public Object getId() {
     return id;
   }
   
   boolean isAnchor() {
-    return task == null;
+    return onComplete == null;
   }
   
   public boolean isConfirmed() {
@@ -59,7 +59,7 @@ public final class StatefulConfirmation implements Confirmation {
   }
   
   Runnable getTask() {
-    return task;
+    return onComplete;
   }
   
   StatefulConfirmation next() {
@@ -68,7 +68,7 @@ public final class StatefulConfirmation implements Confirmation {
   
   @Override
   public String toString() {
-    return StatefulConfirmation.class.getSimpleName() + " [id=" + id + ", task=" + task + ", requested=" + requested + 
+    return StatefulConfirmation.class.getSimpleName() + " [id=" + id + ", onComplete=" + onComplete + ", requested=" + requested + 
         ", completed=" + completed + "]";
   }
 
