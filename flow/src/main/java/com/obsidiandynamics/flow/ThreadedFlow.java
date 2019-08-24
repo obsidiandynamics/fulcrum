@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.*;
 
 import com.obsidiandynamics.worker.*;
 
-public final class Flow implements Terminable, Joinable {
+public final class ThreadedFlow implements Terminable, Joinable {
+  private static final int CYCLE_IDLE_INTERVAL_MILLIS = 1;
+  
   /** Atomically assigns sequence numbers for thread naming. */
   private static final AtomicInteger nextThreadNo = new AtomicInteger();
   
@@ -16,15 +18,23 @@ public final class Flow implements Terminable, Joinable {
   
   private final ConcurrentHashMap<Object, FlowConfirmation> confirmations = new ConcurrentHashMap<>();
   
-  public Flow(FiringStrategy.Factory completionStrategyFactory) {
-    this(completionStrategyFactory, Flow.class.getSimpleName() + "-" + nextThreadNo.getAndIncrement());
+  private final FiringStrategy firingStrategy;
+  
+  public ThreadedFlow(FiringStrategy.Factory completionStrategyFactory) {
+    this(completionStrategyFactory, ThreadedFlow.class.getSimpleName() + "-" + nextThreadNo.getAndIncrement());
   }
   
-  public Flow(FiringStrategy.Factory firingStrategyFactory, String threadName) {
+  public ThreadedFlow(FiringStrategy.Factory firingStrategyFactory, String threadName) {
+    firingStrategy = firingStrategyFactory.create(this, tail);
     executor = WorkerThread.builder()
         .withOptions(new WorkerOptions().daemon().withName(threadName))
-        .onCycle(firingStrategyFactory.create(this, tail))
+        .onCycle(this::onCycle)
         .buildAndStart();
+  }
+  
+  private void onCycle(WorkerThread thread) throws InterruptedException {
+    firingStrategy.fire();
+    Thread.sleep(CYCLE_IDLE_INTERVAL_MILLIS);
   }
   
   public FlowConfirmation begin(Object id, Runnable task) {

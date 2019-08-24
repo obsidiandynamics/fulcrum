@@ -16,7 +16,7 @@ import com.obsidiandynamics.junit.*;
 import com.obsidiandynamics.threads.*;
 
 @RunWith(Parameterized.class)
-public final class FlowTest {
+public final class ThreadedFlowTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
     return TestCycle.timesQuietly(1);
@@ -24,7 +24,7 @@ public final class FlowTest {
   
   private final Timesert wait = Timesert.wait(10_000);
 
-  private Flow flow;
+  private ThreadedFlow flow;
 
   @After
   public void after() {
@@ -32,7 +32,7 @@ public final class FlowTest {
   }
 
   private void createFlow(FiringStrategy.Factory firingStrategyFactory) {
-    flow = new Flow(firingStrategyFactory);
+    flow = new ThreadedFlow(firingStrategyFactory);
   }
 
   private static class TestTask implements Runnable {
@@ -56,7 +56,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testStrictNoComplete() {
+  public void testStrict_noComplete() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 10;
     final List<Integer> completed = new CopyOnWriteArrayList<>();
@@ -72,7 +72,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testStrictIncreasing() {
+  public void testStrict_increasing() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -89,7 +89,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testStrictIncreasingDoublePending() {
+  public void testStrict_increasingDoublePending() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -118,7 +118,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testStrictDecreasing() {
+  public void testStrict_decreasing() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -134,7 +134,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testStrictRandom() {
+  public void testStrict_random() {
     createFlow(StrictFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -150,7 +150,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testLazyNoComplete() {
+  public void testLazy_noComplete() {
     createFlow(LazyFiringStrategy::new);
     final int runs = 10;
     final List<Integer> completed = new CopyOnWriteArrayList<>();
@@ -165,7 +165,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testLazyIncreasing() {
+  public void testLazy_increasing() {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -182,7 +182,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testLazyDecreasing() {
+  public void testLazy_decreasing() {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);
@@ -198,7 +198,7 @@ public final class FlowTest {
   }
 
   @Test
-  public void testLazyRandom() {
+  public void testLazy_random() {
     createFlow(LazyFiringStrategy::new);
     final int runs = 100;
     final List<Integer> expected = increasingListOf(runs);

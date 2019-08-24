@@ -63,7 +63,7 @@ public final class FlowConfirmation implements Confirmation {
         ", completed=" + completed + ", next=" + next + "]";
   }
 
-  static FlowConfirmation anchor(Flow flow) {
+  static FlowConfirmation anchor(ThreadedFlow flow) {
     return new FlowConfirmation(flow, null);
   }
 }
