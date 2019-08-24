@@ -23,7 +23,12 @@ public final class StatefulConfirmation implements Confirmation {
   
   @Override
   public void confirm() {
-    completed.incrementAndGet();
+    final int numCompleted = completed.incrementAndGet();
+    final int numRequested = requested.get();
+    if (numCompleted > numRequested) {
+      completed.decrementAndGet();
+      throw new IllegalStateException("Completed " + numCompleted + " of " + numRequested + " for ID " + id);
+    }
     fireController.fire();
   }
   
@@ -37,7 +42,7 @@ public final class StatefulConfirmation implements Confirmation {
   
   public boolean isConfirmed() {
     final int requested = this.requested.get();
-    return requested != 0 && requested == completed.get();
+    return requested != 0 && completed.get() >= requested;
   }
   
   void addRequest() {
