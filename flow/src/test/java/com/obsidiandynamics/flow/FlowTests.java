@@ -123,15 +123,18 @@ final class FlowTests {
     Collections.shuffle(confirmations);
     Functions.parallelMapStream(confirmations.stream(), 
                                 confirmation -> {
+                                  Threads.sleep(1);
                                   confirmation.confirm();
                                   return null;
                                 }, 
                                 executor);
     
     // wait for the confirmations to trickle through
+    final Integer lastConfirmationId = lastOf(orderedConfirmationIds);
     final Runnable assertion = () -> {
       if (assertOnlyLast) {
         Assertions.assertThat(completions.size()).isGreaterThan(0);
+        assertEquals(lastConfirmationId, lastOf(completions));
       } else {
         assertEquals(tasks, completions.size());
       }
@@ -145,7 +148,6 @@ final class FlowTests {
     
     if (assertOnlyLast) {
       assertThat(ListQuery.of(completions).isOrderedBy(relativeOrderOf(orderedConfirmationIds)));
-      assertEquals(lastOf(orderedConfirmationIds), lastOf(completions));
     } else {
       Assertions.assertThat(completions).hasSameElementsAs(orderedConfirmationIds);
     }
