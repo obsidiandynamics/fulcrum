@@ -2,8 +2,8 @@ package com.obsidiandynamics.flow;
 
 import java.util.concurrent.atomic.*;
 
-public final class FlowConfirmation implements Confirmation {
-  private final AtomicReference<FlowConfirmation> next = new AtomicReference<>();
+public final class StatefulConfirmation implements Confirmation {
+  private final AtomicReference<StatefulConfirmation> next = new AtomicReference<>();
   
   private final Runnable task;
   
@@ -13,14 +13,18 @@ public final class FlowConfirmation implements Confirmation {
   
   private final Object id;
   
-  FlowConfirmation(Object id, Runnable task) {
+  private final FireController fireController;
+  
+  StatefulConfirmation(Object id, Runnable task, FireController fireController) {
     this.id = id;
     this.task = task;
+    this.fireController = fireController;
   }
   
   @Override
   public void confirm() {
     completed.incrementAndGet();
+    fireController.fire();
   }
   
   Object getId() {
@@ -31,7 +35,7 @@ public final class FlowConfirmation implements Confirmation {
     return task == null;
   }
   
-  boolean isConfirmed() {
+  public boolean isConfirmed() {
     final int requested = this.requested.get();
     return requested != 0 && requested == completed.get();
   }
@@ -44,8 +48,8 @@ public final class FlowConfirmation implements Confirmation {
     return requested.get() - completed.get();
   }
   
-  void appendTo(AtomicReference<FlowConfirmation> tail) {
-    final FlowConfirmation t1 = tail.getAndSet(this);
+  void appendTo(AtomicReference<StatefulConfirmation> tail) {
+    final StatefulConfirmation t1 = tail.getAndSet(this);
     t1.next.lazySet(this);
   }
   
@@ -53,17 +57,17 @@ public final class FlowConfirmation implements Confirmation {
     return task;
   }
   
-  FlowConfirmation next() {
+  StatefulConfirmation next() {
     return next.get();
   }
   
   @Override
   public String toString() {
-    return FlowConfirmation.class.getSimpleName() + " [task=" + task + ", requested=" + requested + 
+    return StatefulConfirmation.class.getSimpleName() + " [id=" + id + ", task=" + task + ", requested=" + requested + 
         ", completed=" + completed + ", next=" + next + "]";
   }
 
-  static FlowConfirmation anchor(ThreadedFlow flow) {
-    return new FlowConfirmation(flow, null);
+  static StatefulConfirmation anchor() {
+    return new StatefulConfirmation(null, null, null);
   }
 }

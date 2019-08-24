@@ -1,10 +1,8 @@
 package com.obsidiandynamics.flow;
 
-import java.util.concurrent.atomic.*;
-
 public final class StrictFiringStrategy extends FiringStrategy {
-  public StrictFiringStrategy(ThreadedFlow flow, AtomicReference<FlowConfirmation> tail) {
-    super(flow, tail);
+  public StrictFiringStrategy(AbstractFlow flow, StatefulConfirmation head) {
+    super(flow, head);
   }
 
   //TODO remove

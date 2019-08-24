@@ -1,20 +1,15 @@
 package com.obsidiandynamics.flow;
 
-import java.util.concurrent.atomic.*;
-
 public abstract class FiringStrategy {
-  protected final ThreadedFlow flow;
+  protected final AbstractFlow flow;
   
-  protected final AtomicReference<FlowConfirmation> tail;
+  protected StatefulConfirmation head;
   
-  protected FlowConfirmation head;
+  protected StatefulConfirmation current;
   
-  protected FlowConfirmation current;
-  
-  protected FiringStrategy(ThreadedFlow flow, AtomicReference<FlowConfirmation> tail) {
+  protected FiringStrategy(AbstractFlow flow, StatefulConfirmation head) {
     this.flow = flow;
-    this.tail = tail;
-    head = tail.get();
+    this.head = head;
     current = head;
   }
   
@@ -22,6 +17,6 @@ public abstract class FiringStrategy {
   
   @FunctionalInterface
   public interface Factory {
-    FiringStrategy create(ThreadedFlow flow, AtomicReference<FlowConfirmation> tail);
+    FiringStrategy create(AbstractFlow flow, StatefulConfirmation head);
   }
 }

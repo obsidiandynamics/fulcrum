@@ -1,6 +1,7 @@
 package com.obsidiandynamics.flow;
 
 import static com.obsidiandynamics.flow.FlowTests.*;
+import static com.obsidiandynamics.flow.FlowTests.assertThat;
 import static org.junit.Assert.*;
 
 import java.util.*;
@@ -10,28 +11,25 @@ import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
 
-import com.obsidiandynamics.await.*;
 import com.obsidiandynamics.junit.*;
-import com.obsidiandynamics.threads.*;
 
 @RunWith(Parameterized.class)
-public final class ThreadedFlowTest {
+public final class ThreadlessFlowTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
     return TestCycle.timesQuietly(1);
   }
   
-  private final Timesert wait = Timesert.wait(10_000);
-
-  private ThreadedFlow flow;
-
-  @After
-  public void after() {
-    if (flow != null) flow.terminate().joinSilently();
-  }
+  private ThreadlessFlow flow;
 
   private void createFlow(FiringStrategy.Factory firingStrategyFactory) {
-    flow = new ThreadedFlow(firingStrategyFactory);
+    flow = new ThreadlessFlow(firingStrategyFactory);
+  }
+  
+  @Test
+  public void testTerminateAndJoin() throws InterruptedException {
+    createFlow(StrictFiringStrategy::new);
+    assertTrue(flow.terminate().join(0));
   }
 
   @Test
@@ -45,7 +43,6 @@ public final class ThreadedFlowTest {
       flow.begin(i, new TestTask(completed, i));
     }
 
-    Threads.sleep(10);
     assertEquals(0, completed.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
@@ -58,11 +55,10 @@ public final class ThreadedFlowTest {
     final List<Integer> completed = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     
     cons.forEach(a -> a.confirm());
-    wait.until(ListQuery.of(completed).isSize(runs));
+    assertThat(ListQuery.of(completed).isSize(runs));
     assertEquals(expected, completed);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -91,7 +87,7 @@ public final class ThreadedFlowTest {
     
     cons.forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
+    assertThat(ListQuery.of(completed).isSize(runs));
     assertEquals(expected, completed);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -107,7 +103,7 @@ public final class ThreadedFlowTest {
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
+    assertThat(ListQuery.of(completed).isSize(runs));
     assertEquals(expected, completed);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -123,7 +119,7 @@ public final class ThreadedFlowTest {
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).transform(Collections::shuffle).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).isSize(runs));
+    assertThat(ListQuery.of(completed).isSize(runs));
     assertEquals(expected, completed);
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -138,7 +134,6 @@ public final class ThreadedFlowTest {
       flow.begin(i, new TestTask(completed, i));
     }
 
-    Threads.sleep(10);
     assertEquals(0, completed.size());
     assertEquals(runs, flow.getPendingConfirmations().size());
   }
@@ -151,11 +146,10 @@ public final class ThreadedFlowTest {
     final List<Integer> completed = new CopyOnWriteArrayList<>();
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
-    Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).delayedBy(1).forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
+    assertThat(ListQuery.of(completed).contains(runs - 1));
     assertThat(ListQuery.of(completed).isOrderedBy(Integer::compare));
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -171,7 +165,7 @@ public final class ThreadedFlowTest {
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
+    assertThat(ListQuery.of(completed).contains(runs - 1));
     assertEquals(1, completed.size());
     assertEquals(0, flow.getPendingConfirmations().size());
   }
@@ -187,7 +181,7 @@ public final class ThreadedFlowTest {
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(completed, i))));
     ListQuery.of(cons).transform(Collections::shuffle).delayedBy(1).forEach(a -> a.confirm());
 
-    wait.until(ListQuery.of(completed).contains(runs - 1));
+    assertThat(ListQuery.of(completed).contains(runs - 1));
     assertThat(ListQuery.of(completed).isOrderedBy(Integer::compare));
     assertEquals(0, flow.getPendingConfirmations().size());
   }

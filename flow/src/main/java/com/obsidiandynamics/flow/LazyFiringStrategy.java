@@ -1,12 +1,10 @@
 package com.obsidiandynamics.flow;
 
-import java.util.concurrent.atomic.*;
-
 public final class LazyFiringStrategy extends FiringStrategy {
-  private FlowConfirmation complete;
+  private StatefulConfirmation complete;
   
-  public LazyFiringStrategy(ThreadedFlow flow, AtomicReference<FlowConfirmation> tail) {
-    super(flow, tail);
+  public LazyFiringStrategy(AbstractFlow flow, StatefulConfirmation head) {
+    super(flow, head);
   }
 
   //TODO remove
