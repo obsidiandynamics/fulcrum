@@ -102,11 +102,19 @@ allprojects {
   test {
     exclude "**/*IT.class"
     jvmArgs += baseJvmArgs
+    
+    testLogging {
+      info.events = ["started", "failed", "skipped", "passed"]
+    }
   }
   
   task integrationTest(type: Test, description: "Runs integration tests", group: "Verification") {
     include "**/*IT.class"
     jvmArgs += baseJvmArgs
+    
+    testLogging {
+      info.events = ["started", "failed", "skipped", "passed"]
+    }
   }
 
   jacoco {
