@@ -151,6 +151,11 @@ public final class ThreadlessFlowTest {
 
     for (int i = 0; i < runs; i++) {
       flow.begin(i, new TestTask(dispatched, i));
+      flow.begin(i, new TestTask(dispatched, i));
+    }
+    
+    for (int i = 0; i < runs; i++) {
+      flow.getPendingConfirmations().get(i).confirm();
     }
 
     assertEquals(0, dispatched.size());
