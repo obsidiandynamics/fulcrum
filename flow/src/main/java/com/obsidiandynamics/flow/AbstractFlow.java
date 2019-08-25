@@ -14,7 +14,7 @@ public abstract class AbstractFlow implements Flow {
   protected final FiringStrategy firingStrategy;
 
   protected AbstractFlow(FiringStrategy.Factory firingStrategyFactory) {
-    mustExist(firingStrategyFactory, "Firing strateg factory cannot be null");
+    mustExist(firingStrategyFactory, "Firing strategy factory cannot be null");
     firingStrategy = firingStrategyFactory.create(this, tail.get());
   }
   

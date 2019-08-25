@@ -2,6 +2,14 @@ package com.obsidiandynamics.flow;
 
 import java.util.concurrent.atomic.*;
 
+/**
+ *  A {@link Confirmation} that tracks the number of initiating requests to the
+ *  encompassing {@link Flow}, requiring an equivalent number of calls to 
+ *  {@link #confirm()} before being deemed as complete.
+ *
+ *  @see Confirmation
+ *  @see Flow
+ */
 public final class StatefulConfirmation implements Confirmation {
   private final AtomicReference<StatefulConfirmation> next = new AtomicReference<>();
   
