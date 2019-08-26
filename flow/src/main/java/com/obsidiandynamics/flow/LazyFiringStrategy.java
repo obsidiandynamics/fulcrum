@@ -6,7 +6,7 @@ package com.obsidiandynamics.flow;
  *  ensuring that the preceding sequences are dispatched before their successors. <p>
  *  
  *  A {@link LazyFiringStrategy} is suitable in those application context where dispatching
- *  an element has the effect of dispatching all prior elements.
+ *  an element has the implied effect of dispatching all prior elements.
  *
  *  @see FiringStrategy
  *  @see Flow
