@@ -156,22 +156,38 @@ public final class WorkerThreadTest {
   }
 
   @Test
-  public void testWhileNotInterrupted() {
+  public void testWhileNotInterrupted() throws InterruptedException {
     final WorkerThread thread = WorkerThread.builder()
         .onCycle(t -> Thread.sleep(10))
         .buildAndStart();
 
     final Runnable r = mock(Runnable.class);
-    new Thread(() -> {
-      Timesert.wait(1_000).until(() -> {
-        verify(r, atLeastOnce()).run();
-      });
-      thread.terminate();
-    }, "terminator-thread").start();
+    doAnswer(__ -> {
+      Threads.sleep(1);
+      return null;
+    }).when(r).run();
+    
+    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
+    final Thread terminatorThread = new Thread(() -> {
+      try {
+        wait.until(() -> {
+          verify(r, atLeastOnce()).run();
+        });
+      } catch (Throwable e) {
+        e.printStackTrace();
+        errorRef.set(e);;
+      } finally {
+        thread.terminate();
+      }
+    }, "terminator-thread");
+    terminatorThread.start();
 
     thread.whileNotInterrupted(r);
     thread.joinSilently();
     assertFalse(Thread.interrupted());
+    
+    terminatorThread.join();
+    assertNull(errorRef.get());
   }
 
   @Test

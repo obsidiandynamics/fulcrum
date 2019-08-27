@@ -56,6 +56,10 @@ public final class ThreadedFlowTest {
       flow.begin(i, new TestTask(dispatched, i));
       flow.begin(i, new TestTask(dispatched, i));
     }
+    
+    for (int i = 0; i < runs; i++) {
+      flow.getPendingConfirmations().get(i).confirm();
+    }
 
     Threads.sleep(10);
     assertEquals(0, dispatched.size());
