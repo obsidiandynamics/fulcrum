@@ -6,12 +6,12 @@ import org.junit.*;
 
 import com.obsidiandynamics.flow.FiringStrategyTests.*;
 
-public final class LazyFiringStrategyTest {
+public final class StrictFiringStrategyTest {
   private MockFlow flow;
   
   @Before
   public void before() {
-    flow = new MockFlow(LazyFiringStrategy::new);
+    flow = new MockFlow(StrictFiringStrategy::new);
   }
   
   @Test
@@ -68,11 +68,11 @@ public final class LazyFiringStrategyTest {
     final MockConfirmation c1 = flow.beginAndConfirm();
     
     flow.getFiringStrategy().fire();
-    assertFalse(c0.isFired());
+    assertTrue(c0.isFired());
     assertTrue(c1.isFired());
     
     flow.getFiringStrategy().fire();
-    assertFalse(c0.isFired());
+    assertTrue(c0.isFired());
     assertTrue(c1.isFired());
   }
 }
