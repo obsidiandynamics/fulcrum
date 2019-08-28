@@ -115,8 +115,7 @@ public final class Threads {
   }
   
   /**
-   *  Executes a given {@link CheckedRunnable} block, returning the duration of the run
-   *  in milliseconds.
+   *  Executes a given {@link CheckedRunnable} block, timing the run and returning the duration in milliseconds.
    *  
    *  @param <X> Throwable type.
    *  @param r The runnable.
@@ -128,8 +127,7 @@ public final class Threads {
   }
   
   /**
-   *  Executes a given {@link CheckedRunnable} block, returning the duration of the run
-   *  in nanoseconds.
+   *  Executes a given {@link CheckedRunnable} block, timing the run and returning the duration in nanoseconds.
    *  
    *  @param <X> Throwable type.
    *  @param r The runnable.
