@@ -1,8 +1,8 @@
 package com.obsidiandynamics.worker;
 
+import static com.obsidiandynamics.func.Functions.*;
+
 import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.function.*;
 
 public final class WorkerThread implements Terminable, Joinable {
   private final Thread driver;
@@ -16,12 +16,6 @@ public final class WorkerThread implements Terminable, Joinable {
   private final WorkerExceptionHandler onUncaughtException;
   
   private volatile WorkerState state = WorkerState.CONCEIVED;
-  
-  /** Indicates that the shutdown handler is about to be run. */
-  private final AtomicBoolean shutdown = new AtomicBoolean();
-  
-  /** Indicates that the driver has been interrupted by {@link #shutdown()}. */
-  private volatile boolean interrupted;
   
   /** Guards the changing of the thread state. */
   private final Object stateLock = new Object();
@@ -37,9 +31,7 @@ public final class WorkerThread implements Terminable, Joinable {
     this.onUncaughtException = onUncaughtException;
     driver = new Thread(this::run);
     
-    if (options.getName() != null) {
-      driver.setName(options.getName());
-    }
+    ifPresentVoid(options.getName(), driver::setName);
     
     driver.setDaemon(options.isDaemon());
     driver.setPriority(options.getPriority());
@@ -74,14 +66,9 @@ public final class WorkerThread implements Terminable, Joinable {
       if (state == WorkerState.CONCEIVED) {
         state = WorkerState.TERMINATED;
       } else if (state == WorkerState.RUNNING) {
+        driver.interrupt();
         state = WorkerState.TERMINATING;
       }
-    }
-    
-    // only interrupt the driver if it hasn't finished cycling, and at most once
-    if (shutdown.compareAndSet(false, true)) {
-      driver.interrupt();
-      interrupted = true;
     }
     
     return this;
@@ -103,14 +90,9 @@ public final class WorkerThread implements Terminable, Joinable {
       try {
         handleUncaughtException(exception);
       } finally {
-        if (shutdown.compareAndSet(false, true)) {
-          // indicate that we've finished cycling — this way we won't get interrupted and 
-          // can call the shutdown hook safely
-        } else {
-          // we will imminently get interrupted — wait before proceeding with the shutdown hook
-          whileNot(this::isDriverInterruptRaised, Thread::yield);
-          Thread.interrupted(); // clear the interrupt before invoking the shutdown hook
-        }
+        // Interrupt may have been set as part of terminating the thread; clear it before proceeding with the
+        // shutdown handler.
+        Thread.interrupted(); 
         
         try {
           onShutdown.handle(this, exception);
@@ -123,14 +105,6 @@ public final class WorkerThread implements Terminable, Joinable {
         }
       }
     }
-  }
-  
-  boolean isDriverInterruptRaised() {
-    return interrupted;
-  }
-  
-  static void whileNot(BooleanSupplier test, Runnable r) {
-    while (! test.getAsBoolean()) r.run();
   }
   
   private void handleUncaughtException(Throwable exception) {
