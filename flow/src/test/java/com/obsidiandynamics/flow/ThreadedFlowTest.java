@@ -18,7 +18,7 @@ import com.obsidiandynamics.threads.*;
 public final class ThreadedFlowTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
-    return TestCycle.timesQuietly(1);
+    return TestCycle.timesQuietly((int) (Math.random() * 10) + 1); //TODO
   }
   
   private static final int EXECUTOR_THREADS = Math.min(Math.max(8, Runtime.getRuntime().availableProcessors()), 32);
