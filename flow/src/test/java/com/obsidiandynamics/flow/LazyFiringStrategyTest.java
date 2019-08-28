@@ -32,6 +32,9 @@ public final class LazyFiringStrategyTest {
     flow.getFiringStrategy().fire();
     assertFalse(c0.isFired());
     assertFalse(c1.isFired());
+    
+    assertTrue(flow.getPendingConfirmations().containsKey(c0.getId()));
+    assertTrue(flow.getPendingConfirmations().containsKey(c1.getId()));
   }
   
   @Test
@@ -46,6 +49,9 @@ public final class LazyFiringStrategyTest {
     flow.getFiringStrategy().fire();
     assertFalse(c0.isFired());
     assertFalse(c1.isFired());
+    
+    assertTrue(flow.getPendingConfirmations().containsKey(c0.getId()));
+    assertTrue(flow.getPendingConfirmations().containsKey(c1.getId()));
   }
   
   @Test
@@ -60,6 +66,9 @@ public final class LazyFiringStrategyTest {
     flow.getFiringStrategy().fire();
     assertTrue(c0.isFired());
     assertFalse(c1.isFired());
+    
+    assertFalse(flow.getPendingConfirmations().containsKey(c0.getId()));
+    assertTrue(flow.getPendingConfirmations().containsKey(c1.getId()));
   }
   
   @Test
@@ -74,5 +83,8 @@ public final class LazyFiringStrategyTest {
     flow.getFiringStrategy().fire();
     assertFalse(c0.isFired());
     assertTrue(c1.isFired());
+    
+    assertFalse(flow.getPendingConfirmations().containsKey(c0.getId()));
+    assertFalse(flow.getPendingConfirmations().containsKey(c1.getId()));
   }
 }
