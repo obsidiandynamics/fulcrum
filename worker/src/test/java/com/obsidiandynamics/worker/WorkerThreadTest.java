@@ -181,7 +181,7 @@ public final class WorkerThreadTest {
         });
       } catch (Throwable e) {
         e.printStackTrace();
-        errorRef.set(e);;
+        errorRef.set(e);
       } finally {
         thread.terminate();
       }
