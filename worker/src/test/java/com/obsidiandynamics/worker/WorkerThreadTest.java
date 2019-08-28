@@ -1,6 +1,7 @@
 package com.obsidiandynamics.worker;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -28,6 +29,11 @@ public final class WorkerThreadTest {
   }
 
   private final Timesert wait = Timesert.wait(10_000);
+  
+  @After
+  public void after() {
+    assertFalse(Thread.interrupted());
+  }
 
   @Test
   public void testSingleRun() {

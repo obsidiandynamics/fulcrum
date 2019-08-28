@@ -22,60 +22,80 @@ public final class ThreadsTest {
   public static List<Object[]> data() {
     return TestCycle.timesQuietly(1);
   }
-  
+
+  @After
+  public void after() {
+    assertFalse(Thread.interrupted());
+  }
+
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Threads.class);
   }
 
   @Test
-  public void testRunUninterruptedlyNormal() {
-    assertTrue(Threads.runUninterruptedly(() -> {}));
+  public void testDeferInterrupt() {
+    assertTrue(Threads.deferInterrupt(() -> {}));
     assertFalse(Thread.interrupted());
   }
 
   @Test
-  public void testRunUninterruptedlyInterrupted() {
-    try {
-      assertFalse(Threads.runUninterruptedly(Exceptions.doThrow(InterruptedException::new)));
-      assertTrue(Thread.interrupted());
-    } finally {
-      Thread.interrupted();
-    }
+  public void testDeferInterrupt_interrupted() {
+    assertFalse(Threads.deferInterrupt(Exceptions.doThrow(InterruptedException::new)));
+    assertTrue(Thread.interrupted());
   }
 
   @Test
-  public void testNoSleepUninterrupted() {
+  public void testDeferInterrupt_booleanSupplier() {
+    assertTrue(Threads.deferInterrupt(() -> true, false));
+    assertFalse(Threads.deferInterrupt(() -> false, true));
+  }
+
+  @Test
+  public void testDeferInterrupt_booleanSupplier_withInterruptedException() {
+    assertFalse(Threads.deferInterrupt(() -> {
+      throw new InterruptedException();
+    }, false));
+    assertTrue(Thread.interrupted());
+  }
+
+  @Test
+  public void testDeferInterrupt_supplier() {
+    assertEquals("okay", Threads.deferInterrupt(() -> "okay", "interrupted"));
+  }
+
+  @Test
+  public void testDeferInterrupt_supplier_withInterruptedException() {
+    assertEquals("interrupted", Threads.deferInterrupt(() -> {
+      throw new InterruptedException();
+    }, "interrupted"));
+    assertTrue(Thread.interrupted());
+  }
+
+  @Test
+  public void testSleep_zeroAmount() {
     assertTrue(Threads.sleep(0));
     assertFalse(Thread.interrupted());
   }
 
   @Test
-  public void testNoSleepInterrupted() {
-    try {
-      Thread.currentThread().interrupt();
-      assertFalse(Threads.sleep(0));
-      assertTrue(Thread.interrupted());
-    } finally {
-      Thread.interrupted();
-    }
+  public void testSleep_zeroAmount_interrupted() {
+    Thread.currentThread().interrupt();
+    assertFalse(Threads.sleep(0));
+    assertTrue(Thread.interrupted());
   }
 
   @Test
-  public void testSleepUninterrupted() {
+  public void testSleep() {
     assertTrue(Threads.sleep(1));
     assertFalse(Thread.interrupted());
   }
 
   @Test
-  public void testSleepInterrupted() {
-    try {
-      Thread.currentThread().interrupt();
-      assertFalse(Threads.sleep(1));
-      assertTrue(Thread.interrupted());
-    } finally {
-      Thread.interrupted();
-    }
+  public void testSleep_interrupted() {
+    Thread.currentThread().interrupt();
+    assertFalse(Threads.sleep(1));
+    assertTrue(Thread.interrupted());
   }
 
   @Test
@@ -88,7 +108,7 @@ public final class ThreadsTest {
   }
 
   @Test
-  public void testAwaitBarrierBroken() throws InterruptedException {
+  public void testAwaitBarrier_broken() throws InterruptedException {
     final CyclicBarrier barrier = new CyclicBarrier(2);
     final AtomicBoolean threadWasInterrupted = new AtomicBoolean();
     final AtomicReference<Throwable> errorRef = new AtomicReference<>();
@@ -103,11 +123,11 @@ public final class ThreadsTest {
     });
     thread.start();
     thread.interrupt(); // interrupting the thread breaks the barrier for the next thread trying to enter it
-    
+
     assertNull(errorRef.get());    
     thread.join();
     assertTrue(threadWasInterrupted.get());
-    
+
     assertThatThrownBy(() -> {
       Threads.await(barrier);
     }).isExactlyInstanceOf(RuntimeBrokenBarrierException.class).hasCauseExactlyInstanceOf(BrokenBarrierException.class);
@@ -123,7 +143,7 @@ public final class ThreadsTest {
   }
 
   @Test
-  public void testAwaitLatchInterrupted() throws InterruptedException {
+  public void testAwaitLatch_interrupted() throws InterruptedException {
     final AtomicBoolean threadWasInterrupted = new AtomicBoolean();
     final CountDownLatch latch = new CountDownLatch(1);
     final Thread thread = new Thread(() -> {
@@ -133,7 +153,7 @@ public final class ThreadsTest {
     });
     thread.start();
     thread.interrupt();
-    
+
     thread.join();
     assertTrue(threadWasInterrupted.get());
   }
