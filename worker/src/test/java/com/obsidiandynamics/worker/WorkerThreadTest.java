@@ -154,6 +154,8 @@ public final class WorkerThreadTest {
         .onCycle(t -> Thread.sleep(10))
         .build();
     thread.start();
+    assertFalse(thread.isDriverInterruptRaised());
+    
     Thread.currentThread().interrupt();
     thread.joinSilently();
     assertTrue(Thread.interrupted());
@@ -161,39 +163,58 @@ public final class WorkerThreadTest {
     thread.terminate().joinSilently();
   }
 
+//  @Test
+//  public void testWhileNotInterrupted() throws InterruptedException {
+//    final WorkerThread thread = WorkerThread.builder()
+//        .onCycle(t -> Thread.sleep(10))
+//        .buildAndStart();
+//
+//    final Runnable r = mock(Runnable.class);
+//    doAnswer(__ -> {
+//      Threads.sleep(1);
+//      System.out.println(new Date() + " inside runner");
+//      return null;
+//    }).when(r).run();
+//    
+//    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
+//    final Thread terminatorThread = new Thread(() -> {
+//      try {
+//        wait.until(() -> {
+//          System.out.println(new Date() + " waiting for first run");
+//          verify(r, atLeastOnce()).run();
+//        });
+//      } catch (Throwable e) {
+//        e.printStackTrace();
+//        errorRef.set(e);
+//      } finally {
+//        thread.terminate();
+//      }
+//    }, "terminator-thread");
+//    terminatorThread.start();
+//
+//    thread.whileNotInterrupted(r);
+//    thread.joinSilently();
+//    assertFalse(Thread.interrupted());
+//    
+//    terminatorThread.join();
+//    assertNull(errorRef.get());
+//  }
+  
   @Test
-  public void testWhileNotInterrupted() throws InterruptedException {
-    final WorkerThread thread = WorkerThread.builder()
-        .onCycle(t -> Thread.sleep(10))
-        .buildAndStart();
-
+  public void testWhileNot() {
     final Runnable r = mock(Runnable.class);
+    final AtomicBoolean condition = new AtomicBoolean(false);
+    final AtomicInteger runCount = new AtomicInteger();
     doAnswer(__ -> {
-      Threads.sleep(1);
+      if (runCount.getAndIncrement() == 0) {
+        condition.set(true);
+      }
       return null;
     }).when(r).run();
     
-    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
-    final Thread terminatorThread = new Thread(() -> {
-      try {
-        wait.until(() -> {
-          verify(r, atLeastOnce()).run();
-        });
-      } catch (Throwable e) {
-        e.printStackTrace();
-        errorRef.set(e);
-      } finally {
-        thread.terminate();
-      }
-    }, "terminator-thread");
-    terminatorThread.start();
-
-    thread.whileNotInterrupted(r);
-    thread.joinSilently();
-    assertFalse(Thread.interrupted());
-    
-    terminatorThread.join();
-    assertNull(errorRef.get());
+    WorkerThread.whileNot(condition::get, r);
+    assertEquals(1, runCount.get());
+    assertTrue(condition.get());
   }
 
   @Test

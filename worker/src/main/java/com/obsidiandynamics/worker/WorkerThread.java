@@ -2,6 +2,7 @@ package com.obsidiandynamics.worker;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 public final class WorkerThread implements Terminable, Joinable {
   private final Thread driver;
@@ -107,7 +108,7 @@ public final class WorkerThread implements Terminable, Joinable {
           // can call the shutdown hook safely
         } else {
           // we will imminently get interrupted — wait before proceeding with the shutdown hook
-          whileNotInterrupted(Thread::yield);
+          whileNot(this::isDriverInterruptRaised, Thread::yield);
           Thread.interrupted(); // clear the interrupt before invoking the shutdown hook
         }
         
@@ -124,8 +125,12 @@ public final class WorkerThread implements Terminable, Joinable {
     }
   }
   
-  void whileNotInterrupted(Runnable r) {
-    while (! interrupted) r.run();
+  boolean isDriverInterruptRaised() {
+    return interrupted;
+  }
+  
+  static void whileNot(BooleanSupplier test, Runnable r) {
+    while (! test.getAsBoolean()) r.run();
   }
   
   private void handleUncaughtException(Throwable exception) {
