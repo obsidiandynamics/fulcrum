@@ -28,7 +28,7 @@ import nl.jqno.equalsverifier.*;
 public final class WorkerThreadTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
-    return TestCycle.timesQuietly(1);
+    return TestCycle.timesQuietly((int) (Math.random() * 50) + 1); //TODO
   }
 
   private final Timesert wait = Timesert.wait(10_000);
