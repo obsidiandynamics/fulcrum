@@ -1,5 +1,7 @@
 package com.obsidiandynamics.worker;
 
+import static com.obsidiandynamics.func.Functions.*;
+
 public final class WorkerThreadBuilder {
   private WorkerOptions options = new WorkerOptions();
   
@@ -41,10 +43,11 @@ public final class WorkerThreadBuilder {
   }
   
   public WorkerThread build() {
-    if (onCycle == null) {
-      throw new IllegalStateException("onCycle behaviour not set");
-    }
-    
+    mustExist(onStartup, "On-startup handler cannot be null");
+    mustExist(onShutdown, "On-shutdown handler cannot be null");
+    mustExist(onCycle, "On-cycle handler cannot be null");
+    mustExist(options, "Options cannot be null");
+    mustExist(onUncaughtException, "Uncaught exception handler be null");
     return new WorkerThread(options, onCycle, onStartup, onShutdown, onUncaughtException);
   }
   

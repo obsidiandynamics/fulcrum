@@ -27,7 +27,7 @@ public final class Threads {
   }
 
   /**
-   *  Runs a specified {@link CheckedRunnable}, trapping an interrupt
+   *  Runs the specified {@link CheckedRunnable}, trapping an interrupt
    *  and deferring it by setting {@link Thread#interrupt()}.
    *  
    *  @param interruptible The block to run.
@@ -44,7 +44,7 @@ public final class Threads {
   }
   
   /**
-   *  Runs a specified {@link CheckedBooleanSupplier} and returns the resulting value, trapping an interrupt
+   *  Runs the specified {@link CheckedBooleanSupplier} and returns the resulting value, trapping an interrupt
    *  and deferring it by setting {@link Thread#interrupt()}.
    *  
    *  @param interruptible The block to run.
@@ -61,7 +61,7 @@ public final class Threads {
   }
   
   /**
-   *  Runs a specified {@link CheckedSupplier} and returns the resulting value, trapping an interrupt
+   *  Runs the specified {@link CheckedSupplier} and returns the resulting value, trapping an interrupt
    *  and deferring it by setting {@link Thread#interrupt()}.
    *  
    *  @param <T> Result type.
@@ -75,6 +75,56 @@ public final class Threads {
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       return onInterrupt;
+    }
+  }
+  
+  /**
+   *  Runs the specified {@link CheckedRunnable} repeatedly until it completes, trapping any interrupts
+   *  in the process. Upon return, the {@link Thread#interrupt()} is set if at least one interrupt was
+   *  trapped.
+   *  
+   *  @param interruptible The block to run.
+   *  @return The number of times the block was run. A value of {@code 1} implies that the block run without
+   *          interruption. Any number greater than {@code 1} implies that the block was interrupted.
+   */
+  public static int suppressInterrupts(CheckedRunnable<InterruptedException> interruptible) {
+    boolean interrupted = false;
+    int attempts = 1;
+    for (;; attempts++) {
+      try {
+        interruptible.run();
+        break;
+      } catch (InterruptedException e) {
+        interrupted = true;
+      }
+    }
+    
+    if (interrupted) Thread.currentThread().interrupt();
+    
+    return attempts;
+  }
+  
+  /**
+   *  Runs the specified {@link CheckedSupplier} repeatedly until it completes, returning the result and
+   *  trapping any interrupts in the process. Upon return, the {@link Thread#interrupt()} is set if at 
+   *  least one interrupt was trapped.
+   *  
+   *  @param <T> Result type.
+   *  @param interruptible The block to run.
+   *  @return The resulting value.
+   */
+  public static <T> T suppressInterrupts(CheckedSupplier<? extends T, InterruptedException> interruptible) {
+    boolean interrupted = false;
+    try {
+      for (;;) {
+        try {
+          return interruptible.get();
+        } catch (InterruptedException e) {
+          interrupted = true;
+        }
+      }
+    } finally {
+      if (interrupted) Thread.currentThread().interrupt();
     }
   }
 
