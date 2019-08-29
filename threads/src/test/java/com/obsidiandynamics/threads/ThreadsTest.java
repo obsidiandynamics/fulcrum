@@ -34,25 +34,25 @@ public final class ThreadsTest {
   }
 
   @Test
-  public void testDeferInterrupt() {
+  public void testDeferInterrupt_runnable_pass() {
     assertTrue(Threads.deferInterrupt(() -> {}));
     assertFalse(Thread.interrupted());
   }
 
   @Test
-  public void testDeferInterrupt_interrupted() {
+  public void testDeferInterrupt_runnable_interrupted() {
     assertFalse(Threads.deferInterrupt(Exceptions.doThrow(InterruptedException::new)));
     assertTrue(Thread.interrupted());
   }
 
   @Test
-  public void testDeferInterrupt_booleanSupplier() {
+  public void testDeferInterrupt_booleanSupplier_pass() {
     assertTrue(Threads.deferInterrupt(() -> true, false));
     assertFalse(Threads.deferInterrupt(() -> false, true));
   }
 
   @Test
-  public void testDeferInterrupt_booleanSupplier_withInterruptedException() {
+  public void testDeferInterrupt_booleanSupplier_interrupted() {
     assertFalse(Threads.deferInterrupt(() -> {
       throw new InterruptedException();
     }, false));
@@ -60,15 +60,75 @@ public final class ThreadsTest {
   }
 
   @Test
-  public void testDeferInterrupt_supplier() {
+  public void testDeferInterrupt_supplier_pass() {
     assertEquals("okay", Threads.deferInterrupt(() -> "okay", "interrupted"));
   }
 
   @Test
-  public void testDeferInterrupt_supplier_withInterruptedException() {
+  public void testDeferInterrupt_supplier_interrupted() {
     assertEquals("interrupted", Threads.deferInterrupt(() -> {
       throw new InterruptedException();
     }, "interrupted"));
+    assertTrue(Thread.interrupted());
+  }
+  
+  @Test
+  public void testSuppressInterrupts_runnable_pass() {
+    assertEquals(1, Threads.suppressInterrupts(() -> {}));
+  }
+  
+  @Test
+  public void testSuppressInterrupts_runnable_interruptedOnce() {
+    final AtomicInteger invocations = new AtomicInteger();
+    assertEquals(2, Threads.suppressInterrupts(() -> {
+      if (invocations.getAndIncrement() == 0) {
+        throw new InterruptedException();
+      }
+    }));
+    assertTrue(Thread.interrupted());
+    assertEquals(2, invocations.get());
+  }
+  
+  @Test
+  public void testSuppressInterrupts_runnable_interruptedTwice() {
+    final AtomicInteger invocations = new AtomicInteger();
+    assertEquals(3, Threads.suppressInterrupts(() -> {
+      if (invocations.getAndIncrement() <= 1) {
+        throw new InterruptedException();
+      }
+    }));
+    assertTrue(Thread.interrupted());
+    assertEquals(3, invocations.get());
+  }
+  
+  @Test
+  public void testSuppressInterrupts_supplier_pass() {
+    assertEquals("pass", Threads.suppressInterrupts(() -> "pass"));
+  }
+  
+  @Test
+  public void testSuppressInterrupts_supplier_interruptedOnce() {
+    final AtomicInteger invocations = new AtomicInteger();
+    assertEquals("2-invocations", Threads.suppressInterrupts(() -> {
+      if (invocations.getAndIncrement() == 0) {
+        throw new InterruptedException();
+      } else {
+        return invocations + "-invocations";
+      }
+    }));
+    assertTrue(Thread.interrupted());
+  }
+  
+  @Test
+  public void testSuppressInterrupts_supplier_interruptedTwice() {
+    final AtomicInteger invocations = new AtomicInteger();
+    assertEquals("3-invocations", Threads.suppressInterrupts(() -> {
+      if (invocations.getAndIncrement() <= 1) {
+        throw new InterruptedException();
+      } else {
+        return invocations + "-invocations";
+      }
+    }));
     assertTrue(Thread.interrupted());
   }
 
