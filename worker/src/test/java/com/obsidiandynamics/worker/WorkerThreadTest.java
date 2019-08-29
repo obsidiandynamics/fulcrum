@@ -1,6 +1,8 @@
 package com.obsidiandynamics.worker;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -16,6 +18,7 @@ import org.junit.runners.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.await.*;
+import com.obsidiandynamics.func.*;
 import com.obsidiandynamics.junit.*;
 import com.obsidiandynamics.threads.*;
 
@@ -116,28 +119,31 @@ public final class WorkerThreadTest {
     verify(onShutdown).handle(eq(thread), any());
   }
 
-  @Test(expected=IllegalStateException.class)
+  @Test
   public void testTerminateOnConceive() {
     final WorkerThread thread = WorkerThread.builder()
         .onCycle(t -> {})
         .build();
     thread.terminate();
     assertEquals(WorkerState.TERMINATED, thread.getState());
-    thread.start();
+    assertThatThrownBy(thread::start)
+    .isExactlyInstanceOf(IllegalStateException.class).hasMessageContaining("Cannot start worker in state TERMINATED");
   }
 
-  @Test(expected=IllegalStateException.class)
+  @Test
   public void testBuildWithWorker() {
-    WorkerThread.builder().build();
+    assertThatThrownBy(WorkerThread.builder()::build)
+    .isExactlyInstanceOf(NullArgumentException.class).hasMessage("On-cycle handler cannot be null");
   }
 
-  @Test(expected=IllegalStateException.class)
+  @Test
   public void testStartTwice() {
     final WorkerThread thread = WorkerThread.builder()
         .onCycle(t -> t.terminate())
         .build();
     thread.start();
-    thread.start(); // this call should throw an exception
+    assertThatThrownBy(thread::start)
+    .isExactlyInstanceOf(IllegalStateException.class).hasMessageContaining("Cannot start worker in state ");
   }
 
   @Test
@@ -154,46 +160,12 @@ public final class WorkerThreadTest {
         .onCycle(t -> Thread.sleep(10))
         .build();
     thread.start();
+    
     Thread.currentThread().interrupt();
     thread.joinSilently();
     assertTrue(Thread.interrupted());
 
     thread.terminate().joinSilently();
-  }
-
-  @Test
-  public void testWhileNotInterrupted() throws InterruptedException {
-    final WorkerThread thread = WorkerThread.builder()
-        .onCycle(t -> Thread.sleep(10))
-        .buildAndStart();
-
-    final Runnable r = mock(Runnable.class);
-    doAnswer(__ -> {
-      Threads.sleep(1);
-      return null;
-    }).when(r).run();
-    
-    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
-    final Thread terminatorThread = new Thread(() -> {
-      try {
-        wait.until(() -> {
-          verify(r, atLeastOnce()).run();
-        });
-      } catch (Throwable e) {
-        e.printStackTrace();
-        errorRef.set(e);
-      } finally {
-        thread.terminate();
-      }
-    }, "terminator-thread");
-    terminatorThread.start();
-
-    thread.whileNotInterrupted(r);
-    thread.joinSilently();
-    assertFalse(Thread.interrupted());
-    
-    terminatorThread.join();
-    assertNull(errorRef.get());
   }
 
   @Test
