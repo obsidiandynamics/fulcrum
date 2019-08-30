@@ -386,7 +386,7 @@ public final class Functions {
    *  
    *  @param <T> Value type.
    *  @param value The value to check.
-   *  @param message The message to the {@link NullArgumentException}.
+   *  @param message The message of the {@link NullArgumentException}.
    *  @return The verified value.
    *  @throws NullArgumentException If the given value is {@code null}.
    */
@@ -424,6 +424,91 @@ public final class Functions {
    */
   public static <X extends Throwable> void mustBeNull(Object value, Supplier<? extends X> exceptionMaker) throws X {
     mustBeTrue(value == null, exceptionMaker);
+  }
+  
+  /**
+   *  A convenient variant of {@link #mustNotBeEmpty(Collection, Supplier)} that throws an
+   *  {@link IllegalArgumentException} with the supplied {@code message}.
+   *  
+   *  @param <C> Collection type.
+   *  @param <X> Exception type.
+   *  @param collection The collection to check.
+   *  @param message The message of the {@link IllegalArgumentException}.
+   *  @return The verified collection.
+   *  @throws X If the given collection is empty.
+   */
+  public static <C extends Collection<?>, X extends Throwable> C mustNotBeEmpty(C collection, String message) throws X {
+    return mustNotBeEmpty(collection, illegalArgument(message));
+  }
+  
+  /**
+   *  Ensures that the given collection is not empty. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <C> Collection type.
+   *  @param <X> Exception type.
+   *  @param collection The collection to check.
+   *  @param exceptionMaker A way of creating the exception for an empty collection.
+   *  @return The verified collection.
+   *  @throws X If the given collection is empty.
+   */
+  public static <C extends Collection<?>, X extends Throwable> C mustNotBeEmpty(C collection, Supplier<? extends X> exceptionMaker) throws X {
+    if (! collection.isEmpty()) {
+      return collection;
+    } else {
+      throw exceptionMaker.get();
+    }
+  }
+  
+  /**
+   *  Ensures that the given map is not empty. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <M> Map type.
+   *  @param <X> Exception type.
+   *  @param map The map to check.
+   *  @param exceptionMaker A way of creating the exception for an empty map.
+   *  @return The verified map.
+   *  @throws X If the given map is empty.
+   */
+  public static <M extends Map<?, ?>, X extends Throwable> M mustNotBeEmpty(M map, Supplier<? extends X> exceptionMaker) throws X {
+    if (! map.isEmpty()) {
+      return map;
+    } else {
+      throw exceptionMaker.get();
+    }
+  }
+  
+  /**
+   *  A convenient variant of {@link #mustNotBeEmpty(String, Supplier)} that throws an
+   *  {@link IllegalArgumentException} with the supplied {@code message}.
+   *  
+   *  @param <X> Exception type.
+   *  @param string The string to check.
+   *  @param message The message of the {@link IllegalArgumentException}.
+   *  @return The verified string.
+   *  @throws X If the given string is empty.
+   */
+  public static <X extends Throwable> String mustNotBeEmpty(String string, String message) throws X {
+    return mustNotBeEmpty(string, illegalArgument(message));
+  }
+  
+  /**
+   *  Ensures that the given string is not empty. Otherwise, an
+   *  exception specified by the given {@code exceptionMaker} is thrown.
+   *  
+   *  @param <X> Exception type.
+   *  @param string The string to check.
+   *  @param exceptionMaker A way of creating the exception for an empty string.
+   *  @return The verified string.
+   *  @throws X If the given string is empty.
+   */
+  public static <X extends Throwable> String mustNotBeEmpty(String string, Supplier<? extends X> exceptionMaker) throws X {
+    if (! string.isEmpty()) {
+      return string;
+    } else {
+      throw exceptionMaker.get();
+    }
   }
 
   /**

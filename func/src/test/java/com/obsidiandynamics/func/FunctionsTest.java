@@ -1,6 +1,8 @@
 package com.obsidiandynamics.func;
 
 import static java.util.Arrays.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -15,9 +17,7 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import org.hamcrest.core.*;
 import org.junit.*;
-import org.junit.rules.*;
 
 import com.obsidiandynamics.assertion.*;
 import com.obsidiandynamics.func.Functions.*;
@@ -27,9 +27,6 @@ public final class FunctionsTest {
   @ClassRule
   public static final ExecutorProp executorProp = new ExecutorProp(Executors::newWorkStealingPool);
   
-  @Rule
-  public final ExpectedException expectedException = ExpectedException.none();
-
   @Test
   public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Functions.class);
@@ -89,9 +86,9 @@ public final class FunctionsTest {
 
   @Test
   public void testMustExist_mapWithNull() throws Exception {
-    expectedException.expect(Exception.class);
-    expectedException.expectMessage("No value for key KEY");
-    Functions.mustExist(Collections.emptyMap(), "KEY", "No value for key %s", Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustExist(Collections.emptyMap(), "KEY", "No value for key %s", Exception::new);
+    }).isExactlyInstanceOf(Exception.class).hasMessage("No value for key KEY");
   }
 
   @Test
@@ -100,14 +97,18 @@ public final class FunctionsTest {
     assertEquals(string, "string");
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeSubtype_withIncorrectType() throws Exception {
-    Functions.mustBeSubtype("string", Integer.class, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeSubtype("string", Integer.class, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeSubtype_withNull() throws Exception {
-    Functions.mustBeSubtype(null, String.class, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeSubtype(null, String.class, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -115,9 +116,11 @@ public final class FunctionsTest {
     assertEquals("foo", Functions.mustExist("foo", Exception::new));
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustExist_withNull() throws Exception {
-    Functions.mustExist(null, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustExist(null, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
 
   @Test
@@ -127,9 +130,9 @@ public final class FunctionsTest {
 
   @Test
   public void testMustExist_withNullUsingNullArgumentExceptionWithMessageVariant() throws Exception {
-    expectedException.expect(NullArgumentException.class);
-    expectedException.expectMessage("Something cannot be null");
-    Functions.mustExist(null, "Something cannot be null");
+    assertThatThrownBy(() -> {
+      Functions.mustExist(null, "Something cannot be null");
+    }).isExactlyInstanceOf(NullArgumentException.class).hasMessage("Something cannot be null");
   }
 
   @Test
@@ -139,9 +142,9 @@ public final class FunctionsTest {
 
   @Test
   public void testMustExist_withNullUsingNullArgumentExceptionWithoutMessageVariant() throws Exception {
-    expectedException.expect(NullArgumentException.class);
-    expectedException.expectMessage(IsNull.nullValue(String.class));
-    Functions.mustExist(null);
+    assertThatThrownBy(() -> {
+      Functions.mustExist(null);
+    }).isExactlyInstanceOf(NullArgumentException.class).hasMessage(null);
   }
 
   @Test
@@ -149,9 +152,49 @@ public final class FunctionsTest {
     Functions.mustBeNull(null, Exception::new);
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeNull_withNonNullValue() throws Exception {
-    Functions.mustBeNull("nonNull", Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeNull("nonNull", Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_collection_nonEmpty() {
+    final List<String> collection = Collections.singletonList("foo");
+    assertSame(collection, Functions.mustNotBeEmpty(collection, "Collection cannot be empty"));
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_collection_empty() {
+    assertThatThrownBy(() -> {
+      Functions.mustNotBeEmpty(Collections.emptyList(), "Collection cannot be empty");
+    }).isExactlyInstanceOf(IllegalArgumentException.class).hasMessage("Collection cannot be empty");
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_map_nonEmpty() {
+    final Map<String, String> map = Collections.singletonMap("foo", "bar");
+    assertSame(map, Functions.mustNotBeEmpty(map, Functions.illegalArgument("Map cannot be empty")));
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_map_empty() {
+    assertThatThrownBy(() -> {
+      Functions.mustNotBeEmpty(Collections.emptyMap(), Functions.illegalArgument("Map cannot be empty"));
+    }).isExactlyInstanceOf(IllegalArgumentException.class).hasMessage("Map cannot be empty");
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_string_nonEmpty() {
+    assertEquals("foo", Functions.mustNotBeEmpty("foo", "String cannot be empty"));
+  }
+  
+  @Test
+  public void testMustNotBeEmpty_string_empty() {
+    assertThatThrownBy(() -> {
+      Functions.mustNotBeEmpty("", "String cannot be empty");
+    }).isExactlyInstanceOf(IllegalArgumentException.class).hasMessage("String cannot be empty");
   }
 
   @Test
@@ -159,9 +202,11 @@ public final class FunctionsTest {
     Functions.mustBeEqual(42, 42, Exception::new);
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeEqual_withNonEqualValues() throws Exception {
-    Functions.mustBeEqual(42, 17, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeEqual(42, 17, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
 
   @Test
@@ -169,9 +214,11 @@ public final class FunctionsTest {
     assertEquals(42, Functions.mustNotBeEqual(43, 42, Exception::new).intValue());
   }
 
-  @Test(expected=Exception.class)
+  @Test
   public void testMustNotBeEqual_withEqualValues() throws Exception {
-    Functions.mustNotBeEqual(42, 42, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustNotBeEqual(42, 42, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -179,9 +226,11 @@ public final class FunctionsTest {
     Functions.mustBeGreater(4L, 3L, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreater_withLongFail() throws Exception {
-    Functions.mustBeGreater(3L, 3L, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreater(3L, 3L, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -190,9 +239,11 @@ public final class FunctionsTest {
     Functions.mustBeGreaterOrEqual(3L, 3L, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreaterOrEqual_withLongFail() throws Exception {
-    Functions.mustBeGreaterOrEqual(2L, 3L, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreaterOrEqual(2L, 3L, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -200,9 +251,11 @@ public final class FunctionsTest {
     Functions.mustBeLess(2L, 3L, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLess_withLongFail() throws Exception {
-    Functions.mustBeLess(3L, 3L, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLess(3L, 3L, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -211,9 +264,11 @@ public final class FunctionsTest {
     Functions.mustBeLessOrEqual(2L, 3L, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLessOrEqual_withLongFail() throws Exception {
-    Functions.mustBeLessOrEqual(4L, 3L, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLessOrEqual(4L, 3L, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -221,9 +276,11 @@ public final class FunctionsTest {
     Functions.mustBeGreater(4, 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreater_withIntFail() throws Exception {
-    Functions.mustBeGreater(3, 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreater(3, 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -232,9 +289,11 @@ public final class FunctionsTest {
     Functions.mustBeGreaterOrEqual(3, 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreaterOrEqual_withIntFail() throws Exception {
-    Functions.mustBeGreaterOrEqual(2, 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreaterOrEqual(2, 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -242,9 +301,11 @@ public final class FunctionsTest {
     Functions.mustBeLess(2, 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLess_withIntFail() throws Exception {
-    Functions.mustBeLess(3, 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLess(3, 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -253,9 +314,11 @@ public final class FunctionsTest {
     Functions.mustBeLessOrEqual(2, 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLessOrEqual_withIntFail() throws Exception {
-    Functions.mustBeLessOrEqual(4, 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLessOrEqual(4, 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -263,9 +326,11 @@ public final class FunctionsTest {
     Functions.mustBeGreater(4.0, 3.0, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreater_withDoubleFail() throws Exception {
-    Functions.mustBeGreater(3.0, 3.0, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreater(3.0, 3.0, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -274,9 +339,11 @@ public final class FunctionsTest {
     Functions.mustBeGreaterOrEqual(3.0, 3.0, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreaterOrEqual_withDoubleFail() throws Exception {
-    Functions.mustBeGreaterOrEqual(2.0, 3.0, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreaterOrEqual(2.0, 3.0, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -284,9 +351,11 @@ public final class FunctionsTest {
     Functions.mustBeLess(2.0, 3.0, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLess_withDoubleFail() throws Exception {
-    Functions.mustBeLess(3.0, 3.0, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLess(3.0, 3.0, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -295,9 +364,11 @@ public final class FunctionsTest {
     Functions.mustBeLessOrEqual(2.0, 3.0, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLessOrEqual_withDoubleFail() throws Exception {
-    Functions.mustBeLessOrEqual(4.0, 3.0, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLessOrEqual(4.0, 3.0, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -305,9 +376,11 @@ public final class FunctionsTest {
     Functions.mustBeGreater(4.0f, 3.0f, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreater_withFloatFail() throws Exception {
-    Functions.mustBeGreater(3.0f, 3.0f, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreater(3.0f, 3.0f, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -316,9 +389,11 @@ public final class FunctionsTest {
     Functions.mustBeGreaterOrEqual(3.0f, 3.0f, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreaterOrEqual_withFloatFail() throws Exception {
-    Functions.mustBeGreaterOrEqual(2.0f, 3.0f, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreaterOrEqual(2.0f, 3.0f, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -326,9 +401,11 @@ public final class FunctionsTest {
     Functions.mustBeLess(2.0f, 3.0f, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLess_withFloatFail() throws Exception {
-    Functions.mustBeLess(3.0f, 3.0f, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLess(3.0f, 3.0f, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -337,9 +414,11 @@ public final class FunctionsTest {
     Functions.mustBeLessOrEqual(2.0f, 3.0f, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLessOrEqual_withFloatFail() throws Exception {
-    Functions.mustBeLessOrEqual(4.0f, 3.0f, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLessOrEqual(4.0f, 3.0f, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -347,9 +426,11 @@ public final class FunctionsTest {
     Functions.mustBeGreater((Integer) 4, (Integer) 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreater_withComparableFail() throws Exception {
-    Functions.mustBeGreater((Integer) 3, (Integer) 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreater((Integer) 3, (Integer) 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -358,9 +439,11 @@ public final class FunctionsTest {
     Functions.mustBeGreaterOrEqual((Integer) 3, (Integer) 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeGreaterOrEqual_withComparableFail() throws Exception {
-    Functions.mustBeGreaterOrEqual((Integer) 2, (Integer) 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeGreaterOrEqual((Integer) 2, (Integer) 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -368,9 +451,11 @@ public final class FunctionsTest {
     Functions.mustBeLess((Integer) 2, (Integer) 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLess_withComparableFail() throws Exception {
-    Functions.mustBeLess((Integer) 3, (Integer) 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLess((Integer) 3, (Integer) 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
   
   @Test
@@ -379,9 +464,11 @@ public final class FunctionsTest {
     Functions.mustBeLessOrEqual((Integer) 2, (Integer) 3, Exception::new);
   }
   
-  @Test(expected=Exception.class)
+  @Test
   public void testMustBeLessOrEqual_withComparableFail() throws Exception {
-    Functions.mustBeLessOrEqual((Integer) 4, (Integer) 3, Exception::new);
+    assertThatThrownBy(() -> {
+      Functions.mustBeLessOrEqual((Integer) 4, (Integer) 3, Exception::new);
+    }).isExactlyInstanceOf(Exception.class);
   }
 
   @Test
@@ -567,18 +654,22 @@ public final class FunctionsTest {
     assertEquals(Arrays.asList(0, 2, 4, 6), doubled);
   }
 
-  @Test(expected=RuntimeException.class)
+  @Test
   public void testParallelMapStream_runtimeException() throws InterruptedException {
-    Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
-      throw new RuntimeException("Simulated failure");
-    }, executorProp.getExecutor());
+    assertThatThrownBy(() -> {
+      Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
+        throw new RuntimeException("Simulated failure");
+      }, executorProp.getExecutor());
+    }).isExactlyInstanceOf(RuntimeException.class);
   }
 
-  @Test(expected=IOException.class)
+  @Test
   public void testParallelMapStream_checkedException() throws InterruptedException, IOException {
-    Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
-      throw new IOException("Simulated failure");
-    }, executorProp.getExecutor());
+    assertThatThrownBy(() -> {
+      Functions.parallelMapStream(IntStream.range(0, 4).boxed(), n -> {
+        throw new IOException("Simulated failure");
+      }, executorProp.getExecutor());
+    }).isExactlyInstanceOf(IOException.class);
   }
 
   @Test
@@ -589,10 +680,12 @@ public final class FunctionsTest {
     assertSame(actualCause, unwound);
   }
 
-  @Test(expected=IllegalStateException.class)
+  @Test
   public void testCapturedException_unwind_notCaptured() {
     final Throwable exception = new Exception(new RuntimeException());
-    CapturedException.unwind(exception);
+    assertThatThrownBy(() -> {
+      CapturedException.unwind(exception);
+    }).isExactlyInstanceOf(IllegalStateException.class);
   }
   
   @Test
@@ -617,6 +710,6 @@ public final class FunctionsTest {
     final List<String> filtered = strings.stream()
         .filter(Functions.fieldPredicate(String::length, length -> length > 3))
         .collect(Collectors.toList());
-    org.assertj.core.api.Assertions.assertThat(filtered).containsExactly("hare", "boar");
+    assertThat(filtered).containsExactly("hare", "boar");
   }
 }
