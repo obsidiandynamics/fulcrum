@@ -2,11 +2,13 @@ package com.obsidiandynamics.httpclient;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.hamcrest.CoreMatchers.*;
+import static com.obsidiandynamics.func.Functions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 import org.apache.http.*;
 import org.apache.http.HttpStatus;
@@ -14,9 +16,9 @@ import org.apache.http.client.methods.*;
 import org.apache.http.entity.*;
 import org.apache.http.impl.nio.client.*;
 import org.assertj.core.api.*;
-import org.hamcrest.core.*;
 import org.junit.*;
-import org.junit.rules.*;
+import org.junit.runner.*;
+import org.junit.runners.*;
 import org.mockito.*;
 
 import com.github.tomakehurst.wiremock.http.*;
@@ -24,7 +26,13 @@ import com.github.tomakehurst.wiremock.junit.*;
 import com.obsidiandynamics.httpclient.HttpCall.*;
 import com.obsidiandynamics.junit.*;
 
+@RunWith(Parameterized.class)
 public final class HttpCallTest {
+  @Parameterized.Parameters
+  public static List<Object[]> data() {
+    return TestCycle.timesQuietly(1);
+  }
+  
   private static CloseableHttpAsyncClient client;
 
   @ClassRule
@@ -33,9 +41,6 @@ public final class HttpCallTest {
                                                                             .dynamicHttpsPort());
   @Rule
   public final WireMockClassRule wireMock = wireMockClassRule;
-
-  @Rule
-  public final ExpectedException expectedException = ExpectedException.none();
 
   @BeforeClass
   public static void beforeClass() {
@@ -87,8 +92,9 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(NumberFormatException.class);
-    HttpCall.withClient(client).invoke(get).parse(Double::parseDouble);
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get).parse(Double::parseDouble);
+    }).isExactlyInstanceOf(NumberFormatException.class);
   }
 
   @Test
@@ -101,17 +107,18 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(ResponseStatusException.class);
-    expectedException.expect(HamcrestMatchers.<ResponseStatusException>assertedBy(exception -> {
-      assertEquals(400, exception.getStatusCode());
-      assertEquals("Bad request", exception.getReasonPhrase());
-      assertEquals("{some entity}", exception.getEntity());
-      Assertions.assertThat(exception.getMessage()).contains("Unexpected response");
-      Assertions.assertThat(exception.getMessage()).contains("status: 400");
-      Assertions.assertThat(exception.getMessage()).contains("reason: Bad request");
-      Assertions.assertThat(exception.getMessage()).contains("entity: '{some entity}'");
-    }));
-    HttpCall.withClient(client).invoke(get).ensureIsOk();
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get).ensureIsOk();
+    }).satisfies(throwable -> {
+      final ResponseStatusException rse = mustBeSubtype(throwable, ResponseStatusException.class, AssertionError::new);
+      assertEquals(400, rse.getStatusCode());
+      assertEquals("Bad request", rse.getReasonPhrase());
+      assertEquals("{some entity}", rse.getEntity());
+      Assertions.assertThat(rse.getMessage()).contains("Unexpected response");
+      Assertions.assertThat(rse.getMessage()).contains("status: 400");
+      Assertions.assertThat(rse.getMessage()).contains("reason: Bad request");
+      Assertions.assertThat(rse.getMessage()).contains("entity: '{some entity}'");
+    });
   }
 
   @Test
@@ -123,17 +130,18 @@ public final class HttpCallTest {
 
     final HttpHead head = new HttpHead(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(ResponseStatusException.class);
-    expectedException.expect(HamcrestMatchers.<ResponseStatusException>assertedBy(exception -> {
-      assertEquals(400, exception.getStatusCode());
-      assertEquals("Bad request", exception.getReasonPhrase());
-      assertNull(exception.getEntity());
-      Assertions.assertThat(exception.getMessage()).contains("Unexpected response");
-      Assertions.assertThat(exception.getMessage()).contains("status: 400");
-      Assertions.assertThat(exception.getMessage()).contains("reason: Bad request");
-      Assertions.assertThat(exception.getMessage()).contains("entity: null");
-    }));
-    HttpCall.withClient(client).invoke(head).ensureIsOk();
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(head).ensureIsOk();
+    }).satisfies(throwable -> {
+      final ResponseStatusException rse = mustBeSubtype(throwable, ResponseStatusException.class, AssertionError::new);
+      assertEquals(400, rse.getStatusCode());
+      assertEquals("Bad request", rse.getReasonPhrase());
+      assertNull(rse.getEntity());
+      Assertions.assertThat(rse.getMessage()).contains("Unexpected response");
+      Assertions.assertThat(rse.getMessage()).contains("status: 400");
+      Assertions.assertThat(rse.getMessage()).contains("reason: Bad request");
+      Assertions.assertThat(rse.getMessage()).contains("entity: null");
+    });
   }
 
   @Test
@@ -143,8 +151,9 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(IOException.class);
-    HttpCall.withClient(client).invoke(get);
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get);
+    }).isInstanceOf(IOException.class);
   }
 
   @Test
@@ -154,9 +163,9 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(IOException.class);
-    expectedException.expectCause(instanceOf(ConnectionClosedException.class));
-    HttpCall.withClient(client).invoke(get);
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get);
+    }).isExactlyInstanceOf(ConnectionClosedException.class);
   }
 
   @Test
@@ -166,9 +175,9 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(IOException.class);
-    expectedException.expectCause(instanceOf(MalformedChunkCodingException.class));
-    HttpCall.withClient(client).invoke(get);
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get);
+    }).isExactlyInstanceOf(MalformedChunkCodingException.class);
   }
 
   @Test
@@ -225,14 +234,15 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(ResponseStatusException.class);
-    expectedException.expectCause(IsNull.nullValue(Throwable.class));
-    expectedException.expect(HamcrestMatchers.<ResponseStatusException>assertedBy(exception -> {
-      assertEquals(400, exception.getStatusCode());
-      assertEquals("Bad request", exception.getReasonPhrase());
-      assertEquals("", exception.getEntity());
-    }));
-    HttpCall.withClient(client).invoke(get).ensureIsOk();
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get).ensureIsOk();
+    }).satisfies(throwable -> {
+      final ResponseStatusException rse = mustBeSubtype(throwable, ResponseStatusException.class, AssertionError::new);
+      assertNull(rse.getCause());
+      assertEquals(400, rse.getStatusCode());
+      assertEquals("Bad request", rse.getReasonPhrase());
+      assertEquals("", rse.getEntity());
+    });
   }
 
   @Test
@@ -254,14 +264,15 @@ public final class HttpCallTest {
 
     final HttpGet get = new HttpGet(String.format("http://localhost:%d/test", wireMock.port()));
 
-    expectedException.expect(ResponseStatusException.class);
-    expectedException.expectCause(IsNull.nullValue(Throwable.class));
-    expectedException.expect(HamcrestMatchers.<ResponseStatusException>assertedBy(exception -> {
-      assertEquals(400, exception.getStatusCode());
-      assertEquals("Bad request", exception.getReasonPhrase());
-      assertEquals("", exception.getEntity());
-    }));
-    HttpCall.withClient(client).invoke(get).ensureIsOkOrCreated();
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.withClient(client).invoke(get).ensureIsOkOrCreated();
+    }).satisfies(throwable -> {
+      final ResponseStatusException rse = mustBeSubtype(throwable, ResponseStatusException.class, AssertionError::new);
+      assertNull(rse.getCause());
+      assertEquals(400, rse.getStatusCode());
+      assertEquals("Bad request", rse.getReasonPhrase());
+      assertEquals("", rse.getEntity());
+    });
   }
 
   @Test
@@ -297,8 +308,22 @@ public final class HttpCallTest {
     when(entity.getContentType()).thenReturn(header);
     when(header.getElements()).thenThrow(ParseException.class);
 
-    expectedException.expect(IOException.class);
-    expectedException.expectCause(Is.isA(ParseException.class));
-    HttpCall.toString(entity);
+    Assertions.assertThatThrownBy(() -> {
+      HttpCall.toString(entity);
+    }).isExactlyInstanceOf(IOException.class).hasCauseExactlyInstanceOf(ParseException.class);
+  }
+  
+  @Test
+  public void testCoerceToIOException_ioException() {
+    final IOException cause = new IOException();
+    final IOException coerced = HttpCall.coerceToIOException(new ExecutionException(cause));
+    assertSame(cause, coerced);
+  }
+  
+  @Test
+  public void testCoerceToIOException_otherException() {
+    final Exception cause = new Exception();
+    final IOException coerced = HttpCall.coerceToIOException(new ExecutionException(cause));
+    Assertions.assertThat(coerced).isExactlyInstanceOf(IOException.class).hasCauseReference(cause);
   }
 }

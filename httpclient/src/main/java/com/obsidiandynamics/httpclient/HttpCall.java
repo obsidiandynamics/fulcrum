@@ -222,6 +222,7 @@ public final class HttpCall {
      *  @throws X If an error occurs in the parser function.
      */
     public <T, X extends Throwable> T parse(CheckedFunction<String, T, X> entityParser) throws IOException, X {
+      mustExist(entityParser, "Entity parser cannot be null");
       return entityParser.apply(getEntityString());
     }
     
@@ -233,6 +234,7 @@ public final class HttpCall {
      *  @return The {@link ParseConditionally} step.
      */
     public ParseConditionally ifResponse(Predicate<HttpResponse> predicate) {
+      mustExist(predicate, "Predicate cannot be null");
       return new ParseConditionally(predicate);
     }
     
@@ -255,6 +257,7 @@ public final class HttpCall {
      *  @return The {@link ParseConditionally} step.
      */
     public ParseConditionally ifStatusIs(int... expectedStatuses) {
+      mustExist(expectedStatuses, "Expected statuses array cannot be null");
       return ifResponse(statusIs(expectedStatuses));
     }
     
@@ -282,13 +285,24 @@ public final class HttpCall {
    *  @return The resulting {@link HttpResponse} object.
    *  @throws InterruptedException If the calling thread was interrupted.
    *  @throws IOException If an I/O error occurs. (This also includes {@link ConnectException} and
-   *                      {@link SocketTimeoutException}.)
+   *                      {@link SocketTimeoutException}.) If the underlying exception is not an
+   *                      {@link IOException}, it will be coerced by wrapping.
    */
   public static HttpResponse invoke(HttpAsyncClient client, HttpUriRequest request) throws InterruptedException, IOException {
+    mustExist(client, "HTTP client cannot be null");
+    mustExist(request, "Request cannot be null");
     try {
       return client.execute(request, null).get();
     } catch (ExecutionException e) {
-      throw new IOException(e.getCause());
+      throw coerceToIOException(e);
+    }
+  }
+  
+  static IOException coerceToIOException(ExecutionException e) {
+    if (e.getCause() instanceof IOException) {
+      return (IOException) e.getCause();
+    } else {
+      return new IOException(e.getCause());
     }
   }
   
@@ -311,7 +325,7 @@ public final class HttpCall {
    *  @throws IOException If an I/O error occurs.
    */
   public static String toString(HttpEntity entity) throws IOException {
-    mustExist(entity);
+    mustExist(entity, "Entity cannot be null");
     try {
       return EntityUtils.toString(entity);
     } catch (ParseException e) {
@@ -330,6 +344,7 @@ public final class HttpCall {
    */
   public static void ensureResponseStatusIs(HttpResponse response, int expectedStatus) 
       throws ResponseStatusException, IOException {
+    mustExist(response, "Response cannot be null");
     if (! statusIs(expectedStatus).test(response)) {
       throw createResponseStatusException(response);
     }
@@ -346,6 +361,8 @@ public final class HttpCall {
    */
   public static void ensureResponseStatusIs(HttpResponse response, int... expectedStatuses) 
       throws ResponseStatusException, IOException {
+    mustExist(response, "Response cannot be null");
+    mustExist(expectedStatuses, "Expected statuses array cannot be null");
     if (! statusIs(expectedStatuses).test(response)) {
       throw createResponseStatusException(response);
     }
