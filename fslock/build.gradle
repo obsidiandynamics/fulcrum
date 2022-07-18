@@ -2,16 +2,16 @@ def packageName = "fulcrum-fslock"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-format")
-  compile project(":fulcrum-func")
-  
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-httpclient")
-  testCompile project(":fulcrum-threads")
-  testCompile "org.apache.ant:ant:${antVersion}"
-  testCompile "io.undertow:undertow-core:${undertowVersion}"
-  testCompile "org.apache.httpcomponents:httpclient:${httpclientVersion}"
-  testCompile "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
+  api project(":fulcrum-format")
+  api project(":fulcrum-func")
+
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-httpclient")
+  testImplementation project(":fulcrum-threads")
+  testImplementation "org.apache.ant:ant:${antVersion}"
+  testImplementation "io.undertow:undertow-core:${undertowVersion}"
+  testImplementation "org.apache.httpcomponents:httpclient:${httpclientVersion}"
+  testImplementation "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
 }
 
 jar {

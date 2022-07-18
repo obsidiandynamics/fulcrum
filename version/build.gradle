@@ -2,7 +2,7 @@ def packageName = "fulcrum-version"
 version = project(":").version
 
 dependencies {
-  testCompile project(":fulcrum-assert")
+  testImplementation project(":fulcrum-assert")
 }
 
 jar {

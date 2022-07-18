@@ -4,8 +4,8 @@ version = project(":").version
 dependencies {
   compileOnly "org.hamcrest:hamcrest-core:${hamcrestVersion}"
   compileOnly "junit:junit:${junitVersion}"
-  
-  testCompile project(":fulcrum-assert")
+
+  testImplementation project(":fulcrum-assert")
 }
 
 jar {

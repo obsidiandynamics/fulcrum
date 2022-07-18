@@ -2,16 +2,16 @@ def packageName = "fulcrum-flux"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  compile project(":fulcrum-threads")
-  compile project(":fulcrum-worker")
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-verifier")
-  
-  testRuntime "org.slf4j:slf4j-nop:${slf4jVersion}"
+  api project(":fulcrum-func")
+  api project(":fulcrum-threads")
+  api project(":fulcrum-worker")
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-junit")
+  testImplementation project(":fulcrum-verifier")
+
+  testImplementation "org.slf4j:slf4j-nop:${slf4jVersion}"
 }
 
 jar {

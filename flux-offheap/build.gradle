@@ -2,24 +2,24 @@ def packageName = "fulcrum-flux-offheap"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-flux")
-  compile project(":fulcrum-format")
-  compile project(":fulcrum-fslock")
-  compile project(":fulcrum-io")
-  compile project(":fulcrum-random")
+  api project(":fulcrum-flux")
+  api project(":fulcrum-format")
+  api project(":fulcrum-fslock")
+  api project(":fulcrum-io")
+  api project(":fulcrum-random")
   
   compileOnly "net.openhft:chronicle-queue:${chronicleQueueVersion}"
   compileOnly "com.esotericsoftware:kryo:${kryoVersion}"
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-verifier")
-  testCompile project(":fulcrum-flux").sourceSets.test.output
-  testCompile "net.openhft:chronicle-queue:${chronicleQueueVersion}"
-  testCompile "com.esotericsoftware:kryo:${kryoVersion}"
-  
-  testRuntime "org.slf4j:slf4j-nop:${slf4jVersion}"
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-junit")
+  testImplementation project(":fulcrum-verifier")
+  testImplementation project(":fulcrum-flux").sourceSets.test.output
+  testImplementation "net.openhft:chronicle-queue:${chronicleQueueVersion}"
+  testImplementation "com.esotericsoftware:kryo:${kryoVersion}"
+
+  testImplementation "org.slf4j:slf4j-nop:${slf4jVersion}"
 }
 
 jar {

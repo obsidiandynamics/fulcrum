@@ -2,13 +2,13 @@ def packageName = "fulcrum-worker"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  compile project(":fulcrum-concat")
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-threads")
+  api project(":fulcrum-func")
+  api project(":fulcrum-concat")
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-junit")
+  testImplementation project(":fulcrum-threads")
 }
 
 jar {

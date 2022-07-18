@@ -2,12 +2,12 @@ def packageName = "fulcrum-threads"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-verifier")
+  api project(":fulcrum-func")
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-junit")
+  testImplementation project(":fulcrum-verifier")
 }
 
 jar {

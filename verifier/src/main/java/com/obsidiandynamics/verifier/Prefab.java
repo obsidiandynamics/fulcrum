@@ -149,7 +149,7 @@ public final class Prefab {
   public <T> T black(Class<T> type) {
     mustExist(type);
     synchronized (lock) {
-      return prefabValues.giveBlack(new TypeTag(type));
+      return prefabValues.giveBlue(new TypeTag(type));
     }
   }
 }

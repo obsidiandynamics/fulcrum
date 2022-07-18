@@ -2,10 +2,10 @@ def packageName = "fulcrum-testmark"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  compile project(":fulcrum-resolver")
-  
-  testCompile project(":fulcrum-assert")
+  api project(":fulcrum-func")
+  api project(":fulcrum-resolver")
+
+  testImplementation project(":fulcrum-assert")
 }
 
 jar {

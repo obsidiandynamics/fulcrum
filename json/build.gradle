@@ -2,11 +2,11 @@ def packageName = "fulcrum-json"
 version = project(":").version
 
 dependencies {
-  compile project (":fulcrum-format")
+  api project (":fulcrum-format")
   compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-  
-  testCompile project (":fulcrum-assert")
-  testCompile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+
+  testImplementation project (":fulcrum-assert")
+  testImplementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 
 jar {

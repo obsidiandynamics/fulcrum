@@ -2,11 +2,11 @@ def packageName = "fulcrum-mockito"
 version = project(":").version
 
 dependencies {
-  compile project (":fulcrum-func")
+  api project (":fulcrum-func")
   compileOnly "org.mockito:mockito-core:${mockitoVersion}"
 
-  testCompile project (":fulcrum-verifier")
-  testCompile "org.mockito:mockito-core:${mockitoVersion}"
+  testImplementation project (":fulcrum-verifier")
+  testImplementation "org.mockito:mockito-core:${mockitoVersion}"
 }
 
 jar {

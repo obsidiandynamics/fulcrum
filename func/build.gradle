@@ -2,9 +2,9 @@ def packageName = "fulcrum-func"
 version = project(":").version
 
 dependencies {
-  testCompile project (":fulcrum-assert")
-  testCompile project (":fulcrum-await")
-  testCompile project (":fulcrum-junit")
+  testImplementation project (":fulcrum-assert")
+  testImplementation project (":fulcrum-await")
+  testImplementation project (":fulcrum-junit")
 }
 
 jar {

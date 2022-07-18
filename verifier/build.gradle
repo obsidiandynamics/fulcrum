@@ -2,12 +2,12 @@ def packageName = "fulcrum-verifier"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  compileOnly "com.obsidiandynamics.pojotester:pojotester:${pojotesterVersion}"
+  api project(":fulcrum-func")
+  compileOnly "com.obsidiandynamics.pojotester:core:${pojotesterVersion}"
   compileOnly "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
-  
-  testCompile project(":fulcrum-assert")
-  testCompile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 
 jar {

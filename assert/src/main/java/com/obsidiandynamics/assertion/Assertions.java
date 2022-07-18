@@ -100,7 +100,7 @@ public final class Assertions {
   }
   
   /**
-   *  Verifies that a utility class is well defined.
+   *  Verifies that a utility class is well-defined.
    *
    *  Adapted from
    *  https://github.com/trajano/maven-jee6/blob/master/maven-jee6-test/src/test/java/net/trajano/maven_jee6/test/test/UtilityClassTestUtilTest.java

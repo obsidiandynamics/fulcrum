@@ -2,7 +2,7 @@ def packageName = "fulcrum-select"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
+  api project(":fulcrum-func")
 }
 
 jar {

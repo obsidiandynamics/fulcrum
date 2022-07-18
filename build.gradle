@@ -36,7 +36,7 @@ def baseJvmArgs = [
 project.ext.set("baseJvmArgs", baseJvmArgs)
 
 allprojects {
-  apply plugin: "java"
+  apply plugin: "java-library"
   apply plugin: "jacoco"
   apply plugin: "maven-publish"
   apply plugin: "com.jfrog.bintray"
@@ -44,8 +44,11 @@ allprojects {
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
 
+  //TODO remove when Javadoc errors have been resolved
+  javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+
   repositories {
-    jcenter()
+    mavenCentral()
     maven {
       url "https://oss.sonatype.org/content/repositories/snapshots"
     }
@@ -54,8 +57,8 @@ allprojects {
   ext {
     antVersion = "1.10.6"
     assertjVersion = "3.13.2"
-    chronicleQueueVersion = "5.17.18"
-    equalsverifierVersion = "3.1.9"
+    chronicleQueueVersion = "5.23ea24"
+    equalsverifierVersion = "3.10"
     glassfishELVersion = "3.0.1-b11"
     hamcrestVersion = "2.1"
     hibernateValidatorVersion = "6.0.13.Final"
@@ -76,12 +79,12 @@ allprojects {
   }
   
   dependencies {
-    testCompile "junit:junit:${junitVersion}"
-    testCompile "com.obsidiandynamics.pojotester:pojotester:${pojotesterVersion}"
-    testCompile "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
-    testCompile "org.mockito:mockito-core:${mockitoVersion}"
-    testCompile "org.assertj:assertj-core:${assertjVersion}"
-    testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "com.obsidiandynamics.pojotester:core:${pojotesterVersion}"
+    testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.assertj:assertj-core:${assertjVersion}"
+    testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
   }
   
   compileJava {
@@ -118,7 +121,7 @@ allprojects {
   }
 
   jacoco {
-    toolVersion = "0.8.4"
+    toolVersion = "0.8.8"
   }
   
   task verify {  

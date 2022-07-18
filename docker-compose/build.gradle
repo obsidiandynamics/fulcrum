@@ -2,10 +2,10 @@ def packageName = "fulcrum-docker-compose"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-concat")
-  compile project(":fulcrum-shell")
+  api project(":fulcrum-concat")
+  api project(":fulcrum-shell")
   
-  testCompile "org.hamcrest:hamcrest-library:1.3"
+  testImplementation "org.hamcrest:hamcrest-library:1.3"
 }
 
 jar {

@@ -3,11 +3,11 @@ version = project(":").version
 
 dependencies {
   compileOnly "javax.validation:validation-api:${validationApiVersion}"
-  
-  testCompile project (":fulcrum-assert")
-  testCompile "javax.validation:validation-api:${validationApiVersion}"
-  testRuntime "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
-  testRuntime "org.glassfish:javax.el:${glassfishELVersion}"
+
+  testImplementation project (":fulcrum-assert")
+  testImplementation "javax.validation:validation-api:${validationApiVersion}"
+  testImplementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+  testImplementation "org.glassfish:javax.el:${glassfishELVersion}"
 }
 
 jar {

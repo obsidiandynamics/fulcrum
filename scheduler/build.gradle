@@ -2,13 +2,13 @@ def packageName = "fulcrum-scheduler"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-worker")
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-await")
-  testCompile project(":fulcrum-junit")
-  testCompile project(":fulcrum-testmark")
-  testCompile project(":fulcrum-threads")
+  api project(":fulcrum-worker")
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-await")
+  testImplementation project(":fulcrum-junit")
+  testImplementation project(":fulcrum-testmark")
+  testImplementation project(":fulcrum-threads")
 }
 
 jar {

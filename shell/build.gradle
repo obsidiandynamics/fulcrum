@@ -2,8 +2,8 @@ def packageName = "fulcrum-shell"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-assert")
-  compile project(":fulcrum-concat")
+  api project(":fulcrum-assert")
+  api project(":fulcrum-concat")
 }
 
 jar {

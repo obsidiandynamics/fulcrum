@@ -1,38 +1,17 @@
 def packageName = "fulcrum-dyno"
 version = project(":").version
 
-repositories {
-  jcenter()
-}
-
-buildscript {
-  repositories {
-    maven {
-      url 'https://plugins.gradle.org/m2/'
-    }
-  }
-  dependencies {
-    classpath 'net.ltgt.gradle:gradle-apt-plugin:0.21'
-  }
-}
-
-apply plugin: 'net.ltgt.apt'
-
 dependencies {
-  compile project(":fulcrum-func")
+  api project(":fulcrum-func")
   compileOnly "org.openjdk.jmh:jmh-core:${jmhVersion}"
   
   annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
-  
-  testCompile project(":fulcrum-assert")
-  testCompile project(":fulcrum-resolver")
-  testCompile "org.openjdk.jmh:jmh-core:${jmhVersion}"
+
+  testImplementation project(":fulcrum-assert")
+  testImplementation project(":fulcrum-resolver")
+  testImplementation "org.openjdk.jmh:jmh-core:${jmhVersion}"
 }
 
-compileJava {
-  aptOptions.annotationProcessing = false
-}
-    
 task copySrc(type: Copy, dependsOn: compileJava) {
   from 'build/generated/source/apt/main/com/obsidiandynamics/dyno/generated'
   into 'src/main/java/com/obsidiandynamics/dyno/generated'

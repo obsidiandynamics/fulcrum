@@ -2,16 +2,16 @@ def packageName = "fulcrum-httpclient"
 version = project(":").version
 
 dependencies {
-  compile project (":fulcrum-func")
-  compile project (":fulcrum-io")
+  api project (":fulcrum-func")
+  api project (":fulcrum-io")
   compileOnly "org.apache.httpcomponents:httpclient:${httpclientVersion}"
   compileOnly "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
-  
-  testCompile project (":fulcrum-assert")
-  testCompile project (":fulcrum-junit")
-  testCompile "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
-  testCompile "org.apache.httpcomponents:httpclient:${httpclientVersion}"
-  testCompile "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
+
+  testImplementation project (":fulcrum-assert")
+  testImplementation project (":fulcrum-junit")
+  testImplementation "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
+  testImplementation "org.apache.httpcomponents:httpclient:${httpclientVersion}"
+  testImplementation "org.apache.httpcomponents:httpasyncclient:${httpasyncclientVersion}"
 }
 
 jar {

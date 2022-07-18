@@ -2,9 +2,9 @@ def packageName = "fulcrum-resolver"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  
-  testCompile project(":fulcrum-assert")
+  api project(":fulcrum-func")
+
+  testImplementation project(":fulcrum-assert")
 }
 
 jar {

@@ -2,11 +2,11 @@ def packageName = "fulcrum-launcher"
 version = project(":").version
 
 dependencies {
-  compile project(":fulcrum-func")
-  compile project(":fulcrum-props")
-  compile project(":fulcrum-resolver")
-  
-  testCompile project(":fulcrum-assert")
+  api project(":fulcrum-func")
+  api project(":fulcrum-props")
+  api project(":fulcrum-resolver")
+
+  testImplementation project(":fulcrum-assert")
 }
 
 jar {
