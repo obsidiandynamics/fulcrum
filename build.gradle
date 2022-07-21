@@ -140,9 +140,9 @@ allprojects {
     classDirectories.from = files(sourceSets.main.output)
     executionData.from = files("$buildDir/jacoco/test.exec") + file("$buildDir/jacoco/integrationTest.exec")
     reports {
-      html.enabled true
-      xml.enabled true
-      csv.enabled false
+      html.required = true
+      xml.required = true
+      csv.required = false
     }
   }
 
@@ -156,25 +156,16 @@ allprojects {
 subprojects {
 }
 
-task jacocoMerge(type: JacocoMerge) {
-  mustRunAfter = subprojects.test + subprojects.integrationTest
-  executionData = files(subprojects.jacocoTestReport.executionData)
-  doFirst {
-    executionData = files(files(subprojects.jacocoTestReport.executionData).findAll { it.exists() })
-  }
-}
-
 task jacocoRootReport(type: JacocoReport) {
-  dependsOn jacocoMerge
-  mustRunAfter = subprojects.test + subprojects.integrationTest
+  mustRunAfter = allprojects.test + allprojects.integrationTest + allprojects.javadoc
   additionalSourceDirs.from = files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
   classDirectories.from = files(subprojects.sourceSets.main.output)
-  executionData jacocoMerge.destinationFile
+  executionData.setFrom project.fileTree(dir: '.', include: ['**/build/jacoco/test.exec', '**/build/jacoco/integrationTest.exec'])
   reports {
-    html.enabled true
-    xml.enabled true
-    csv.enabled false
+    html.required = true
+    xml.required = true
+    csv.required = false
   }
   onlyIf = {
     true
@@ -186,73 +177,6 @@ task jacocoRootReport(type: JacocoReport) {
   }
 }
 
-//def packageName = "fulcrum-core"
-//
-//jar {
-//  baseName packageName
-//  finalizedBy jacocoRootReport
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//  baseName packageName
-//  classifier = "javadoc"
-//  from "$buildDir/docs/javadoc"
-//}
-//
-//task sourcesJar(type: Jar) {
-//  baseName packageName
-//  from sourceSets.main.allSource
-//  classifier = "sources"
-//}
-//
-//artifacts {
-//  archives jar
-//  archives javadocJar
-//  archives sourcesJar
-//}
-//
-//publishing {
-//  publications {
-//    mavenJava(MavenPublication) {
-//      groupId project(":").group
-//      artifactId packageName
-//      version project(":").version
-//      from components.java
-//      artifact sourcesJar
-//      artifact javadocJar
-//    }
-//  }
-//  repositories {
-//    maven {
-//      url "${project(':').projectDir}/../repo"
-//    }
-//  }
-//}
-
-//def packageDesc = "Core package"
-//def repoName = "fulcrum"
-//bintray {
-//  user = System.getenv(envUser)
-//  key = System.getenv(envKey)
-//  publications = ["mavenJava"]
-//  pkg {
-//    repo = "${repoName}"
-//    name = packageName
-//    userOrg = "obsidiandynamics"
-//    desc = packageDesc
-//    websiteUrl = "https://github.com/obsidiandynamics/${repoName}"
-//    licenses = ["BSD New"]
-//    vcsUrl = "https://github.com/obsidiandynamics/${repoName}"
-//    issueTrackerUrl = "https://github.com/obsidiandynamics/${repoName}/issues"
-//    publicDownloadNumbers = true
-//    githubRepo = "obsidiandynamics/${repoName}"
-//    override = true
-//    publish = true
-//    version {
-//      name = project(":").version
-//      desc = packageDesc
-//      released  = new Date()
-//      vcsTag = project(":").version
-//    }
-//  }
-//}
+jar {
+  finalizedBy jacocoRootReport
+}

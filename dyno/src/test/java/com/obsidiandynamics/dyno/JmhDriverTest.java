@@ -43,7 +43,6 @@ public final class JmhDriverTest {
     
     final AtomicReference<Exception> error = new AtomicReference<>();
     final ThreadGroup group = new ThreadGroup(UUID.randomUUID().toString());
-    group.setDaemon(true);
     final Thread thread = new Thread(group, () -> {
       final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
       ThreadGroupScopedBenchmarkTarget.primeDelegate(delegate);
@@ -71,6 +70,7 @@ public final class JmhDriverTest {
         ThreadGroupScopedBenchmarkTarget.clearDelegate();
       }
     });
+    thread.setDaemon(true);
     thread.start();
     thread.join();
     assertNull(error.get());
@@ -78,11 +78,11 @@ public final class JmhDriverTest {
   
   public static final class NopBenchmarkTarget implements BenchmarkTarget {
     @Override
-    public void cycle(Abyss abyss) throws Exception {}
+    public void cycle(Abyss abyss) {}
   }
 
   @Test
-  public void testRunWithFork() throws Exception {
+  public void testRunWithFork() {
     Assume.assumeTrue(TEST_REAL_JMH);
     
     // When running from an older (JDK 1.8) build using Gradle wrapper, the forking of a JVM will 

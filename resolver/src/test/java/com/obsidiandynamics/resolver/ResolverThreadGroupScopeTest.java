@@ -19,7 +19,6 @@ public final class ResolverThreadGroupScopeTest {
     final AtomicReference<Throwable> error = new AtomicReference<>();
     
     final ThreadGroup nannyGroup = new ThreadGroup(UUID.randomUUID().toString());
-    nannyGroup.setDaemon(true);
     final Thread nanny = new Thread(nannyGroup, () -> {
       try {
         assertNull(scoped().assign(String.class, Singleton.of("assigned")));

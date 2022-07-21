@@ -10,7 +10,6 @@ public final class ThreadGroupExecutorSample {
   
   private static void parentSurrogateChildrenWithExecutor() throws InterruptedException {
     final ThreadGroup surrogateGroup = new ThreadGroup("surrogate");
-    surrogateGroup.setDaemon(true);
     final Thread surrogateThread = new Thread(surrogateGroup, () -> {
       // assignment in the surrogate thread
       Resolver.scope(Scope.THREAD_GROUP).assign(String.class, Singleton.of("surrogate and children only"));
