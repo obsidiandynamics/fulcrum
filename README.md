@@ -1,9 +1,9 @@
 <img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> Fulcrum
 ===
-[![Download](https://api.bintray.com/packages/obsidiandynamics/fulcrum/fulcrum-shell/images/download.svg) ](https://bintray.com/obsidiandynamics/fulcrum/fulcrum-shell/_latestVersion)
-[![Build](https://travis-ci.org/obsidiandynamics/fulcrum.svg?branch=master) ](https://travis-ci.org/obsidiandynamics/fulcrum#)
+[![Maven release](https://maven-badges.herokuapp.com/maven-central/com.obsidiandynamics.fulcrum/assert/badge.svg)](https://search.maven.org/search?q=g:com.obsidiandynamics.fulcrum)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/obsidiandynamics/fulcrum.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/obsidiandynamics/fulcrum/alerts/)
+[![Gradle build](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml/badge.svg)](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml)
 [![codecov](https://codecov.io/gh/obsidiandynamics/fulcrum/branch/master/graph/badge.svg)](https://codecov.io/gh/obsidiandynamics/fulcrum)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/obsidiandynamics/fulcrum.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/obsidiandynamics/fulcrum/context:java)
 
 Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
 
