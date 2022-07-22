@@ -44,7 +44,7 @@ public final class TaskScheduler implements Terminable, Joinable {
   /** The worker thread for performing task execution. */
   private final WorkerThread executor;
   
-  /** The time when the thread should be woken, in absolute nanoseconds. See {@link System.nanoTime()}. */
+  /** The time when the thread should be woken, in absolute nanoseconds. See {@link System#nanoTime()}. */
   private volatile long nextWake;
   
   /** Whether execution should be forced for all tasks (regarding of their scheduled time), pending and future. */

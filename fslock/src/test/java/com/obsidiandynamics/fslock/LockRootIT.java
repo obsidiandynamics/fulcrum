@@ -161,9 +161,9 @@ public final class LockRootIT {
    *  web server. At this point, the parent can communicate with the child forks, and will issue acquire/release
    *  commands (as HTTP POSTs to the child processes) and assert results.
    *  
-   *  @throws InterruptedException
-   *  @throws ResponseStatusException
-   *  @throws IOException
+   *  @throws InterruptedException If the thread was interrupted.
+   *  @throws ResponseStatusException If an HTTP error occurred.
+   *  @throws IOException If an I/O error occurred.
    */
   @Test
   public void testAcrossJvms() throws InterruptedException, ResponseStatusException, IOException {
@@ -187,7 +187,7 @@ public final class LockRootIT {
 
       assertTrue(sendCommandBoolean(client, forkPorts.get(0), Command.ACQUIRE));
       assertFalse(sendCommandBoolean(client, forkPorts.get(1), Command.ACQUIRE));
-      sendCommand(client, forkPorts.get(0), Command.RELEASE);
+      sendCommandBoolean(client, forkPorts.get(0), Command.RELEASE);
       assertTrue(sendCommandBoolean(client, forkPorts.get(1), Command.ACQUIRE));
     } finally {
       for (int forkPort : forkPorts) {

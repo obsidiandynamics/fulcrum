@@ -68,8 +68,8 @@ public final class JmhDriver implements BenchmarkDriver {
    *  Purely for testing purposes. Directly assigns {@link JmhWrapper#targetClass} to
    *  avoid having to use reflection.
    *  
-   *  @param wrapper
-   *  @param targetClass
+   *  @param wrapper The JMH wrapper.
+   *  @param targetClass The target class.
    */
   static void assignTargetClass(JmhWrapper wrapper, String targetClass) {
     wrapper.targetClass = targetClass;

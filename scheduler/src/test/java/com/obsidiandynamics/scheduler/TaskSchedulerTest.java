@@ -140,10 +140,9 @@ public final class TaskSchedulerTest {
   
   private void testParallelSchedule(int addThreads, int tasksPerThread) {
     Parallel.blocking(addThreads, threadIdx -> {
-      final List<UUID> ids = new ArrayList<>(tasksPerThread);
       for (int i = 0; i < tasksPerThread; i++) {
         final TestTask task = doIn(new UUID(threadIdx, i), i);
-        ids.add(task.getId());
+        assertNotNull(task.getId());
         scheduler.schedule(task);
       }
     }).run();
@@ -157,10 +156,9 @@ public final class TaskSchedulerTest {
   }
   
   private void testClear(int tasks) {
-    final List<UUID> ids = new ArrayList<>(tasks);
     for (int i = 0; i < tasks; i++) {
       final TestTask task = doIn(new UUID(0, i), i);
-      ids.add(task.getId());
+      assertNotNull(task.getId());
       scheduler.schedule(task);
     }
    

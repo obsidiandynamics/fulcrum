@@ -98,8 +98,7 @@ public abstract class AbstractEmissionContext<E> implements EmissionContext<E>, 
     if (size > 1) {
       size--;
       final Node<E> oldHead = head;
-      final Node<E> newHead = head.next;
-      head = newHead;
+      head = head.next;
       return oldHead.event;
     } else if (size == 1) {
       size--;

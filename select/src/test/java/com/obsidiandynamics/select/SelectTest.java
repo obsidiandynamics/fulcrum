@@ -235,7 +235,7 @@ public final class SelectTest {
     final Once<String> branch = new Once<>();
     Select.from(5L)
     .whenNull().then(() -> branch.assign("null"))
-    .when(isEqual("foo")).then(obj -> branch.assign("foo"))
+    .when(isEqual((Object) "foo")).then(obj -> branch.assign("foo"))
     .whenInstanceOf(int.class).then(obj -> branch.assign("int"))
     .whenInstanceOf(Integer.class).then(obj -> branch.assign("Integer"))
     .whenInstanceOf(long.class).then(obj -> branch.assign("long"))
@@ -251,7 +251,7 @@ public final class SelectTest {
     final Once<String> branch = new Once<>();
     Select.from(5L).checked()
     .whenNull().then(() -> branch.assign("null"))
-    .when(isEqual("foo")).then(obj -> branch.assign("foo"))
+    .when(isEqual((Object) "foo")).then(obj -> branch.assign("foo"))
     .whenInstanceOf(int.class).then(obj -> branch.assign("int"))
     .whenInstanceOf(Integer.class).then(obj -> branch.assign("Integer"))
     .whenInstanceOf(long.class).then(obj -> branch.assign("long"))

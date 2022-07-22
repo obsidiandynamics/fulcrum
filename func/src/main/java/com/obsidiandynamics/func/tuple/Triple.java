@@ -30,7 +30,8 @@ public final class Triple<A, B, C> extends AbstractTriple<A, B, C> {
   public C getThird() {
     return getThirdElement();
   }
-  
+
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   public Triple<A, B, C> clone() {
     return of(getFirst(), getSecond(), getThird());

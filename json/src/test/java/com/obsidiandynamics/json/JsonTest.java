@@ -114,7 +114,7 @@ public final class JsonTest {
   private static Date getTestDate() {
     final Calendar cal = Calendar.getInstance();
     cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-    cal.set(2047, 0, 2, 3, 4, 5);
+    cal.set(2047, Calendar.JANUARY, 2, 3, 4, 5);
     cal.set(Calendar.MILLISECOND, 678);
     return cal.getTime();
   }

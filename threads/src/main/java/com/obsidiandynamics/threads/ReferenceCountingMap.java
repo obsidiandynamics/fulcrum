@@ -150,7 +150,7 @@ public final class ReferenceCountingMap<K, V> {
   
   /**
    *  Atomically de-scopes the mapping for the given key, if one exists. Attempting to call
-   *  {@link #descope(Object)} for a non-existent mapping will not have any further impact.
+   *  this method for a non-existent mapping will not have any further impact.
    *  
    *  @param key The key.
    */

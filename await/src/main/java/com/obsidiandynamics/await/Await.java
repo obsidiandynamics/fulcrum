@@ -177,7 +177,10 @@ public final class Await {
         }
       }
     } finally {
-      if (Thread.interrupted()) throw new InterruptedException("Wait interrupted");
+      if (Thread.interrupted()) {
+        //noinspection ThrowFromFinallyBlock
+        throw new InterruptedException("Wait interrupted");
+      }
     }
   }
 }

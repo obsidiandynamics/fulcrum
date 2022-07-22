@@ -35,7 +35,8 @@ public final class Quadruple<A, B, C, D> extends AbstractQuadruple<A, B, C, D> {
   public D getFourth() {
     return getFourthElement();
   }
-  
+
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   public Quadruple<A, B, C, D> clone() {
     return of(getFirst(), getSecond(), getThird(), getFourth());

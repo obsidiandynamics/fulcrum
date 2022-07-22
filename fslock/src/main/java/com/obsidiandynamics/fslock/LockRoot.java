@@ -70,6 +70,7 @@ public final class LockRoot {
     this.lockProvider = lockProvider;
     
     if (! rootDir.exists()) {
+      //noinspection ResultOfMethodCallIgnored
       rootDir.mkdirs();
     } else {
       DirectoryLock.ensureIsDirectory(rootDir);
@@ -177,7 +178,7 @@ public final class LockRoot {
    */
   public int vacuumAll() throws IOException {
     int vacuumed = 0;
-    for (File fileWithinRoot : rootDir.listFiles()) {
+    for (File fileWithinRoot : Functions.mustExist(rootDir.listFiles(), IOException::new)) {
       if (fileWithinRoot.isDirectory()) {
         if (vacuum(fileWithinRoot)) {
           vacuumed++;

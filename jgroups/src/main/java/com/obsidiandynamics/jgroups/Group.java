@@ -145,7 +145,7 @@ public final class Group implements AutoCloseable {
     final Serializable id = syncMessage.getId();
     final HostMessageHandler idHandler = new HostMessageHandler() {
       @Override 
-      public void handle(JChannel channel, Message resp) throws Exception {
+      public void handle(JChannel channel, Message resp) {
         responses.put(resp.getSrc(), resp);
         if (responses.size() == respondents) {
           removeMessageHandler(id, this);

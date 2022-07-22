@@ -59,8 +59,8 @@ public final class RandomnessTest {
 
   private static boolean isWellDistributed(byte[] bytes) {
     final Set<Byte> unique = new HashSet<>(bytes.length, 1f);
-    for (int i = 0; i < bytes.length; i++) {
-      unique.add(bytes[i]);
+    for (final byte aByte : bytes) {
+      unique.add(aByte);
     }
     final int expectedUniqueBytes = Math.min((int) Math.round(Math.sqrt(bytes.length)), 256);
     return unique.size() >= expectedUniqueBytes;
@@ -73,7 +73,7 @@ public final class RandomnessTest {
   }
 
   /**
-   *  Self-test verifying that {@link #testRandomness()} works as expected.
+   *  Self-test verifying that {@link #testRandomness(int, Supplier)} works as expected.
    */
   @Test(expected=UnlikelyRandomSourceError.class)
   public void testRandomnessFailure() {

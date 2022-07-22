@@ -12,7 +12,13 @@ public final class Constraints {
    *  The holder class defers initialisation until needed.
    */
   private static class Holder {
-    static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    static final Validator VALIDATOR;
+
+    static {
+      try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+        VALIDATOR = factory.getValidator();
+      }
+    }
   }
   
   private Constraints() {}

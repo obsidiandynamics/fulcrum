@@ -45,7 +45,7 @@ public final class ConsumerSink<E> implements Sink<E> {
   }
 
   @Override
-  public void onNext(E next) throws InterruptedException, FluxException {
+  public void onNext(E next) throws FluxException {
     if (terminating) return;
     
     eventConsumer.accept(context, next);

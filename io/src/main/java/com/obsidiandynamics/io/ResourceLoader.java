@@ -39,7 +39,7 @@ public final class ResourceLoader {
   public static InputStream stream(URI uri) throws FileNotFoundException {
     switch (uri.getScheme()) {
       case "file":
-        return new FileInputStream(new File(stripScheme(uri)));
+        return new FileInputStream(stripScheme(uri));
         
       case "cp":
       case "classpath":

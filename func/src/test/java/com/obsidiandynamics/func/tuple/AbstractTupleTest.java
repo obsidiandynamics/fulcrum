@@ -107,10 +107,11 @@ public final class AbstractTupleTest {
     
     class PairImpl2<X, Y> extends AbstractPair<X, Y> {
       PairImpl2(X first, Y second) {
-        
         super(first, second);
       }
     }
-    assertNotEquals((Object) new PairImpl1<>("a", "b"), (Object) new PairImpl2<>("a", "b"));
+    final Object a = new PairImpl1<>("a", "b");
+    final Object b = new PairImpl2<>("a", "b");
+    assertNotEquals(a, b);
   }
 }

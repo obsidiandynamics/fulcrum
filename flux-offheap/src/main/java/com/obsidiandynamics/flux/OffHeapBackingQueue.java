@@ -117,7 +117,8 @@ final class OffHeapBackingQueue<E> implements BackingQueue<E> {
       if (! closed) {
         try (DocumentContext dc = tailer.readingDocument()) {
           if (dc.isPresent()) {
-            dc.wire().readBytes(in -> {
+            final Wire wire = Functions.mustExist(dc.wire());
+            wire.readBytes(in -> {
               final int length = in.readInt();
               bytesHolder.bytes = new byte[length];
               in.read(bytesHolder.bytes);
@@ -186,7 +187,8 @@ final class OffHeapBackingQueue<E> implements BackingQueue<E> {
     try {
       if (! closed) {
         try (DocumentContext dc = appender.writingDocument()) {
-          dc.wire().writeBytes(out -> {
+          final Wire wire = Functions.mustExist(dc.wire());
+          wire.writeBytes(out -> {
             out.writeInt(bytes.length);
             out.write(bytes);
           });

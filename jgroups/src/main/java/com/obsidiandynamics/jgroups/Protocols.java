@@ -7,6 +7,7 @@ import org.jgroups.*;
 import org.jgroups.protocols.*;
 import org.jgroups.protocols.pbcast.*;
 import org.jgroups.stack.*;
+import org.jgroups.util.*;
 import org.jgroups.util.Util.*;
 
 import com.obsidiandynamics.func.*;

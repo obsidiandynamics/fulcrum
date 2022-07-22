@@ -59,7 +59,7 @@ public final class SocketsTest {
   /**
    *  Tests maximum allowable range.
    *  
-   *  @throws PortRangeExhaustedException
+   *  @throws PortRangeExhaustedException If the port range was exhausted.
    */
   @Test
   public void testGetSparePortMaximumRangeSuccess() throws PortRangeExhaustedException {
@@ -71,11 +71,11 @@ public final class SocketsTest {
    *  Tests a range comprising just one port, with the port being acquired beforehand, thus
    *  forcing an exhaustion.
    *  
-   *  @throws PortRangeExhaustedException
-   *  @throws IOException
+   *  @throws PortRangeExhaustedException If the port range was exhausted.
+   *  @throws IOException If an I/O error occurred.
    */
   @Test(expected=PortRangeExhaustedException.class)
-  public void testGetSparePortRangeExchausted() throws PortRangeExhaustedException, IOException {
+  public void testGetSparePortRangeExhausted() throws PortRangeExhaustedException, IOException {
     final int spare = Sockets.getSparePort(2000, 3000);
     try (ServerSocket socket = new ServerSocket()) {
       socket.setReuseAddress(true);
@@ -96,8 +96,8 @@ public final class SocketsTest {
    *  The test is repeated N times, meaning that the likelihood of never exercising the looping
    *  logic is 1/(2^N). With N=20, the probability of achieving full coverage is 0.9999990463.
    *  
-   *  @throws PortRangeExhaustedException
-   *  @throws IOException
+   *  @throws PortRangeExhaustedException If the port range was exhausted.
+   *  @throws IOException If an I/O error occurred.
    */
   @Test
   public void testGetSparePortInShortRangeWithSomeInUse() throws PortRangeExhaustedException, IOException {

@@ -26,6 +26,7 @@ public final class Pair<A, B> extends AbstractPair<A, B> {
     return getSecondElement();
   }
   
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   public Pair<A, B> clone() {
     return of(getFirst(), getSecond());

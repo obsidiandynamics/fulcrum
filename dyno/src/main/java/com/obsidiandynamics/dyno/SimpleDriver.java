@@ -80,9 +80,9 @@ public final class SimpleDriver implements BenchmarkDriver {
    *  Calibrates a batch size so that a check is performed at most approximately once every 10 millis or
    *  {@code benchmarkTimeMillis}, whichever is lower.
    *  
-   *  @param cyclesPerMillisecond
-   *  @param benchmarkTimeMillis
-   *  @return
+   *  @param cyclesPerMillisecond Number of cycles per millisecond.
+   *  @param benchmarkTimeMillis Number of milliseconds to run the benchmark for.
+   *  @return The batch size.
    */
   static int calibrateBatchSize(double cyclesPerMillisecond, int benchmarkTimeMillis) {
     final int checkIntervalMillis = Math.min(benchmarkTimeMillis, 10);
