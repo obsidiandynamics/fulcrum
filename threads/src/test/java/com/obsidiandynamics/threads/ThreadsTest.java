@@ -196,9 +196,7 @@ public final class ThreadsTest {
   @Test
   public void testAwaitLatch() {
     final CountDownLatch latch = new CountDownLatch(1);
-    new Thread(() -> {
-      latch.countDown();
-    }).start();
+    new Thread(latch::countDown).start();
     Threads.await(latch);
   }
 
@@ -209,7 +207,7 @@ public final class ThreadsTest {
     final Thread thread = new Thread(() -> {
       Threads.await(latch);
       assertTrue(Thread.interrupted());
-      threadWasInterrupted.set(true);;
+      threadWasInterrupted.set(true);
     });
     thread.start();
     thread.interrupt();

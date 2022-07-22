@@ -1,5 +1,6 @@
 package com.obsidiandynamics.select;
 
+import java.util.*;
 import java.util.function.*;
 
 import com.obsidiandynamics.func.*;
@@ -24,7 +25,7 @@ public final class Select<V, R> implements SelectRoot<R> {
   }
   
   public <C> ValueThen<Select<V, R>, C, R> whenInstanceOf(Class<C> type) {
-    return when(instanceOf(type)).transform(obj -> type.cast(obj));
+    return when(instanceOf(type)).transform(type::cast);
   }
   
   public Select<V, R> otherwise(Consumer<? super V> action) {
@@ -57,7 +58,7 @@ public final class Select<V, R> implements SelectRoot<R> {
     }
     
     public <C> ValueThen<Select<V, R>.Checked, C, R>.Checked whenInstanceOf(Class<C> type) {
-      return when(instanceOf(type)).transform(obj -> type.cast(obj));
+      return when(instanceOf(type)).transform(type::cast);
     }
     
     public <X extends Throwable> Select<V, R>.Checked otherwise(CheckedConsumer<? super V, X> action) throws X {
@@ -109,7 +110,7 @@ public final class Select<V, R> implements SelectRoot<R> {
   }
   
   public static <V> Predicate<V> isNull() {
-    return v -> v == null;
+    return Objects::isNull;
   }
   
   public static <V> Predicate<V> isNotNull() {
@@ -121,7 +122,7 @@ public final class Select<V, R> implements SelectRoot<R> {
   }
   
   public static <V> Predicate<V> instanceOf(Class<?> type) {
-    return v -> type.isInstance(v);
+    return type::isInstance;
   }
   
   public static <V> Predicate<V> alwaysTrue() {

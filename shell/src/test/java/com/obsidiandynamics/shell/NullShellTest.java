@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 public final class NullShellTest {
-  private NullShell shell = NullShell.getIntance();
+  private final NullShell shell = NullShell.getIntance();
   
   @Test
   public void test() {

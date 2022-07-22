@@ -1,6 +1,7 @@
 package com.obsidiandynamics.shell;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
@@ -84,7 +85,7 @@ public final class RunningProcess {
   private static String readStream(InputStream is, Consumer<String> sink) throws IOException {
     final Writer writer = new StringWriter();
     final char[] buffer = new char[1024];
-    try (Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+    try (Reader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
       int n;
       while ((n = reader.read(buffer)) != -1) {
         final String output = new String(buffer, 0, n);

@@ -79,9 +79,7 @@ public abstract class AbstractBufferedChannelTest {
     final List<Integer> collected = new ArrayList<>();
     
     final Flux flux = new Flux()
-        .cascade(Emitters.<Integer>supplier(context -> {
-          context.terminate();
-        }))
+        .cascade(Emitters.<Integer>supplier(StageContext::terminate))
         .cascade(Channels.buffered(1, getBackingQueueFactory()))
         .cascade(Sinks.consumer((__context, event) -> {
           collected.add(event);

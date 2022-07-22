@@ -25,7 +25,7 @@ public final class LazyReferenceTest {
 
   @Test
   public void testGetDoubleCheck() {
-    final AtomicReference<LazyReference<String, RuntimeException>> refPtr = new AtomicReference<LazyReference<String, RuntimeException>>();
+    final AtomicReference<LazyReference<String, RuntimeException>> refPtr = new AtomicReference<>();
     final LazyReference<String, RuntimeException> ref = LazyReference.from(() -> {
       final Thread losingThread = new Thread(() -> {
         refPtr.get().get();

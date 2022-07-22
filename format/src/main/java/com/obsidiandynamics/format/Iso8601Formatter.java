@@ -13,7 +13,7 @@ public interface Iso8601Formatter {
    *  @return A {@link Date} object.
    *  @throws Throwable If a parsing error occurs.
    */
-  public Date parse(String encoded) throws Throwable;
+  Date parse(String encoded) throws Throwable;
   
   /**
    *  Formats a given date to ISO 8601 form, using the provided time zone.
@@ -22,5 +22,5 @@ public interface Iso8601Formatter {
    *  @param timeZone The time zone to use.
    *  @return The formatted {@link String}.
    */
-  public String format(Date date, TimeZone timeZone);
+  String format(Date date, TimeZone timeZone);
 }

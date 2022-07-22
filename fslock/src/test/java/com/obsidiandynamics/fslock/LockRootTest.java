@@ -45,9 +45,9 @@ public final class LockRootTest {
   
   @Test
   public void testTryAcquireClose_oneThread_failOnRoot() throws IOException {
-    final File roolLockFile = new File(SANDBOX_DIR + File.separator + ".lock");
-    final LockProvider lockProvider = (LockProvider) file -> {
-      if (file.getAbsolutePath().equals(roolLockFile.getAbsolutePath())) {
+    final File rootLockFile = new File(SANDBOX_DIR + File.separator + ".lock");
+    final LockProvider lockProvider = file -> {
+      if (file.getAbsolutePath().equals(rootLockFile.getAbsolutePath())) {
         return null;
       } else {
         return RandomAccessFileLockProvider.getInstance().tryLock(file);
@@ -66,7 +66,7 @@ public final class LockRootTest {
   public void testTryAcquireClose_oneThread_failOnNode() throws IOException {
     final String nodeName = UUID.randomUUID().toString();
     final File nodeLockFile = DirectoryLock.lockFileForDir(new File(SANDBOX_DIR + File.separator + nodeName));
-    final LockProvider lockProvider = (LockProvider) file -> {
+    final LockProvider lockProvider = file -> {
       if (file.getAbsolutePath().equals(nodeLockFile.getAbsolutePath())) {
         return null;
       } else {
@@ -232,7 +232,7 @@ public final class LockRootTest {
     try (ReentrantDirectoryLock lock = lockRoot.tryAcquire(nodeName)) {
       Assertions.assertThat(lock.toString())
       .contains("absolutePath=" + nodeDir.getAbsolutePath())
-      .contains("owner=" + Thread.currentThread().toString())
+      .contains("owner=" + Thread.currentThread())
       .contains("count=1");
     }
     Assertions.assertThat(lockRoot.toString()).contains("rootDir=").contains(new File(SANDBOX_DIR).toString()).contains("locks=");

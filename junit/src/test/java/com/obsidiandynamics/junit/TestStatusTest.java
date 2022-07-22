@@ -29,12 +29,12 @@ public final class TestStatusTest {
 
   @Test
   public void _0_testThatStatusIsPassing() {
-    assertTrue(! testStatus.isFailed());
+    assertFalse(testStatus.isFailed());
   }
 
   @Test
   public void _1_testThatStatusIsStillPassingAfterOneTest() {
-    assertTrue(! testStatus.isFailed());
+    assertFalse(testStatus.isFailed());
   }
   
   @Test

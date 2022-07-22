@@ -18,7 +18,8 @@ public final class ClassesTest {
 
   @Test
   public void testCast() {
-    final String s = Classes.cast((Object) "hello");
+    final Object obj = "hello";
+    final String s = Classes.cast(obj);
     assertEquals("hello", s);
   }
   
@@ -50,7 +51,7 @@ public final class ClassesTest {
   }
   
   static <T, R> Function<T, R> uncheck(CheckedFunction<? super T, ? extends R, ? extends RuntimeException> checkedFunction) {
-    return t -> checkedFunction.apply(t);
+    return checkedFunction::apply;
   }
   
   @Test

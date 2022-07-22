@@ -37,7 +37,7 @@ public final class LockRootIT {
   private enum Command {
     TERMINATE,
     ACQUIRE,
-    RELEASE;
+    RELEASE
   }
   
   /**

@@ -77,7 +77,7 @@ public final class ThreadedFlowTest {
     Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
     
-    cons.forEach(a -> a.confirm());
+    cons.forEach(StatefulConfirmation::confirm);
     wait.until(ListQuery.of(dispatched).isSize(runs));
     assertEquals(expected, dispatched);
     assertEquals(0, flow.getPendingConfirmations().size());
@@ -100,12 +100,12 @@ public final class ThreadedFlowTest {
       assertEquals(2, c0.getPendingCount());
     });
     
-    cons.forEach(a -> a.confirm());
+    cons.forEach(StatefulConfirmation::confirm);
     
     // single pass shouldn't lead to any completions
     assertThat(ListQuery.of(dispatched).isSize(0));
     
-    cons.forEach(a -> a.confirm());
+    cons.forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).isSize(runs));
     assertEquals(expected, dispatched);
@@ -121,7 +121,7 @@ public final class ThreadedFlowTest {
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
-    ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
+    ListQuery.of(cons).transform(Collections::reverse).list().forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).isSize(runs));
     assertEquals(expected, dispatched);
@@ -137,7 +137,7 @@ public final class ThreadedFlowTest {
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
-    ListQuery.of(cons).transform(Collections::shuffle).list().forEach(a -> a.confirm());
+    ListQuery.of(cons).transform(Collections::shuffle).list().forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).isSize(runs));
     assertEquals(expected, dispatched);
@@ -181,7 +181,7 @@ public final class ThreadedFlowTest {
 
     Threads.sleep(10); // covers the idle wait branch of StrictFiringStrategy.cycle()
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
-    ListQuery.of(cons).delayedBy(1).forEach(a -> a.confirm());
+    ListQuery.of(cons).delayedBy(1).forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).contains(runs - 1));
     assertThat(ListQuery.of(dispatched).isOrderedBy(Integer::compare));
@@ -197,7 +197,7 @@ public final class ThreadedFlowTest {
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
-    ListQuery.of(cons).transform(Collections::reverse).list().forEach(a -> a.confirm());
+    ListQuery.of(cons).transform(Collections::reverse).list().forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).contains(runs - 1));
     assertEquals(1, dispatched.size());
@@ -213,7 +213,7 @@ public final class ThreadedFlowTest {
     final List<StatefulConfirmation> cons = new ArrayList<>(runs);
 
     expected.forEach(i -> cons.add(flow.begin(i, new TestTask(dispatched, i))));
-    ListQuery.of(cons).transform(Collections::shuffle).delayedBy(1).forEach(a -> a.confirm());
+    ListQuery.of(cons).transform(Collections::shuffle).delayedBy(1).forEach(StatefulConfirmation::confirm);
 
     wait.until(ListQuery.of(dispatched).contains(runs - 1));
     assertThat(ListQuery.of(dispatched).isOrderedBy(Integer::compare));

@@ -139,7 +139,7 @@ public final class WorkerThreadTest {
   @Test
   public void testStartTwice() {
     final WorkerThread thread = WorkerThread.builder()
-        .onCycle(t -> t.terminate())
+        .onCycle(WorkerThread::terminate)
         .build();
     thread.start();
     assertThatThrownBy(thread::start)

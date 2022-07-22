@@ -82,7 +82,7 @@ public final class Combinations<E> implements Iterable<List<E>> {
    *  @return The combination vector at the given location.
    */
   public static <E> List<E> get(int[] indices, E[][] matrix) {
-    final E[] combination = Classes.<E[]>cast(new Object[matrix.length]);
+    final E[] combination = Classes.cast(new Object[matrix.length]);
     return Arrays.asList(get(indices, matrix, combination));
   }
 

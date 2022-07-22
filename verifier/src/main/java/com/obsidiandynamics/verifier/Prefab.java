@@ -116,12 +116,7 @@ public final class Prefab {
     
     final T redCopy = shallowCopy(red);
     synchronized (lock) {
-      factoryCache.put(type, new PrefabValueFactory<T>() {
-        @Override
-        public Tuple<T> createValues(TypeTag tag, PrefabValues prefabValues, LinkedHashSet<TypeTag> typeStack) {
-          return new Tuple<>(red, black, redCopy);
-        }
-      });
+      factoryCache.put(type, (tag, prefabValues, typeStack) -> new Tuple<>(red, black, redCopy));
     }
   }
   

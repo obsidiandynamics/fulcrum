@@ -24,7 +24,7 @@ public final class TimestampedTest {
   @Test
   public void testMapPreserve() {
     final Timestamped<Integer> in = new Timestamped<>(42);
-    final Function<Timestamped<Integer>, Timestamped<String>> map = Timestamped.<Integer, String>mapPreserve(String::valueOf);
+    final Function<Timestamped<Integer>, Timestamped<String>> map = Timestamped.mapPreserve(String::valueOf);
     final Timestamped<String> out = map.apply(in);
     assertEquals("42", out.getValue());
     assertEquals("in=" + in + ", out=" + out, in.getTimestamp(), out.getTimestamp());
@@ -33,7 +33,7 @@ public final class TimestampedTest {
   @Test
   public void testMapRestamp() {
     final Timestamped<Integer> in = new Timestamped<>(42);
-    final Function<Timestamped<Integer>, Timestamped<String>> map = Timestamped.<Integer, String>mapRestamp(String::valueOf);
+    final Function<Timestamped<Integer>, Timestamped<String>> map = Timestamped.mapRestamp(String::valueOf);
     while (System.nanoTime() <= in.getTimestamp());
     final Timestamped<String> out = map.apply(in);
     assertEquals("42", out.getValue());

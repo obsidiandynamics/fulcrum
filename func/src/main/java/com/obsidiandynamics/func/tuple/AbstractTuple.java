@@ -98,7 +98,7 @@ public abstract class AbstractTuple implements Comparable<AbstractTuple> {
    *  
    *  @return A {@link Comparator} of {@link AbstractTuple} types.
    */
-  public static final Comparator<AbstractTuple> defaultComparator() {
+  public static Comparator<AbstractTuple> defaultComparator() {
     return AbstractTuple::compareElements;
   }
   
@@ -118,7 +118,7 @@ public abstract class AbstractTuple implements Comparable<AbstractTuple> {
    *  @param y The second tuple to compare.
    *  @return The result of the comparison, as per {@link Comparator} conventions.
    */
-  public static final int compareElements(AbstractTuple x, AbstractTuple y) {
+  public static int compareElements(AbstractTuple x, AbstractTuple y) {
     mustBeEqual(x.getClass(), y.getClass(), 
                 withMessage(() -> "Classes are not mutually comparable: " + x.getClass().getName() + " and " + y.getClass().getName(), 
                             IllegalArgumentException::new));
@@ -126,7 +126,7 @@ public abstract class AbstractTuple implements Comparable<AbstractTuple> {
     for (int elementIndex = 0; elementIndex < x.elements.length; elementIndex++) {
       final Object xElement = x.elements[elementIndex];
       final Object yElement = y.elements[elementIndex];
-      final Comparator<Object> comparator = Classes.<Comparator<Object>>cast(x.getComparator(elementIndex));
+      final Comparator<Object> comparator = Classes.cast(x.getComparator(elementIndex));
       final int comparison = comparator.compare(xElement, yElement);
       if (comparison != 0) {
         return comparison;

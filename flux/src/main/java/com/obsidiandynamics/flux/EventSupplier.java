@@ -53,14 +53,11 @@ public interface EventSupplier<E> {
   }
   
   static <E> EventSupplier<E> iterator(Iterator<? extends E> iterator) {
-    return new EventSupplier<E>() {
-      @Override
-      public void get(EmissionContext<? super E> context) {
-        if (iterator.hasNext()) {
-          context.emit(iterator.next());
-        } else {
-          context.terminate();
-        }
+    return context -> {
+      if (iterator.hasNext()) {
+        context.emit(iterator.next());
+      } else {
+        context.terminate();
       }
     };
   }

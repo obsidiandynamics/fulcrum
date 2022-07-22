@@ -19,7 +19,7 @@ public final class BenchmarkSupportTest {
   }
 
   @Test
-  public void testLifecycle() throws ClassNotFoundException, Exception {
+  public void testLifecycle() throws Exception {
     final BenchmarkTarget delegate = mock(BenchmarkTarget.class);
     ThreadScopedBenchmarkTarget.primeDelegate(delegate);
     

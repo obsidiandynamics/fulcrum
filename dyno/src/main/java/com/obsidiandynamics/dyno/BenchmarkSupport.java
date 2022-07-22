@@ -5,7 +5,7 @@ import com.obsidiandynamics.func.*;
 final class BenchmarkSupport {
   private BenchmarkSupport() {}
   
-  static BenchmarkTarget resolve(String targetClass) throws ClassNotFoundException, Exception {
+  static BenchmarkTarget resolve(String targetClass) throws Exception {
     final Class<? extends BenchmarkTarget> cls = Classes.cast(Class.forName(targetClass));
     return resolve(cls);
   }

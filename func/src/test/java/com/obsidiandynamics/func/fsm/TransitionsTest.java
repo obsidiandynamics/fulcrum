@@ -227,7 +227,7 @@ public final class TransitionsTest {
   }
   
   private static <S> void sortPaths(List<List<S>> paths, Comparator<? super S> comparator) {
-    Collections.sort(paths, (p0, p1) -> {
+    paths.sort((p0, p1) -> {
       assertEquals(p0.size(), p1.size());
       final int elements = p0.size();
       for (int i = 0; i < elements; i++) {

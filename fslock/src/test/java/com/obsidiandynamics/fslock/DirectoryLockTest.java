@@ -21,7 +21,7 @@ public final class DirectoryLockTest {
   
   @Test
   public void testEnsureIsDirectory() throws IOException {
-    final File fileInTmp = new File(System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID().toString());
+    final File fileInTmp = new File(System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID());
     fileInTmp.createNewFile();
     fileInTmp.deleteOnExit();
         

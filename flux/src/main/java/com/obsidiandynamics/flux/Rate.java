@@ -55,7 +55,7 @@ public final class Rate {
     }
   }
   
-  public static final FlatRateBuilder flatBuilder() {
+  public static FlatRateBuilder flatBuilder() {
     return new FlatRateBuilder();
   }
   
@@ -97,19 +97,19 @@ public final class Rate {
     return new RampUpRateBuilder();
   }
 
-  public final double getBaseRate() {
+  public double getBaseRate() {
     return baseRate;
   }
 
-  public final double getPeakRate() {
+  public double getPeakRate() {
     return peakRate;
   }
 
-  public final double getRampUpTime() {
+  public double getRampUpTime() {
     return rampUpTime;
   }
 
-  public final double getDuration() {
+  public double getDuration() {
     return duration;
   }
 

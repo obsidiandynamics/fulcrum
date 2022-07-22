@@ -58,7 +58,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(ints, collected.stream().collect(Collectors.toList()));
+    assertEquals(ints, new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());
@@ -109,7 +109,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(ints, collected.stream().collect(Collectors.toList()));
+    assertEquals(ints, new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());
@@ -134,7 +134,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(ints, collected.stream().collect(Collectors.toList()));
+    assertEquals(ints, new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());
@@ -162,7 +162,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(Collections.singletonList(0), collected.stream().collect(Collectors.toList()));
+    assertEquals(Collections.singletonList(0), new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());
@@ -195,7 +195,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(Collections.singletonList(0), collected.stream().collect(Collectors.toList()));
+    assertEquals(Collections.singletonList(0), new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());
@@ -223,7 +223,7 @@ public final class OffHeapFluxTest {
     
     flux.joinSilently();
     
-    assertEquals(Collections.emptyList(), collected.stream().collect(Collectors.toList()));
+    assertEquals(Collections.emptyList(), new ArrayList<>(collected));
     assertTrue(flux.isComplete());
     assertNull(flux.getError());
     verify(completionHandler).onComplete(isNull());

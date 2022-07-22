@@ -39,9 +39,9 @@ public final class HttpClientTest {
   public final ExpectedException expectedException = ExpectedException.none();
   
   @ClassRule
-  public static WireMockClassRule wireMockClassRule = new WireMockClassRule(options()
-                                                                            .dynamicPort()
-                                                                            .dynamicHttpsPort());
+  public static final WireMockClassRule wireMockClassRule = new WireMockClassRule(options()
+                                                                                        .dynamicPort()
+                                                                                        .dynamicHttpsPort());
   @Rule
   public final WireMockClassRule wireMock = wireMockClassRule;
   
@@ -59,11 +59,8 @@ public final class HttpClientTest {
   
   @Test(expected=RuntimeIOException.class)
   public void testCloseUncheckedWithException() {
-    final Closeable closeable = new Closeable() {
-      @Override
-      public void close() throws IOException {
-        throw new IOException("Simulated fault");
-      }
+    final Closeable closeable = () -> {
+      throw new IOException("Simulated fault");
     };
     IO.closeUnchecked(closeable);
   }
@@ -120,8 +117,8 @@ public final class HttpClientTest {
   }
   
   @Test(expected=HttpClientBuilderException.class)
-  public void testRuntimeException() {
-    HttpClient.builder().withPoolSize(-1).buildAndStart();
+  public void testRuntimeException() throws IOException {
+    HttpClient.builder().withPoolSize(-1).buildAndStart().close();
   }
   
   @Test

@@ -14,6 +14,6 @@ public final class KryoTimestampedSerializer extends Serializer<Timestamped<?>> 
   public Timestamped<?> read(Kryo kryo, Input input, Class<? extends Timestamped<?>> type) {
     final long timestamp = input.readLong();
     final Object value = kryo.readClassAndObject(input);
-    return new Timestamped<Object>(timestamp, value);
+    return new Timestamped<>(timestamp, value);
   }
 }

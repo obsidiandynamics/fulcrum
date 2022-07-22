@@ -5,6 +5,7 @@ import static com.obsidiandynamics.func.Functions.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.*;
 
 import com.obsidiandynamics.func.*;
 
@@ -211,10 +212,12 @@ public final class LockRoot {
         }
         
         if (acquiredNodeLock) {
-          Files.walk(nodeDir.toPath())
-          .sorted(Comparator.reverseOrder())
-          .map(Path::toFile)
-          .forEach(File::delete);
+          try (Stream<Path> streamPath = Files.walk(nodeDir.toPath()).sorted(Comparator.reverseOrder())) {
+            try (Stream<File> stream = streamPath.map(Path::toFile)) {
+              //noinspection ResultOfMethodCallIgnored
+              stream.forEach(File::delete);
+            }
+          }
           vacuumed = true;
         } else {
           vacuumed = false;

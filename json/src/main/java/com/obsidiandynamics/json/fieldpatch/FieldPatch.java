@@ -15,7 +15,7 @@ import com.obsidiandynamics.func.*;
  *  @param <T> Value type.
  */
 public interface FieldPatch<T> {
-  static final FieldPatch<?> NULL_INSTANCE = new StandardFieldPatch<>(null);
+  FieldPatch<?> NULL_INSTANCE = new StandardFieldPatch<>(null);
 
   T get();
   
@@ -51,7 +51,7 @@ public interface FieldPatch<T> {
     if (patch != null) valueConsumer.accept(patch.get());
   }
   
-  static final class StandardFieldPatch<T> implements FieldPatch<T> {
+  final class StandardFieldPatch<T> implements FieldPatch<T> {
     private final T value;
     
     StandardFieldPatch(T value) {

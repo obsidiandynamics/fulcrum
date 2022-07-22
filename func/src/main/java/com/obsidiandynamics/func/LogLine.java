@@ -10,7 +10,7 @@ public interface LogLine extends Consumer<String> {
   }
   
   static LogLine forPrintStream(PrintStream stream) {
-    return message -> stream.println(message);
+    return stream::println;
   }
   
   default void println(String message) {

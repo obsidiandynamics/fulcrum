@@ -13,7 +13,7 @@ import com.obsidiandynamics.func.*;
 public final class LazyStripedTest {
   @Test
   public void testGet_contended() {
-    final Supplier<Object> valueSupplier = Classes.<Supplier<Object>>cast(mock(Supplier.class));
+    final Supplier<Object> valueSupplier = Classes.cast(mock(Supplier.class));
     final LazyStriped<Object> striped = new LazyStriped<>(16, valueSupplier);
     final AtomicInteger invocations = new AtomicInteger();
     final Object expectedValue = new Object();

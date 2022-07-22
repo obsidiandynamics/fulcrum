@@ -54,7 +54,7 @@ final class FlowTests {
     }
 
     static <T> ListQuery<T> of(List<T> list) {
-      return new ListQuery<T>(list);
+      return new ListQuery<>(list);
     }
 
     Runnable isSize(int numberOfElements) {
@@ -66,7 +66,7 @@ final class FlowTests {
     }
     
     Runnable isOrderedBy(Comparator<T> comparator) {
-      final List<T> ordered = transform(l -> Collections.sort(l, comparator)).list;
+      final List<T> ordered = transform(l -> l.sort(comparator)).list;
       return () -> assertEquals(ordered, list);
     }
     
@@ -100,8 +100,8 @@ final class FlowTests {
     }
   }
   
-  static boolean ASSERT_ALL = false;
-  static boolean ASSERT_LAST = true;
+  static final boolean ASSERT_ALL = false;
+  static final boolean ASSERT_LAST = true;
   
   static void testMultithreadedBeginAndConfirm(Flow flow, 
                                                int tasks, 
@@ -114,7 +114,7 @@ final class FlowTests {
                                     taskId -> flow.begin(taskId, new TestTask(dispatched, taskId)),
                                     executor);
     
-    Collections.sort(confirmations, FlowTests::compareConfirmations);
+    confirmations.sort(FlowTests::compareConfirmations);
     final List<StatefulConfirmation> orderedConfirmations = new ArrayList<>(confirmations);
     final List<Integer> orderedConfirmationIds = orderedConfirmations.stream()
         .map(confirmation -> (Integer) confirmation.getId())
@@ -172,6 +172,6 @@ final class FlowTests {
   }
   
   static <T> Comparator<T> relativeOrderOf(List<? extends T> items) {
-    return (t0, t1) -> Integer.compare(items.indexOf(t0), items.indexOf(t1));
+    return Comparator.comparingInt(items::indexOf);
   }
 }

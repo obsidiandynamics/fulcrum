@@ -177,7 +177,7 @@ public final class TaskSchedulerTest {
   private void testForceExecute(int tasks) {
     final List<UUID> ids = new ArrayList<>(tasks); 
     for (int i = 0; i < tasks; i++) {
-      final TestTask task = doIn(60_000 + i * 1_000);
+      final TestTask task = doIn(60_000 + i * 1_000L);
       ids.add(task.getId());
       scheduler.schedule(task);
     }
@@ -196,7 +196,7 @@ public final class TaskSchedulerTest {
   private void testAbort(int tasks) {
     final List<TestTask> timeouts = new ArrayList<>(tasks); 
     for (int i = 0; i < tasks; i++) {
-      final TestTask task = doIn(60_000 + i * 1_000);
+      final TestTask task = doIn(60_000 + i * 1_000L);
       timeouts.add(task);
       scheduler.schedule(task);
     }
@@ -260,7 +260,7 @@ public final class TaskSchedulerTest {
   private void testEarlyExecute(int tasks) {
     final List<TestTask> timeouts = new ArrayList<>(tasks); 
     for (int i = 0; i < tasks; i++) {
-      final TestTask task = doIn(new UUID(0, i), 60_000 + i * 1_000);
+      final TestTask task = doIn(new UUID(0, i), 60_000 + i * 1_000L);
       timeouts.add(task);
       scheduler.schedule(task);
     }
@@ -362,7 +362,7 @@ public final class TaskSchedulerTest {
   }
   
   private TestTask doIn(UUID uuid, long referenceNanos, long millis) {
-    return new TestTask(referenceNanos + millis * 1_000_000l, 
+    return new TestTask(referenceNanos + millis * 1_000_000L,
                         uuid,
                         receiver::receive);
   }

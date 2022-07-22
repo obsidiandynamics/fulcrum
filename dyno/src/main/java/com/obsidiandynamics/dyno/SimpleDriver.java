@@ -62,7 +62,7 @@ public final class SimpleDriver implements BenchmarkDriver {
       log("done in %,d ms\n", System.currentTimeMillis() - start);
 
       // if any of the runners throw an error, rethrow that error here
-      final Throwable error = runners.stream().map(r -> r.error).filter(e -> e != null).findFirst().orElse(null);
+      final Throwable error = runners.stream().map(r -> r.error).filter(Objects::nonNull).findFirst().orElse(null);
       if (error != null) {
         throw new BenchmarkError(error);
       }

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.*;
 
 public final class StandardFieldPatchDeserializerTest {
   @Test(expected=UnsupportedOperationException.class)
-  public void test() throws JsonProcessingException, IOException {
+  public void test() throws IOException {
     new StandardFieldPatchDeserializer().deserialize(null, null);
   }
 }

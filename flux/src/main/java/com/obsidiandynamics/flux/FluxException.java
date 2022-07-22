@@ -30,7 +30,7 @@ public class FluxException extends Exception {
    *  @param exception The exception to wrap (can be {@code null}).
    *  @return The wrapped exception, possibly {@code null}.
    */
-  public static final FluxException wrap(Throwable exception) {
+  public static FluxException wrap(Throwable exception) {
     return wrapException(exception, FluxException.class, FluxException::new);
   }
   

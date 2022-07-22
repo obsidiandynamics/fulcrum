@@ -109,7 +109,7 @@ final class OffHeapBackingQueue<E> implements BackingQueue<E> {
     
     final class BytesHolder {
       byte[] bytes;
-    };
+    }
     final BytesHolder bytesHolder = new BytesHolder();
 
     queueAccessLock.readLock().lock();

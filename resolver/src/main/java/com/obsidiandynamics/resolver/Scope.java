@@ -21,7 +21,7 @@ public enum Scope {
   
   private final Supplier<Scoped> maker;
   
-  private Scope(Supplier<Scoped> maker) {
+  Scope(Supplier<Scoped> maker) {
     this.maker = maker;
   }
 

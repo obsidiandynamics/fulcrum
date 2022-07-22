@@ -19,7 +19,7 @@ public final class ConstructorArgs {
   
   ConstructorParameters toConstructorParameters() {
     return new ConstructorParameters(args.toArray(), 
-                                     paramTypes.toArray(new Class[paramTypes.size()]));
+                                     paramTypes.toArray(new Class[0]));
   }
 
   @Override

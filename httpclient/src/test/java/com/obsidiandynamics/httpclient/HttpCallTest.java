@@ -36,9 +36,9 @@ public final class HttpCallTest {
   private static CloseableHttpAsyncClient client;
 
   @ClassRule
-  public static WireMockClassRule wireMockClassRule = new WireMockClassRule(options()
-                                                                            .dynamicPort()
-                                                                            .dynamicHttpsPort());
+  public static final WireMockClassRule wireMockClassRule = new WireMockClassRule(options()
+                                                                                        .dynamicPort()
+                                                                                        .dynamicHttpsPort());
   @Rule
   public final WireMockClassRule wireMock = wireMockClassRule;
 
@@ -296,7 +296,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEntityToString() throws UnsupportedEncodingException, IOException {
+  public void testEntityToString() throws IOException {
     final String entityString = HttpCall.toString(new StringEntity("stringEntity"));
     assertEquals("stringEntity", entityString);
   }

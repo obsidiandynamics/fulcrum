@@ -145,9 +145,7 @@ public final class SupplierEmitterTest {
     final Flux flux = new Flux()
         .onError(ExceptionHandler.nop())
         .cascade(Emitters
-                 .<Integer>supplier(context -> {
-                   context.terminate();
-                 })
+                 .<Integer>supplier(StageContext::terminate)
                  .onComplete(completionHandler))
         .cascade(Sinks.collection(collected))
         .start();

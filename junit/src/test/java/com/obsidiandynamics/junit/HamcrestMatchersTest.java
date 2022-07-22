@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.*;
 import java.math.*;
+import java.util.*;
 import java.util.function.*;
 
 import org.hamcrest.*;
@@ -22,7 +23,7 @@ public final class HamcrestMatchersTest {
   
   @Test
   public void testPredicateOf() {
-    final Matcher<Object> notNullMatcher = HamcrestMatchers.fulfils(obj -> obj != null);
+    final Matcher<Object> notNullMatcher = HamcrestMatchers.fulfils(Objects::nonNull);
     assertTrue(notNullMatcher.matches("string"));
     assertFalse(notNullMatcher.matches(null));
     

@@ -13,7 +13,7 @@ public final class Terminator extends FluentOperatingSet<Terminable, Terminator>
   
   @Override
   public Joinable terminate() {
-    final List<Joinable> joinables = elements.stream().map(t -> t.terminate()).collect(Collectors.toList());
+    final List<Joinable> joinables = elements.stream().map(Terminable::terminate).collect(Collectors.toList());
     return timeoutMillis -> Joinable.joinAll(timeoutMillis, joinables);
   }
   

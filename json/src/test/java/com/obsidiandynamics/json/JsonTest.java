@@ -120,7 +120,7 @@ public final class JsonTest {
   }
 
   @Test
-  public void testGetMapperWithIso8601() throws JsonParseException, JsonMappingException, IOException {
+  public void testGetMapperWithIso8601() throws IOException {
     final Date date = Json.getInstance().getMapper().readValue('"' + TEST_DATE + '"', Date.class);
     assertEquals(getTestDate(), date);
   }

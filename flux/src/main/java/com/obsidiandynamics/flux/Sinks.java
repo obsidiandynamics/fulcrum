@@ -7,7 +7,7 @@ public final class Sinks {
   private Sinks() {}
   
   public static <E> ConsumerSink<E> consumer(EventConsumer<? super E> eventConsumer) {
-    return new ConsumerSink<E>(eventConsumer);
+    return new ConsumerSink<>(eventConsumer);
   }
   
   public static <E> ConsumerSink<E> consumer(Consumer<? super E> consumer) {

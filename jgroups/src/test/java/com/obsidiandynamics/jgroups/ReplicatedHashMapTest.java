@@ -14,7 +14,7 @@ import org.junit.*;
 
 public final class ReplicatedHashMapTest {
   private static final ChannelFactory UDP_FACTORY = () -> Protocols.newUdpChannel(Util.getLoopback());
-  private static final ChannelFactory MOCK_FACTORY = () -> Protocols.newLoopbackChannel();
+  private static final ChannelFactory MOCK_FACTORY = Protocols::newLoopbackChannel;
   
   private static final boolean MOCK = true;
   

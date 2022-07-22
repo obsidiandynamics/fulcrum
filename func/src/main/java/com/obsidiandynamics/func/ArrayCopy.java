@@ -104,7 +104,7 @@ public final class ArrayCopy {
    *  @return The new array instance.
    */
   public static <T> T clear(T array, int newLength) {
-    return allocate(Classes.<Class<T>>cast(array.getClass()), newLength);
+    return allocate(Classes.cast(array.getClass()), newLength);
   }
   
   /**

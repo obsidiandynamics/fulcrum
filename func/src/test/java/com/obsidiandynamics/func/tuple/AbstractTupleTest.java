@@ -46,8 +46,8 @@ public final class AbstractTupleTest {
       protected Function<Object, String> getFormatter(int fieldIndex) {
         return fieldIndex == 0 ? obj -> ((String) obj).toUpperCase() : super.getFormatter(fieldIndex);
       }
-    };
-    
+    }
+
     final CustomPair pair = new CustomPair("a", "b");
     assertEquals("CustomPair [A, b]", pair.toString());
   }
@@ -62,13 +62,13 @@ public final class AbstractTupleTest {
   @Test
   public void testDefaultComparatorReversed() {
     final List<TestPair<Integer, Integer>> pairs = Arrays.asList(pair(2, 2), pair(0, 0), pair(1, 2), pair(1, 2), pair(1, 0));
-    Collections.sort(pairs, AbstractTuple.defaultComparator().reversed());
+    pairs.sort(AbstractTuple.defaultComparator().reversed());
     assertEquals(asList(pair(2, 2), pair(1, 2), pair(1, 2), pair(1, 0), pair(0, 0)), pairs);
   }
   
   @Test
   public void testDefaultComparatorWithNulls() {
-    final List<TestPair<Integer, Integer>> pairs = Arrays.<TestPair<Integer, Integer>>asList(pair(2, 2), pair(null, 0), pair(1, null), pair(1, 2));
+    final List<TestPair<Integer, Integer>> pairs = Arrays.asList(pair(2, 2), pair(null, 0), pair(1, null), pair(1, 2));
     Collections.sort(pairs);
     assertEquals(asList(pair(null, 0), pair(1, null), pair(1, 2), pair(2, 2)), pairs);
   }
@@ -94,7 +94,7 @@ public final class AbstractTupleTest {
     expectedException.expectMessage(PairImpl1.class.getName());
     expectedException.expectMessage(PairImpl2.class.getName());
     expectedException.expectMessage(" and ");
-    Collections.sort(pairs, AbstractPair.defaultComparator());
+    pairs.sort(AbstractPair.defaultComparator());
   }
   
   @Test
@@ -111,6 +111,6 @@ public final class AbstractTupleTest {
         super(first, second);
       }
     }
-    assertNotEquals(new PairImpl1<>("a", "b"), new PairImpl2<>("a", "b"));
+    assertNotEquals((Object) new PairImpl1<>("a", "b"), (Object) new PairImpl2<>("a", "b"));
   }
 }

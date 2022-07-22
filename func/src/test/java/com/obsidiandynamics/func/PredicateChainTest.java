@@ -15,7 +15,7 @@ public final class PredicateChainTest {
 
   @Test
   public void testChainedAll() {
-    final Predicate<Integer> predicate = PredicateChain.<Integer>allOf(i -> i > 3, i -> i < 6);
+    final Predicate<Integer> predicate = PredicateChain.allOf(i -> i > 3, i -> i < 6);
     
     assertFalse(predicate.test(3));
     assertTrue(predicate.test(4));
@@ -31,7 +31,7 @@ public final class PredicateChainTest {
 
   @Test
   public void testChainedAny() {
-    final Predicate<Integer> predicate = PredicateChain.<Integer>anyOf(i -> i < 4, i -> i > 5);
+    final Predicate<Integer> predicate = PredicateChain.anyOf(i -> i < 4, i -> i > 5);
     
     assertTrue(predicate.test(3));
     assertFalse(predicate.test(4));

@@ -5,12 +5,7 @@ import static com.obsidiandynamics.func.Functions.*;
 import com.obsidiandynamics.worker.*;
 
 public final class ConsumerSink<E> implements Sink<E> {
-  private final StageContext context = new StageContext() {
-    @Override
-    public void terminate() {
-      ConsumerSink.this.terminate();
-    }
-  };
+  private final StageContext context = ConsumerSink.this::terminate;
   
   private final EventConsumer<? super E> eventConsumer;
 

@@ -14,7 +14,7 @@ public final class PropsFormat {
     return Collections.list(props.propertyNames()).stream()
         .map(o -> (String) o)
         .filter(keyPredicate)
-        .map(key -> key.length())
+        .map(String::length)
         .max(Integer::compare).orElse(0);
   }
   

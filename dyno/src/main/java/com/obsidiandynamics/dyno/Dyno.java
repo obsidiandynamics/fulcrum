@@ -6,7 +6,7 @@ import java.util.function.*;
  *  Bootstraps the benchmark.
  */
 public final class Dyno {
-  static Consumer<BenchmarkResult> defaultResultConsumer = __result -> {};
+  static final Consumer<BenchmarkResult> defaultResultConsumer = __result -> {};
   
   /** The driver that will execute the actual benchmark. */
   private BenchmarkDriver driver = new JmhDriver();

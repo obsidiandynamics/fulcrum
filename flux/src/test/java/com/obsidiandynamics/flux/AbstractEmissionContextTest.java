@@ -11,7 +11,7 @@ import org.junit.*;
 import com.obsidiandynamics.func.*;
 
 public final class AbstractEmissionContextTest {
-  private final class TestContext extends AbstractEmissionContext<Integer> {
+  private static final class TestContext extends AbstractEmissionContext<Integer> {
     @Override
     protected void terminateImpl() {}
   }
@@ -52,7 +52,7 @@ public final class AbstractEmissionContextTest {
         assertEquals(1, context.remainingCapacity());
         return next;
       }
-    };
+    }
     final Popper popper = new Popper();
     
     context.emit(0);
@@ -97,7 +97,7 @@ public final class AbstractEmissionContextTest {
         assertEquals(2, context.remainingCapacity());
         return next;
       }
-    };
+    }
     final Popper popper = new Popper();
     
     context.emit(0);
@@ -145,7 +145,7 @@ public final class AbstractEmissionContextTest {
         assertEquals(2, context.remainingCapacity());
         return next;
       }
-    };
+    }
     final Popper popper = new Popper();
     
     context.emit(0);
@@ -171,11 +171,11 @@ public final class AbstractEmissionContextTest {
       int lastPopped = -1;
       
       void popAndCheck() {
-        final int popped = (int) context.next();
+        final int popped = context.next();
         assertEquals(lastPopped + 1, popped);
         lastPopped = popped;
       }
-    };
+    }
     final Popper popper = new Popper();
     
     for (int cycle = 0; cycle < cycles; cycle++) {

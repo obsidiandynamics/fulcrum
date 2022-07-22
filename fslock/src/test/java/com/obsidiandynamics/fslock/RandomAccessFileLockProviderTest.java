@@ -10,7 +10,7 @@ import org.junit.*;
 
 public final class RandomAccessFileLockProviderTest {
   @Test
-  public void testRandomAccessFileIfLockAcquired() throws FileNotFoundException, IOException {
+  public void testRandomAccessFileIfLockAcquired() throws IOException {
     final File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "RandomAccessFileLockProviderTest");
     file.deleteOnExit();
     try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
@@ -20,7 +20,7 @@ public final class RandomAccessFileLockProviderTest {
   }
   
   @Test
-  public void testCloseRandomAccessFileIfLockNotAcquired() throws FileNotFoundException, IOException {
+  public void testCloseRandomAccessFileIfLockNotAcquired() throws IOException {
     final File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "RandomAccessFileLockProviderTest");
     file.deleteOnExit();
     try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {

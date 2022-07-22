@@ -12,14 +12,14 @@ import com.obsidiandynamics.worker.*;
 public final class TaskScheduler implements Terminable, Joinable {
   /** Maximum sleep time. If the next task's time is longer, the sleep will be performed in a loop.
    *  This is also the default time that the scheduler sleeps for if it has no pending tasks. */
-  private static final long MAX_SLEEP_NANOS = 1_000_000_000l;
+  private static final long MAX_SLEEP_NANOS = 1_000_000_000L;
   
   /** Minimum sleep time. Below this threshold sleeping isn't worthwhile. */
-  private static final long MIN_SLEEP_NANOS = 1_000_000l;
+  private static final long MIN_SLEEP_NANOS = 1_000_000L;
   
   /** Compensation for the overhead of scheduling a task. Use a small positive number if the tasks
    *  are coming in later than desired. */
-  private static final long ADJ_NANOS = 0l;
+  private static final long ADJ_NANOS = 0L;
   
   /** List of pending tasks, ordered with the most immediate at the head. */
   private final NavigableSet<Task> tasks = new ConcurrentSkipListSet<>(TaskScheduler::compareByTimeAndId);
@@ -178,8 +178,8 @@ public final class TaskScheduler implements Terminable, Joinable {
       final long timeDiff = Math.min(MAX_SLEEP_NANOS, nextWake - System.nanoTime() - ADJ_NANOS);
       try {
         if (timeDiff >= MIN_SLEEP_NANOS) {
-          final long millis = timeDiff / 1_000_000l;
-          final int nanos = (int) (timeDiff - millis * 1_000_000l);
+          final long millis = timeDiff / 1_000_000L;
+          final int nanos = (int) (timeDiff - millis * 1_000_000L);
           sleepLock.wait(millis, nanos);
         } else {
           break;

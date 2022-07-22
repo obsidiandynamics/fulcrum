@@ -208,7 +208,7 @@ public final class OffHeapBackingQueueTest {
     final OffHeapBackingQueue<String> requests = newQueue(1);
     final OffHeapBackingQueue<String> replies = newQueue(1);
     
-    final AtomicReference<Throwable> errorRef = new AtomicReference<Throwable>();
+    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
     final Thread t = new Thread(() -> {
       try {
         for (int i = 0; i < elements; i++) {

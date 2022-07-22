@@ -44,7 +44,7 @@ public final class WorkerThread implements Terminable, Joinable {
   /**
    *  Starts the worker thread.
    */
-  public final void start() {
+  public void start() {
     synchronized (stateLock) {
       if (state == WorkerState.CONCEIVED) {
         state = WorkerState.RUNNING;
@@ -61,7 +61,7 @@ public final class WorkerThread implements Terminable, Joinable {
    *  @return A {@link Joinable} for the caller to wait on.
    */
   @Override
-  public final Joinable terminate() {
+  public Joinable terminate() {
     synchronized (stateLock) {
       if (state == WorkerState.CONCEIVED) {
         state = WorkerState.TERMINATED;
@@ -118,7 +118,7 @@ public final class WorkerThread implements Terminable, Joinable {
    *  
    *  @return The thread's state.
    */
-  public final WorkerState getState() {
+  public WorkerState getState() {
     return state;
   }
   
@@ -127,30 +127,30 @@ public final class WorkerThread implements Terminable, Joinable {
   }
   
   @Override
-  public final boolean join(long timeoutMillis) throws InterruptedException {
+  public boolean join(long timeoutMillis) throws InterruptedException {
     driver.join(timeoutMillis);
     return ! driver.isAlive();
   }
   
-  public final String getName() {
+  public String getName() {
     return driver.getName();
   }
   
-  public final boolean isDaemon() {
+  public boolean isDaemon() {
     return driver.isDaemon();
   }
   
-  public final int getPriority() {
+  public int getPriority() {
     return driver.getPriority();
   }
   
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hashCode(driver);
   }
 
   @Override
-  public final boolean equals(Object obj) {
+  public boolean equals(Object obj) {
     if (this == obj) {
       return true;
     } else if (obj instanceof WorkerThread) {
@@ -162,7 +162,7 @@ public final class WorkerThread implements Terminable, Joinable {
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return WorkerThread.class.getSimpleName() + " [thread=" + driver + ", state=" + state + "]";
   }
   

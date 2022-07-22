@@ -8,7 +8,7 @@ import java.util.*;
  */
 @FunctionalInterface
 public interface Joinable {
-  public static Joinable nop() { return timeoutMillis -> true; }
+  static Joinable nop() { return timeoutMillis -> true; }
   
   /**
    *  Waits until this concurrent entity terminates.

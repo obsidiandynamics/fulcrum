@@ -52,9 +52,7 @@ public final class StatefulConfirmationTest {
     reset(f);
     assertTrue(c.isConfirmed());
     
-    assertThatThrownBy(() -> {
-      c.confirm();
-    }).isExactlyInstanceOf(IllegalStateException.class).hasMessage("Completed 2 of 1 for ID testId");
+    assertThatThrownBy(c::confirm).isExactlyInstanceOf(IllegalStateException.class).hasMessage("Completed 2 of 1 for ID testId");
     assertEquals(0, c.getPendingCount());
     assertTrue(c.isConfirmed());
     verifyNoMoreInteractions(f);

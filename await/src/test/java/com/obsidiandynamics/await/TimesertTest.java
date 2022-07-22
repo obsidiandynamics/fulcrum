@@ -34,8 +34,10 @@ public final class TimesertTest {
   public void testFailBoolean() {
     try {
       Timesert.wait(20).withIntervalMillis(1).untilTrue(() -> false);
-      TestCase.fail("AssertionError not thrown");
-    } catch (AssertionError e) {}
+    } catch (AssertionError e) {
+      return;
+    }
+    TestCase.fail("AssertionError not thrown");
   }
   
   @Test

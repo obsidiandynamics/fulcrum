@@ -8,7 +8,7 @@ import java.util.*;
 public interface JsonObject extends JsonPart {
   JsonObject field(String name, Object value);
   
-  static final class JsonObjectImpl extends LinkedHashMap<String, Object> implements JsonObject {
+  final class JsonObjectImpl extends LinkedHashMap<String, Object> implements JsonObject {
     private static final long serialVersionUID = 1L;
 
     @Override

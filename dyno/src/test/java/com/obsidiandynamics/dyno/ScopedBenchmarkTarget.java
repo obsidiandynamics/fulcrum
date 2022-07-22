@@ -27,11 +27,11 @@ public abstract class ScopedBenchmarkTarget implements BenchmarkTarget {
     delegate.cycle(abyss);
   }
   
-  protected static final void primeDelegate(Scope scope, BenchmarkTarget delegate) {
+  protected static void primeDelegate(Scope scope, BenchmarkTarget delegate) {
     Resolver.scope(scope).assign(BenchmarkTarget.class, Singleton.of(delegate));
   }
   
-  protected static final void clearDelegate(Scope scope) {
+  protected static void clearDelegate(Scope scope) {
     Resolver.scope(scope).reset(BenchmarkTarget.class);
   }
 }

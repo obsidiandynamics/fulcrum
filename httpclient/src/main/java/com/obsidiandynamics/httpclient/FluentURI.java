@@ -90,6 +90,6 @@ public final class FluentURI {
   }
 
   public URI build() {
-    return Exceptions.wrap(() -> builder.build(), InvalidURISyntaxException::new);
+    return Exceptions.wrap(builder::build, InvalidURISyntaxException::new);
   }
 }

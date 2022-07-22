@@ -126,6 +126,6 @@ public final class JmhDriver implements BenchmarkDriver {
 
   static double getAveragePrimaryScore(Collection<RunResult> results) {
     if (results.isEmpty()) throw new IllegalArgumentException("Empty results collection");
-    return results.stream().collect(Collectors.averagingDouble(r -> r.getPrimaryResult().getScore())).doubleValue();
+    return results.stream().collect(Collectors.averagingDouble(r -> r.getPrimaryResult().getScore()));
   }
 }

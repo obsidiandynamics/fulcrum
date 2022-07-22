@@ -9,7 +9,7 @@ import org.junit.*;
 import com.obsidiandynamics.assertion.*;
 
 public final class FluentOperatingSetTest {
-  public final class TestSet extends FluentOperatingSet<Object, TestSet> {}
+  public static final class TestSet extends FluentOperatingSet<Object, TestSet> {}
   
   @Test
   public void testToString() {

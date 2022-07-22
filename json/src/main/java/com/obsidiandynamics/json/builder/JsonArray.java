@@ -8,7 +8,7 @@ import java.util.*;
 public interface JsonArray extends JsonPart {
   JsonArray element(Object value);
   
-  static final class JsonArrayImpl extends ArrayList<Object> implements JsonArray {
+  final class JsonArrayImpl extends ArrayList<Object> implements JsonArray {
     private static final long serialVersionUID = 1L;
 
     @Override

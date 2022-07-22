@@ -17,7 +17,7 @@ public final class StandardFieldPatchDeserializer extends StdDeserializer<Standa
   }
 
   @Override
-  public StandardFieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+  public StandardFieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     throw new UnsupportedOperationException();
   }
 
@@ -38,7 +38,7 @@ public final class StandardFieldPatchDeserializer extends StdDeserializer<Standa
     }
 
     @Override
-    public FieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public FieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
       final TreeNode node = p.readValueAsTree();
       final TreeNode setNode = node.get("value");
       final Object value = setNode != null ? p.getCodec().treeToValue(setNode, valueType) : null;

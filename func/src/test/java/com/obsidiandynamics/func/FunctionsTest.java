@@ -508,7 +508,7 @@ public final class FunctionsTest {
   @Test
   public void testIfPresent() {
     assertEquals("with_existing", Functions.ifPresent("existing", "with_"::concat));
-    assertNull(Functions.ifPresent((String) null, "with_"::concat));
+    assertNull(Functions.ifPresent(null, "with_"::concat));
   }
 
   @Test
@@ -521,7 +521,7 @@ public final class FunctionsTest {
   public void testIfPresentVoid() {
     final CheckedConsumer<String, RuntimeException> consumer = Classes.cast(mock(CheckedConsumer.class));
     
-    Functions.ifPresentVoid((String) null, consumer);
+    Functions.ifPresentVoid(null, consumer);
     verify(consumer, never()).accept(any());
     
     Functions.ifPresentVoid("test", consumer);
@@ -531,7 +531,7 @@ public final class FunctionsTest {
   @Test
   public void testIfAbsent() {
     assertEquals("existing", Functions.ifAbsent("existing", () -> "new"));
-    assertEquals("new", Functions.ifAbsent((String) null, () -> "new"));
+    assertEquals("new", Functions.ifAbsent(null, () -> "new"));
   }
 
   @Test
@@ -543,7 +543,7 @@ public final class FunctionsTest {
   @Test
   public void testIfEither() {
     assertEquals("with_existing", Functions.ifEither("existing", "with_"::concat, () -> "new"));
-    assertEquals("new", Functions.ifEither((String) null, "with_"::concat, () -> "new"));
+    assertEquals("new", Functions.ifEither(null, "with_"::concat, () -> "new"));
   }
 
   @Test
@@ -579,8 +579,8 @@ public final class FunctionsTest {
 
   @Test
   public void testTryCatch_runnablePass() {
-    final ThrowingRunnable errorProneRunnable = (ThrowingRunnable) () -> {};
-    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    final ThrowingRunnable errorProneRunnable = () -> {};
+    final Consumer<Throwable> onError = Classes.cast(mock(Consumer.class));
     Functions.tryCatch(errorProneRunnable, onError);
     verifyNoMoreInteractions(onError);
   }
@@ -588,17 +588,17 @@ public final class FunctionsTest {
   @Test
   public void testTryCatch_RunnableFail() {
     final Exception cause = new Exception("Simulated");
-    final ThrowingRunnable errorProneRunnable = (ThrowingRunnable) () -> { throw cause; };
-    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    final ThrowingRunnable errorProneRunnable = () -> { throw cause; };
+    final Consumer<Throwable> onError = Classes.cast(mock(Consumer.class));
     Functions.tryCatch(errorProneRunnable, onError);
     verify(onError).accept(eq(cause));
   }
 
   @Test
   public void testTryCatch_supplierPass() {
-    final ThrowingSupplier<String> errorProneSupplier = (ThrowingSupplier<String>) () -> "value";
-    final Supplier<String> defaultValueSupplier = Classes.<Supplier<String>>cast(mock(Supplier.class));
-    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    final ThrowingSupplier<String> errorProneSupplier = () -> "value";
+    final Supplier<String> defaultValueSupplier = Classes.cast(mock(Supplier.class));
+    final Consumer<Throwable> onError = Classes.cast(mock(Consumer.class));
     assertEquals("value", Functions.tryCatch(errorProneSupplier, defaultValueSupplier, onError));
     verifyNoMoreInteractions(defaultValueSupplier);
     verifyNoMoreInteractions(onError);
@@ -607,9 +607,9 @@ public final class FunctionsTest {
   @Test
   public void testTryCatch_supplierFail() {
     final Exception cause = new Exception("Simulated");
-    final ThrowingSupplier<String> errorProneSupplier = (ThrowingSupplier<String>) () -> { throw cause; };
-    final Supplier<String> defaultValueSupplier = (Supplier<String>) () -> "default";
-    final Consumer<Throwable> onError = Classes.<Consumer<Throwable>>cast(mock(Consumer.class));
+    final ThrowingSupplier<String> errorProneSupplier = () -> { throw cause; };
+    final Supplier<String> defaultValueSupplier = () -> "default";
+    final Consumer<Throwable> onError = Classes.cast(mock(Consumer.class));
     assertEquals("default", Functions.tryCatch(errorProneSupplier, defaultValueSupplier, onError));
     verify(onError).accept(eq(cause));
   }
@@ -622,19 +622,18 @@ public final class FunctionsTest {
   @Test
   public void testByField_simple() {
     final List<String> strings = asList("dddd", "a", "ccc", "bb");
-    Collections.sort(strings, Functions.byField(String::length, Comparator.naturalOrder()));
+    strings.sort(Functions.byField(String::length, Comparator.naturalOrder()));
     assertEquals(asList("a", "bb", "ccc", "dddd"), strings);
-    Collections.sort(strings, Functions.byField(String::length, Comparator.naturalOrder()).reversed());
+    strings.sort(Functions.byField(String::length, Comparator.naturalOrder()).reversed());
     assertEquals(asList("dddd", "ccc", "bb", "a"), strings);
   }
 
   @Test
   public void testByField_composite() {
     final List<Point> points = asList(new Point(2, 2), new Point(0, 0), new Point(1, 2), new Point(1, 0));
-    Collections.sort(points, 
-                     new ChainedComparator<Point>()
-                     .chain(Functions.byField(Point::getX, Comparator.naturalOrder()))
-                     .chain(Functions.byField(Point::getY, Comparator.naturalOrder())));
+    points.sort(new ChainedComparator<Point>()
+                    .chain(Functions.byField(Point::getX, Comparator.naturalOrder()))
+                    .chain(Functions.byField(Point::getY, Comparator.naturalOrder())));
     assertEquals(asList(new Point(0, 0), new Point(1, 0), new Point(1, 2), new Point(2, 2)), points);
   }
 

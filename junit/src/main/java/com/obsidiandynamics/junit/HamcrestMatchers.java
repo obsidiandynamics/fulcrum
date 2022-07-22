@@ -79,7 +79,7 @@ public final class HamcrestMatchers {
     return new BaseMatcher<T>() {
       @Override
       public boolean matches(Object item) {
-        final T typedItem = HamcrestMatchers.<T>cast(item);
+        final T typedItem = HamcrestMatchers.cast(item);
         return predicate.test(typedItem);
       }
 
@@ -131,7 +131,7 @@ public final class HamcrestMatchers {
     return new BaseMatcher<T>() {
       @Override
       public boolean matches(Object item) {
-        final T typedItem = HamcrestMatchers.<T>cast(item);
+        final T typedItem = HamcrestMatchers.cast(item);
         try {
           assertion.accept(typedItem);
           return true;

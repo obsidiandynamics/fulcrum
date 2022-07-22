@@ -33,7 +33,7 @@ public final class GroupTest {
   }
   
   private static final ChannelFactory UDP_FACTORY = () -> Protocols.newUdpChannel(Util.getLoopback());
-  private static final ChannelFactory MOCK_FACTORY = () -> Protocols.newLoopbackChannel();
+  private static final ChannelFactory MOCK_FACTORY = Protocols::newLoopbackChannel;
   
   private static final boolean MOCK = true;
   
@@ -53,7 +53,7 @@ public final class GroupTest {
   
   @After
   public void after() {
-    groups.forEach(g -> g.close());
+    groups.forEach(Group::close);
     groups.clear();
   }
   
@@ -81,8 +81,8 @@ public final class GroupTest {
   
   @Test
   public void testFactories() throws Exception {
-    create(UDP_FACTORY);
-    create(MOCK_FACTORY);
+    create(UDP_FACTORY).close();
+    create(MOCK_FACTORY).close();
   }
   
   @Test

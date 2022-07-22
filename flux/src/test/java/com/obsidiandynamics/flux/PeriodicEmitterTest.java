@@ -159,9 +159,7 @@ public final class PeriodicEmitterTest {
     final Flux flux = new Flux()
         .cascade(Emitters
                  .<Integer>periodic(Rate.flatBuilder().withRate(1_000).withDuration(Long.MAX_VALUE).build(),
-                                    context -> {
-                                      context.terminate();
-                                    })
+                                    StageContext::terminate)
                  .onComplete(completionHandler))
         .cascade(Sinks.collection(collected))
         .start();

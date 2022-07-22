@@ -39,7 +39,7 @@ public final class ChainedComparatorTest {
   }
   
   private static Comparator<String> compareAtIndex(int index) {
-    final Comparator<Character> baseComparator = Comparator.<Character>nullsFirst(Comparator.naturalOrder());
+    final Comparator<Character> baseComparator = Comparator.nullsFirst(Comparator.naturalOrder());
     return (str0, str1) -> {
       final Character char0 = index < str0.length() ? str0.charAt(index) : null;
       final Character char1 = index < str1.length() ? str1.charAt(index) : null;
