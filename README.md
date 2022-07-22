@@ -1,11 +1,11 @@
 <img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> Fulcrum
 ===
+Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
+
 [![Maven release](https://img.shields.io/maven-metadata/v.svg?color=blue&label=maven-central&metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fobsidiandynamics%2Ffulcrum%2Ffulcrum-assert%2Fmaven-metadata.xml)](https://mvnrepository.com/artifact/com.obsidiandynamics.fulcrum)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/obsidiandynamics/fulcrum.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/obsidiandynamics/fulcrum/alerts/)
 [![Gradle build](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml/badge.svg)](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml)
 [![codecov](https://codecov.io/gh/obsidiandynamics/fulcrum/branch/master/graph/badge.svg)](https://codecov.io/gh/obsidiandynamics/fulcrum)
-
-Fulcrum is home to tiny **micro libraries** that do very specific things, and can be imported into a project individually, without dragging in tons of unneeded dependencies.
 
 # Modules
 * [`fulcrum-assert`](https://github.com/obsidiandynamics/fulcrum/tree/master/assert) — Common assertions
