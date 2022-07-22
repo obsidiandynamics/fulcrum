@@ -46,7 +46,7 @@ Fulcrum is home to tiny **micro libraries** that do very specific things, and ca
 # Getting started
 Select just the module(s) that you need from the list above. Some modules have a short README describing their use.
 
-The builds are hosted on JCenter. (Maven users may need to add the JCenter repository to their POM.) Simply add the following snippet to your build file. Replace the version placeholder `x.y.z` in the snippet with the version shown on the Download badge at the top of this README, and `fulcrum-module` with the name of the actual module you need.
+Simply add the following snippet to your build file. Replace the version placeholder `x.y.z` in the snippet with the version shown on the Download badge at the top of this README, and `fulcrum-module` with the name of the actual module you need.
 
 For Maven:
 
