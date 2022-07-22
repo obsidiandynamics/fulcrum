@@ -62,5 +62,5 @@ For Maven:
 For Gradle:
 
 ```groovy
-compile 'com.obsidiandynamics.fulcrum:fulcrum-module:x.y.z'
+api 'com.obsidiandynamics.fulcrum:fulcrum-module:x.y.z'
 ```
