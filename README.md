@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/wiki/obsidiandynamics/fulcrum/images/fulcrum-logo.png" width="90px" alt="logo"/> Fulcrum
 ===
-[![Maven release](https://maven-badges.herokuapp.com/maven-central/com.obsidiandynamics.fulcrum/assert/badge.svg)](https://search.maven.org/search?q=g:com.obsidiandynamics.fulcrum)
+[![Maven release](https://img.shields.io/maven-metadata/v.svg?color=green&label=maven-central&metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fobsidiandynamics%2Ffulcrum%2Ffulcrum-assert%2Fmaven-metadata.xml)](https://mvnrepository.com/artifact/com.obsidiandynamics.fulcrum)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/obsidiandynamics/fulcrum.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/obsidiandynamics/fulcrum/alerts/)
 [![Gradle build](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml/badge.svg)](https://github.com/obsidiandynamics/fulcrum/actions/workflows/master.yml)
 [![codecov](https://codecov.io/gh/obsidiandynamics/fulcrum/branch/master/graph/badge.svg)](https://codecov.io/gh/obsidiandynamics/fulcrum)
