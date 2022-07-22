@@ -6,5 +6,5 @@ import org.jgroups.*;
 
 @FunctionalInterface
 public interface GroupMessageHandler {
-  void handle(JChannel channel, Map<Address, Message> messages) throws Exception;
+  void handle(JChannel channel, Map<Address, Message> messages);
 }

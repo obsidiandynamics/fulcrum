@@ -14,7 +14,7 @@ import com.obsidiandynamics.resolver.*;
 
 public final class LauncherTest {
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(Launcher.class);
   }
 

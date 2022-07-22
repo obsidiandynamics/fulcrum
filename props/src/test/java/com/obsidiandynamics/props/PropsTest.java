@@ -54,7 +54,7 @@ public final class PropsTest {
   }
   
   @Test
-  public void testLoadExistingDefault() throws IOException {
+  public void testLoadExistingDefault() {
     final Properties props = Props.load("propstest.properties", null);
     assertNotNull(props);
     assertTrue(props.containsKey("foo"));
@@ -66,7 +66,7 @@ public final class PropsTest {
   }
 
   @Test
-  public void testLoadNonExistingDefault() throws IOException {
+  public void testLoadNonExistingDefault() {
     final Properties def = new Properties();
     def.put("foo", "bar");
     final Properties props = Props.load("non-existing.properties", def);

@@ -88,13 +88,13 @@ public final class JsonTest {
   }
 
   @Test
-  public void testUncheckedParser() throws JsonInputException {
+  public void testUncheckedParser() {
     final Function<String, TestPojo> parser = Json.getInstance().uncheckedParser(TestPojo.class);
     assertEquals(new TestPojo().withA(3), parser.apply("{\"a\":3}"));
   }
 
   @Test
-  public void testUncheckedParserJavaType() throws JsonInputException {
+  public void testUncheckedParserJavaType() {
     final Function<String, Object> parser = Json.getInstance().uncheckedParser(Json.typeOf(TestPojo.class));
     assertEquals(new TestPojo().withA(3), parser.apply("{\"a\":3}"));
   }

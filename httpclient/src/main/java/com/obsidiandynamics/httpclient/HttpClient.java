@@ -168,7 +168,7 @@ public final class HttpClient {
       return client;
     }
     
-    private CloseableHttpAsyncClient buildChecked() throws IOReactorException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+    private CloseableHttpAsyncClient buildChecked() throws IOReactorException {
       final Registry<SchemeIOSessionStrategy> sessionStrategy = RegistryBuilder
           .<SchemeIOSessionStrategy>create()
           .register("http", NoopIOSessionStrategy.INSTANCE)

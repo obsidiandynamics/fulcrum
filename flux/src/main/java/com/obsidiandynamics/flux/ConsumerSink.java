@@ -40,7 +40,7 @@ public final class ConsumerSink<E> implements Sink<E> {
   }
 
   @Override
-  public boolean join(long timeoutMillis) throws InterruptedException {
+  public boolean join(long timeoutMillis) {
     return true;
   }
 

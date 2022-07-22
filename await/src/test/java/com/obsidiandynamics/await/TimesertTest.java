@@ -47,7 +47,7 @@ public final class TimesertTest {
       if (calls.getAndIncrement() == 0) {
         try {
           Thread.sleep(1);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException ignored) {}
         throw new AssertionError("Boom"); 
       }
     });

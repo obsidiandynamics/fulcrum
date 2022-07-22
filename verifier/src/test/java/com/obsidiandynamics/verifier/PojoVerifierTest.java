@@ -12,7 +12,7 @@ public final class PojoVerifierTest {
   public static final class TestPojoPartialMethods {
     private final int a;
     private int b;
-    private int c;
+    private final int c;
     
     public TestPojoPartialMethods(int a, int b, int c) {
       this.a = a;

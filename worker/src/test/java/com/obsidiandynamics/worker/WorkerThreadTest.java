@@ -199,7 +199,11 @@ public final class WorkerThreadTest {
   @Test
   public void testEqualsHashCode() {
     EqualsVerifier.forClass(WorkerThread.class)
-    .withPrefabValues(Thread.class, new Thread("red"), new Thread("black"))
+    .withPrefabValues(Thread.class, new Thread("red") {
+      @Override public void run() {}
+    }, new Thread("black") {
+      @Override public void run() {}
+    })
     .withOnlyTheseFields("driver")
     .verify();
   }

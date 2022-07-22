@@ -116,7 +116,7 @@ public final class RetryTest {
     }
   }
   
-  private static int throwCheckedException() throws IOException, TimeoutException {
+  private static int throwCheckedException() throws IOException {
     throw new IOException("test exception");
   }
   

@@ -59,7 +59,7 @@ public final class OffHeapBackingQueueTest {
   }
   
   @Test
-  public void testPoll_empty_interrupted() throws InterruptedException {
+  public void testPoll_empty_interrupted() {
     final OffHeapBackingQueue<String> queue = newQueue(1);
     Thread.currentThread().interrupt();
     Assertions.assertThatThrownBy(() -> {

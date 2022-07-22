@@ -21,7 +21,7 @@ public final class AwaitTest {
   }
   
   @Test
-  public void testPerpetual_interruptedDuringSleep() throws InterruptedException, TimeoutException {
+  public void testPerpetual_interruptedDuringSleep() {
     Thread.currentThread().interrupt();
     assertThatThrownBy(() -> {
       Await.perpetual(() -> false);
@@ -29,7 +29,7 @@ public final class AwaitTest {
   }
   
   @Test
-  public void testPerpetual_interruptedAfterPass() throws InterruptedException, TimeoutException {
+  public void testPerpetual_interruptedAfterPass() {
     assertThatThrownBy(() -> {
       Await.perpetual(() -> {
         Thread.currentThread().interrupt();
@@ -69,7 +69,7 @@ public final class AwaitTest {
   }
   
   @Test
-  public void testBoundedTimeout_atLeastOnce_timeout() throws InterruptedException, TimeoutException {
+  public void testBoundedTimeout_atLeastOnce_timeout() {
     final BooleanSupplier condition = mock(BooleanSupplier.class);
     assertThatThrownBy(() -> {
       Await.boundedTimeout(SOME_TIME_AGO, 0, 1, AT_LEAST_ONCE, condition);
@@ -78,7 +78,7 @@ public final class AwaitTest {
   }
   
   @Test
-  public void testBoundedTimeout_possiblyNever_timeout() throws InterruptedException, TimeoutException {
+  public void testBoundedTimeout_possiblyNever_timeout() {
     final BooleanSupplier condition = mock(BooleanSupplier.class);
     assertThatThrownBy(() -> {
       Await.boundedTimeout(SOME_TIME_AGO, 0, 1, POSSIBLY_NEVER, condition);

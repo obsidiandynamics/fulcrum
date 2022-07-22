@@ -9,7 +9,7 @@ import com.obsidiandynamics.threads.*;
 
 @FunctionalInterface
 public interface EventMapper<I, O> {
-  void apply(EmissionContext<? super O> context, I input) throws InterruptedException, FluxException;
+  void apply(EmissionContext<? super O> context, I input) throws InterruptedException;
   
   static <E> EventMapper<E, E> filter(Predicate<? super E> predicate) {
     return (context, input) -> {

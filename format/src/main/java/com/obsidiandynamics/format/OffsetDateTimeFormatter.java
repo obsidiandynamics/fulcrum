@@ -16,7 +16,7 @@ public final class OffsetDateTimeFormatter implements Iso8601Formatter {
   }
   
   @Override
-  public Date parse(String encoded) throws Throwable {
+  public Date parse(String encoded) {
     final OffsetDateTime offsetDateTime = OffsetDateTime.parse(encoded, formatter);
     return new Date(offsetDateTime.toInstant().toEpochMilli());
   }

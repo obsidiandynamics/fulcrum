@@ -20,7 +20,7 @@ public final class Group implements AutoCloseable {
   
   private ExceptionHandler errorHandler = ExceptionHandler.forPrintStream(System.err);
       
-  public Group(JChannel channel) throws Exception {
+  public Group(JChannel channel) {
     this.channel = channel;
     channel.setDiscardOwnMessages(true);
     channel.setReceiver(new ReceiverAdapter() {

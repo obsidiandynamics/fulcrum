@@ -85,7 +85,7 @@ public final class ShellBuilderTest {
   }
 
   @Test(expected=IllegalStateException.class)
-  public void testExecuteNullProcess() throws IOException {
+  public void testExecuteNullProcess() {
     builder.execute("test");
   }
   
@@ -149,7 +149,7 @@ public final class ShellBuilderTest {
   }
   
   @Test
-  public void checkInstalledPass() throws IOException, InterruptedException {
+  public void checkInstalledPass() throws IOException {
     final Process proc = mock(Process.class);
     when(executor.run(any())).thenReturn(proc);
     builder.checkInstalled("command");

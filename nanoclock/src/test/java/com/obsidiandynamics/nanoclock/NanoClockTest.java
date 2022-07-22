@@ -8,7 +8,7 @@ import com.obsidiandynamics.assertion.*;
 
 public final class NanoClockTest {
   @Test
-  public void testConformance() throws Exception {
+  public void testConformance() {
     Assertions.assertUtilityClassWellDefined(NanoClock.class);
   }
 

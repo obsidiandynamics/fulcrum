@@ -20,7 +20,7 @@ final class KryoCodec implements Codec {
   }
 
   @Override
-  public byte[] toBytes(Object obj) throws Exception {
+  public byte[] toBytes(Object obj) {
     final Output out = new Output(DEF_BUFFER_SIZE, -1);
     final Kryo kryo = createKryo();
     kryo.writeObject(out, obj, serializer);
@@ -28,7 +28,7 @@ final class KryoCodec implements Codec {
   }
 
   @Override
-  public <T> T toObject(byte[] bytes, Class<T> type) throws Exception {
+  public <T> T toObject(byte[] bytes, Class<T> type) {
     final Input in = new Input(bytes);
     final Kryo kryo = createKryo();
     return kryo.readObject(in, type, serializer);

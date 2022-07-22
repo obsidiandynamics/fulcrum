@@ -122,7 +122,7 @@ public final class HttpClientTest {
   }
   
   @Test
-  public void testSocketTimeout() throws InterruptedException, ExecutionException, TimeoutException {
+  public void testSocketTimeout() throws InterruptedException, ExecutionException {
     client = HttpClient.builder()
         .withSocketTimeout(1)
         .buildAndStart();
@@ -152,7 +152,7 @@ public final class HttpClientTest {
   }
   
   @Test
-  public void testNoTimeouts() throws InterruptedException, ExecutionException, TimeoutException {
+  public void testNoTimeouts() throws InterruptedException, ExecutionException {
     client = HttpClient.builder()
         .withTimeout(0)
         .buildAndStart();
@@ -174,7 +174,7 @@ public final class HttpClientTest {
   }
   
   @Test
-  public void testFault() throws InterruptedException, ExecutionException, TimeoutException {
+  public void testFault() throws InterruptedException, ExecutionException {
     client = HttpClient.builder().buildAndStart();
     
     wireMock.stubFor(get(urlEqualTo("/test"))

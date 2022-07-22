@@ -99,7 +99,7 @@ public final class LockRootTest {
   }
   
   @Test
-  public void testTryAcquire_reentrant() throws IOException, InterruptedException {
+  public void testTryAcquire_reentrant() throws IOException {
     final LockRoot lockRoot = new LockRoot(new File(SANDBOX_DIR));
     final String nodeName = UUID.randomUUID().toString();
     try (ReentrantDirectoryLock lock = lockRoot.tryAcquire(nodeName)) {

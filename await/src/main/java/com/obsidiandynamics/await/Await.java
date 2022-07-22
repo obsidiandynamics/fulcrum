@@ -169,6 +169,7 @@ public final class Await {
           final long remainingTime = deadline - System.currentTimeMillis();
           if (remainingTime > 0) {
             final long sleepTime = Math.min(remainingTime, intervalMillis);
+            //noinspection BusyWait
             Thread.sleep(sleepTime);
           } else {
             return false;

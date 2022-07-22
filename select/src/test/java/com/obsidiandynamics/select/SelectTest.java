@@ -61,7 +61,7 @@ public final class SelectTest {
   }
   
   @Test(expected=TestRuntimeExceptionBar.class)
-  public void testWhenWithThrow() throws TestCheckedExceptionBar, TestCheckedExceptionFoo {
+  public void testWhenWithThrow() {
     Select.from("bar")
     .whenNull().thenThrow(TestRuntimeExceptionFoo::new)
     .when(isEqual("foo")).thenThrow(TestRuntimeExceptionFoo::new)
@@ -71,7 +71,7 @@ public final class SelectTest {
   }
   
   @Test(expected=TestRuntimeExceptionFoo.class)
-  public void testWhenNullWithThrow() throws TestCheckedExceptionBar, TestCheckedExceptionFoo {
+  public void testWhenNullWithThrow() {
     Select.from(null)
     .when(isEqual("bar")).thenThrow(TestRuntimeExceptionBar::new)
     .whenNull().thenThrow(TestRuntimeExceptionFoo::new)
@@ -79,7 +79,7 @@ public final class SelectTest {
   }
   
   @Test(expected=TestRuntimeExceptionBar.class)
-  public void testOtherwiseWithThrow() throws TestCheckedExceptionBar, TestCheckedExceptionFoo {
+  public void testOtherwiseWithThrow() {
     Select.from(null)
     .when(isEqual("foo")).thenThrow(TestRuntimeExceptionFoo::new)
     .otherwiseThrow(TestRuntimeExceptionBar::new);

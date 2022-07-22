@@ -5,7 +5,7 @@ import java.util.function.*;
 
 @FunctionalInterface
 public interface EventConsumer<E> {
-  void accept(StageContext context, E event) throws InterruptedException, FluxException;
+  void accept(StageContext context, E event) throws FluxException;
   
   static <E> EventConsumer<E> consumer(Consumer<? super E> consumer) {
     return (__context, event) -> consumer.accept(event);

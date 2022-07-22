@@ -193,7 +193,7 @@ public final class Iso8601Test {
   }
 
   @Test
-  public void testParseNewWithExceptionParseError() throws Iso8601ParseException {
+  public void testParseNewWithExceptionParseError() {
     org.assertj.core.api.Assertions.assertThatThrownBy(() -> {
       Iso8601.parse("2047-01-02T01:04:05_678-02");
     })

@@ -48,7 +48,7 @@ public final class TerminatorTest {
   }
   
   @Test
-  public void testTerminateAndJoinBlank() throws InterruptedException {
+  public void testTerminateAndJoinBlank() {
     final Terminator terminator = Terminator.blank();
 
     final Joinable joinable = terminator.terminate();

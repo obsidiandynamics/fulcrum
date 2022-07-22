@@ -44,7 +44,7 @@ final class FiringStrategyTests {
     }
 
     @Override
-    public boolean join(long timeoutMillis) throws InterruptedException {
+    public boolean join(long timeoutMillis) {
       return true;
     }
 

@@ -160,6 +160,7 @@ public final class LockRoot {
       if (lock != null) {
         return lock;
       } else if (System.currentTimeMillis() < maxWait) {
+        //noinspection BusyWait
         Thread.sleep(waitTime);
       } else {
         return null;

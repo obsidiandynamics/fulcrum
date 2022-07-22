@@ -15,7 +15,7 @@ public final class JmhDriverSample implements BenchmarkTarget {
   }
   
   @Override
-  public void cycle(Abyss abyss) throws Exception {
+  public void cycle(Abyss abyss) {
     abyss.consume(Math.log(Math.exp(1)));
   }
   

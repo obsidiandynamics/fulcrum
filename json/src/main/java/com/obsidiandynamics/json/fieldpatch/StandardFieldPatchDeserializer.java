@@ -17,12 +17,12 @@ public final class StandardFieldPatchDeserializer extends StdDeserializer<Standa
   }
 
   @Override
-  public StandardFieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+  public StandardFieldPatch<?> deserialize(JsonParser p, DeserializationContext ctxt) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
+  public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
     final Class<?> containedType = property.getType().containedTypeOrUnknown(0).getRawClass();
     return new TypedFieldPatchDeserializer(containedType);
   }

@@ -56,7 +56,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testGet() throws IOException, ResponseStatusException, InterruptedException {
+  public void testGet() throws IOException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)
@@ -72,7 +72,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParse() throws IOException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)
@@ -84,7 +84,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWrongType() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseWrongType() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)
@@ -98,7 +98,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWrongStatusWithEntity() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseWrongStatusWithEntity() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -122,7 +122,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWrongStatusWithoutEntity() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseWrongStatusWithoutEntity() {
     wireMock.stubFor(head(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -145,7 +145,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWithFaultConnectionReset() throws IOException, InterruptedException {
+  public void testParseWithFaultConnectionReset() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
@@ -157,7 +157,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWithFaultEmptyResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseWithFaultEmptyResponse() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse().withFault(Fault.EMPTY_RESPONSE)));
 
@@ -169,7 +169,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseWithFaultMalformedResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseWithFaultMalformedResponse() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse().withFault(Fault.MALFORMED_RESPONSE_CHUNK)));
 
@@ -181,7 +181,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseIfOkWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseIfOkWithOkResponse() throws IOException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)
@@ -193,7 +193,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testParseIfOkOrCreatedWithOkResponse() throws IOException, ResponseStatusException, InterruptedException {
+  public void testParseIfOkOrCreatedWithOkResponse() throws IOException, InterruptedException {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(200)
@@ -226,7 +226,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureIsOkWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkWithBadRequest() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -256,7 +256,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEnsureIsOkOrCreatedWithBadRequest() throws IOException, ResponseStatusException, InterruptedException {
+  public void testEnsureIsOkOrCreatedWithBadRequest() {
     wireMock.stubFor(get(urlEqualTo("/test"))
                      .willReturn(aResponse()
                                  .withStatus(400)
@@ -302,7 +302,7 @@ public final class HttpCallTest {
   }
 
   @Test
-  public void testEntityToStringWithParseError() throws IOException {
+  public void testEntityToStringWithParseError() {
     final HttpEntity entity = mock(HttpEntity.class, Answers.CALLS_REAL_METHODS);
     final Header header = mock(Header.class);
     when(entity.getContentType()).thenReturn(header);

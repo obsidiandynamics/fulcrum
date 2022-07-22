@@ -121,7 +121,7 @@ public final class TaskScheduler implements Terminable, Joinable {
           first.execute(scheduler);
         }
       }
-    } catch (NoSuchElementException e) {} // in case the task was aborted in the meantime
+    } catch (NoSuchElementException ignored) {} // in case the task was aborted in the meantime
   }
   
   /**

@@ -31,7 +31,7 @@ public final class AppVersion {
     Constant(String def) { this.def = def; }
 
     @Override
-    public String get() throws FileNotFoundException {
+    public String get() {
       return def;
     }
   }

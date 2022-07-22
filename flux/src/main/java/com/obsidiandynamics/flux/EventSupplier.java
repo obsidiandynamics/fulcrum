@@ -6,7 +6,7 @@ import java.util.stream.*;
 
 @FunctionalInterface
 public interface EventSupplier<E> {
-  void get(EmissionContext<? super E> context) throws InterruptedException, FluxException;
+  void get(EmissionContext<? super E> context);
   
   static <E> EventSupplier<E> supplier(Supplier<? extends E> supplier) {
     return context -> context.emit(supplier.get());

@@ -34,7 +34,7 @@ public final class JsonObjectTest {
   }
   
   @Test
-  public void testFormatNestedArray() throws Exception {
+  public void testFormatNestedArray() {
     final String json = JsonObject.create()
         .field("array", JsonArray.create().element("one").element("two").element(3).element(4.0))
         .formatUnchecked(Json.getInstance());

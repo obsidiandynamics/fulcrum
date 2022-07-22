@@ -65,7 +65,7 @@ public final class MappingChannel<I, O> implements Channel<I, O> {
   }
 
   @Override
-  public boolean join(long timeoutMillis) throws InterruptedException {
+  public boolean join(long timeoutMillis) {
     return true;
   }
 

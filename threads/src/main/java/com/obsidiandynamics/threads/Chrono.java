@@ -122,6 +122,7 @@ public final class Chrono {
       if (remainingNanos >= 2 * sleepGranularityNanos) {
         // coarse-grained — sleep
         final long sleepMillis = round(remainingNanos - sleepGranularityNanos, sleepGranularityNanos) / NANOS_IN_MILLISECOND;
+        //noinspection BusyWait
         Thread.sleep(sleepMillis);
       } else if (remainingNanos >= 2 * yieldGranularityNanos) {
         // mid-grained — yield
